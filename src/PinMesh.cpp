@@ -721,6 +721,8 @@ ObjectId computeObjectWherePointIsTwoLevel(const Point &p,int globalGridCoordX,i
 
 //Locate a set of vertices in the objects in map 0...
 //if meshIdToLocate=0, this means that vertices will be located in mesh 0
+//#define PINMESH_VERBOSE
+
 void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vector<Point *> &verticesToLocate,std::vector<ObjectId> &verticesIds,int meshIdToLocate) {
   timespec t0,t1,t01;
 
@@ -732,9 +734,10 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
   int gridSize = uniformGrid->gridSizeLevel1;
   int nestedGridSize = uniformGrid->gridSizeLevel2;
   
+  #ifdef PINMESH_VERBOSE
   cerr << "Computing CCs of empty boxes..." << endl;
   clock_gettime(CLOCK_REALTIME, &t0);
-
+  #endif
 
   //we will compute where the empty cells are (to accelerate the point in vol computations!)
 
@@ -890,9 +893,10 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
 
 //  cerr << "Locating two level......" << endl;
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to fill grid and compute CCs: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  #ifdef PINMESH_VERBOSE
+  cerr << "Time to fill grid and compute CCs: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;  
   cerr << "Time only to compute CCs: " << convertTimeMsecs(diff(t01,t1))/1000 << endl;
-
+  #endif
 
   //computing some statistics...
   int numEmptyGridCells=0,numNonEmptyGridCells= 0;
@@ -921,9 +925,11 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
 			            }
           }                             
         } 
+  #ifdef PINMESH_VERBOSE    
   cerr << "Empty grid cells: " << numEmptyGridCells << endl;
   cerr << "Non empty grid cells: " << numNonEmptyGridCells << endl;
   cerr << "Percent empty cells: " << (100.0*numEmptyGridCells)/(numEmptyGridCells+numNonEmptyGridCells) << endl; 
+  #endif
 
   /*clock_gettime(CLOCK_REALTIME, &t0);
   vector<array<int,3> > pointsGridCells(numVerticesInMap); //this will store in what grid cell each point is..
@@ -948,7 +954,9 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
   vector<int> gyVector(numVerticesToLocate);
   vector<int> gzVector(numVerticesToLocate);
 
+  #ifdef PINMESH_VERBOSE
   cerr << "Computing vertices  " << verticesToLocate.size() << " grid coordinates..." << endl;
+  #endif
   clock_gettime(CLOCK_REALTIME, &t0);
 
   #pragma omp parallel
@@ -967,11 +975,13 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
     }
   }
   clock_gettime(CLOCK_REALTIME, &t1);
+
+  #ifdef PINMESH_VERBOSE
   cerr << "Time to compute vertices grid...: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 
 
-
   cerr << "Locating " << verticesToLocate.size() << " vertices..." << endl;
+  #endif
   clock_gettime(CLOCK_REALTIME, &t0);
 
   int numVerticesFoundUsingGrid = 0;
@@ -1008,9 +1018,12 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
     numVerticesFoundUsingGrid += numVerticesFoundUsingGridLocal;
   }
   clock_gettime(CLOCK_REALTIME, &t1);
+
+  #ifdef PINMESH_VERBOSE
   cerr << "Time to locate vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   cerr << "Num vertices found using grid: " << numVerticesFoundUsingGrid << endl;
   cerr << "Percentage vertices found using grid: " << (100.0*numVerticesFoundUsingGrid)/numVerticesToLocate << "\n\n";
+  #endif
 }
 
 
