@@ -267,8 +267,12 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 		//TODO: locate unique vertices???
 		vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
 		//vertices of mesh "meshId" will be located in mesh "1-meshId"
-		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,locationOfEachVertexInOtherMesh,1-meshId);
 
+		timespec t0,t1;
+		clock_gettime(CLOCK_REALTIME, &t0);
+		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,locationOfEachVertexInOtherMesh,1-meshId);
+		clock_gettime(CLOCK_REALTIME, &t1);
+  	cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 		//now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
 
 
@@ -288,9 +292,8 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			
 		}		
 	}
-
 	clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to classify triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  cerr << "Time to locate vertices and classify triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();	
   clock_gettime(CLOCK_REALTIME, &t0); 
   

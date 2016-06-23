@@ -25,7 +25,6 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-#include <boost/foreach.hpp>
 #include <boost/unordered_map.hpp>
 #include "common2.h"
 #include <list>
