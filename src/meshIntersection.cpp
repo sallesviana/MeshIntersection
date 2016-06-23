@@ -20,7 +20,10 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <vector>
 #include <array>
+#include <map>
 #include <cstdlib>
+#include <unordered_set>
+#include <unordered_map>
 #include <time.h>
 #include "rationals.h"
 
@@ -118,9 +121,313 @@ vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edges;
 
 
 
+void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
+	int numTrianglesMesh0 = grid->numTrianglesInGridCell(0, gridSize,i,j,k);//cell.triangles[0].size();
+  int numTrianglesMesh1 = grid->numTrianglesInGridCell(1, gridSize,i,j,k);
 
 
 
+  Triangle **ptrTriMesh0 = grid->getPointerStartListTriangles(0,gridSize,i,j,k);
+  Triangle **ptrTriMesh1Temp = grid->getPointerStartListTriangles(1,gridSize,i,j,k);
+  for(int tA = 0;tA < numTrianglesMesh0; tA++) {
+  	Triangle **ptrTriMesh1 = ptrTriMesh1Temp;
+    for(int tB=0;tB<numTrianglesMesh1;tB++) {
+      pairsTrianglesToProcess.push_back(pair<Triangle *,Triangle *>(*ptrTriMesh0, *ptrTriMesh1));
+      ptrTriMesh1++;
+    }
+    ptrTriMesh0++;
+  }
+}
+
+//the vector will be filled with pointers to the triangles in the same uniform grid cells
+//pairs will appear maximum once in the vector
+//the first element in the pair is a triangle from mesh 0 and the second one is from mesh 1
+void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
+
+  int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
+	int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
+  for(int i=0;i<gridSizeLevel1;i++) 
+    for(int j=0;j<gridSizeLevel1;j++) 
+      for(int k=0;k<gridSizeLevel1;k++) {
+        if (uniformGrid->grid.hasSecondLevel(i,j,k) ) {
+        	Nested3DGrid *secondLevelGrid = uniformGrid->grid.getChildGrid(i,j,k); 
+			    for(int iLevel2=0;iLevel2<gridSizeLevel2;iLevel2++) 
+			    	for(int jLevel2=0;jLevel2<gridSizeLevel2;jLevel2++) 
+			      	for(int kLevel2=0;kLevel2<gridSizeLevel2;kLevel2++) {
+			      		  extractPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2,pairsTrianglesToProcess);   
+			      	}    
+        } else {
+
+        	extractPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1,pairsTrianglesToProcess);         
+        }
+      }
+  sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
+  vector<pair<Triangle *,Triangle *> >::iterator it = std::unique (pairsTrianglesToProcess.begin(), pairsTrianglesToProcess.end());
+  pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10    
+}
+
+
+//returns the number of intersections found
+//the sets are filled with the triangles (from the corresponding mesh) that intersect
+unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid, unordered_set<const Triangle *> trianglesThatIntersect[2]) {
+  unsigned long long totalIntersections = 0;
+
+  vector<pair<Triangle *,Triangle *> > vtPairsTrianglesToProcess;
+  
+  
+  getPairsTrianglesInSameUnifGridCells(uniformGrid,vtPairsTrianglesToProcess);
+
+  //pairsTrianglesToProcess.reserve(1804900);
+  
+
+  //vector<pair<Triangle *,Triangle *> > vtPairsTrianglesToProcess(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
+
+  int numPairsToTest = vtPairsTrianglesToProcess.size();
+  cerr << "Num pairs to test: " << numPairsToTest << endl;
+  vector<bool> pairsIntersect(numPairsToTest,false); //true if the corresponding pair intersects..
+
+  unsigned long long totalTests = 0;
+
+  #pragma omp parallel
+  {
+    VertCoord p0InterLine[3],p1InterLine[3];
+    VertCoord tempRationals[100];
+
+    vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edgesTemp;
+    edgesTemp.reserve(numPairsToTest/10);
+    
+    unsigned long long totalIntersectionsTemp = 0;
+    unsigned long long totalTestsTemp = 0;
+
+    #pragma omp for
+    for(int i=0;i<numPairsToTest;i++) {   
+      pair<Triangle *,Triangle *> &pairTriangles = vtPairsTrianglesToProcess[i];
+      int coplanar;
+      Triangle &a = *pairTriangles.first;
+      Triangle &b = *pairTriangles.second;
+
+      
+      int ans = tri_tri_intersect_with_isectline(vertices[0][a.p[0]].data(),vertices[0][a.p[1]].data(),vertices[0][a.p[2]].data()     ,     
+                                                  vertices[1][b.p[0]].data(),vertices[1][b.p[1]].data(),vertices[1][b.p[2]].data(),
+                                                  &coplanar, p0InterLine ,p1InterLine,tempRationals);
+
+      totalTestsTemp++;
+      if (ans && !coplanar) {
+        edgesTemp.push_back( pair<array<VertCoord,3>,array<VertCoord,3>>( {p0InterLine[0],p0InterLine[1],p0InterLine[2]} , {p1InterLine[0],p1InterLine[1],p1InterLine[2]}   ) );
+      }
+
+      if(ans) {
+        totalIntersectionsTemp++;        
+        pairsIntersect[i] = true;
+      } 
+    }
+
+    #pragma omp critical
+    {
+      totalIntersections += totalIntersectionsTemp;
+      totalTests += totalTestsTemp;
+      edges.insert(edges.end(), edgesTemp.begin(), edgesTemp.end());
+    }
+  }
+
+
+  for(int i=0;i<numPairsToTest;i++)  
+  	if(pairsIntersect[i]) {
+  		trianglesThatIntersect[0].insert(vtPairsTrianglesToProcess[i].first);
+  		trianglesThatIntersect[1].insert(vtPairsTrianglesToProcess[i].second);
+  	}
+
+  cerr << "Total tests: " << totalTests << endl;
+  cerr << "Total intersections: " << totalIntersections << endl;
+           
+  return totalIntersections;
+}
+
+/*//Each vector represents the vertices of a layer
+vector<Point> vertices[2];
+
+//Each vector represents a set of objects in the same layer
+//The objects are represented by a set of triangles (defining their boundaries)
+vector<Triangle> triangles[2]; //
+*/
+void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, const unordered_set<const Triangle *> trianglesThatIntersect[2],ostream &outputStream) {
+	timespec t0,t1;
+	clock_gettime(CLOCK_REALTIME, &t0);
+	int ctIntersectingTrianglesTotal =0;
+	vector<Triangle> outputTriangles[2]; //output triangles generated from triangles of each mesh
+	for(int meshId=0;meshId<2;meshId++){
+		vector<Point *> verticesToLocateInOtherMesh;
+		for(const Triangle&t:triangles[meshId]) {
+			if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+				verticesToLocateInOtherMesh.push_back(&(vertices[meshId][t.p[0]]));				
+			} else {
+				ctIntersectingTrianglesTotal++;
+			}
+		}
+		//TODO: locate unique vertices???
+		vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
+		//vertices of mesh "meshId" will be located in mesh "1-meshId"
+		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,locationOfEachVertexInOtherMesh,1-meshId);
+
+		//now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
+
+
+		int numTrianglesThisMesh = triangles[meshId].size();
+		int ctNonIntersectingTrianglesProcessed = 0;
+		for(int i=0;i<numTrianglesThisMesh;i++) {
+			const Triangle &t=triangles[meshId][i];
+			if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+				//this will (probably) be an output triangle...
+				ObjectId objWhereTriangleIs = locationOfEachVertexInOtherMesh[ctNonIntersectingTrianglesProcessed++];		
+				//cerr << "obj: " << objWhereTriangleIs << endl;		
+				if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
+					//if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
+					outputTriangles[meshId].push_back(t);
+				}				
+			}
+			
+		}		
+	}
+
+	clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to classify triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  Print_Current_Process_Memory_Used();	
+  clock_gettime(CLOCK_REALTIME, &t0); 
+  
+	vector<bool> verticesToWriteOutputMesh0(vertices[0].size(),false);
+	vector<int> newIdVerticesMesh0(vertices[0].size(),-1);
+	for(const Triangle &t : outputTriangles[0]) {
+		verticesToWriteOutputMesh0[t.p[0]] = verticesToWriteOutputMesh0[t.p[1]] = verticesToWriteOutputMesh0[t.p[2]] = true;
+	}
+	int numVerticesMesh0InOutput = 0;
+	int sz = vertices[0].size();
+	for(int i=0;i<sz;i++) 
+		if(verticesToWriteOutputMesh0[i]) {			
+			newIdVerticesMesh0[i] = numVerticesMesh0InOutput;
+			numVerticesMesh0InOutput++;
+		}
+
+	vector<bool> verticesToWriteOutputMesh1(vertices[1].size(),false);
+	vector<int> newIdVerticesMesh1(vertices[1].size(),-1);
+	for(const Triangle &t : outputTriangles[1]) {
+		verticesToWriteOutputMesh1[t.p[0]] = verticesToWriteOutputMesh1[t.p[1]] = verticesToWriteOutputMesh1[t.p[2]] = true;
+	}
+	int numVerticesMesh1InOutput = 0;
+	sz = vertices[1].size();
+	for(int i=0;i<sz;i++) 
+		if(verticesToWriteOutputMesh1[i]) {			
+			newIdVerticesMesh1[i] = numVerticesMesh0InOutput + numVerticesMesh1InOutput;
+			numVerticesMesh1InOutput++;
+		}
+
+	for(Triangle &t : outputTriangles[0]) {
+		t.p[0] = newIdVerticesMesh0[t.p[0]];
+		t.p[1] = newIdVerticesMesh0[t.p[1]];
+		t.p[2] = newIdVerticesMesh0[t.p[2]];
+	}
+	for(Triangle &t : outputTriangles[1]) {
+		t.p[0] = newIdVerticesMesh1[t.p[0]];
+		t.p[1] = newIdVerticesMesh1[t.p[1]];
+		t.p[2] = newIdVerticesMesh1[t.p[2]];
+	}
+
+	clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to update ids of new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  Print_Current_Process_Memory_Used();	
+  clock_gettime(CLOCK_REALTIME, &t0); 
+
+  int totalNumberOutputVertices = numVerticesMesh0InOutput+numVerticesMesh1InOutput;
+  int totalNumberOutputTriangles = outputTriangles[0].size() + outputTriangles[1].size();
+
+  map<pair<int,int>,int> edgesIds; //maybe use unordered_map for performance (if necessary...)
+  vector<pair<int,int> > outputEdges;
+  for(int meshId=0;meshId<2;meshId++) {
+	  for(const Triangle &t : outputTriangles[meshId]) {
+			int a = t.p[0];
+			int b = t.p[1];
+			int c = t.p[2];
+
+			pair<int,int> e;
+			if (a<b) {e.first = a; e.second = b;}
+			else     {e.first = b; e.second = a;}
+			if(edgesIds.count(e)==0) {
+				outputEdges.push_back(e);
+				int sz = edgesIds.size();
+				edgesIds[e] = sz;
+			}
+
+			if (b<c) {e.first = b; e.second = c;}
+			else     {e.first = c; e.second = b;}
+			if(edgesIds.count(e)==0) {
+				outputEdges.push_back(e);
+				int sz = edgesIds.size();
+				edgesIds[e] = sz;
+			}
+
+			if (c<a) {e.first = c; e.second = a;}
+			else     {e.first = a; e.second = c;}
+			if(edgesIds.count(e)==0) {
+				outputEdges.push_back(e);
+				int sz = edgesIds.size();
+				edgesIds[e] = sz;
+			}
+		}
+	}
+	clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to create edges: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  Print_Current_Process_Memory_Used();	
+  clock_gettime(CLOCK_REALTIME, &t0); 
+
+  int totalNumberOutputEdges = edgesIds.size();
+
+  //now, let's write everything in the output!
+  outputStream << totalNumberOutputVertices << " " << totalNumberOutputEdges << " " << totalNumberOutputTriangles << '\n';
+
+  //print the coordinates of the vertices...
+  sz = verticesToWriteOutputMesh0.size();
+  for(int i=0;i<sz;i++) 
+		if(verticesToWriteOutputMesh0[i]) 
+			outputStream << vertices[0][i][0].get_d() << " " << vertices[0][i][1].get_d() << " " << vertices[0][i][2].get_d() << "\n";
+	sz = verticesToWriteOutputMesh1.size();
+  for(int i=0;i<sz;i++) 
+		if(verticesToWriteOutputMesh1[i]) 
+			outputStream << vertices[1][i][0].get_d() << " " << vertices[1][i][1].get_d() << " " << vertices[1][i][2].get_d() << "\n";
+
+	//print edges...
+	for(const pair<int,int> &p:outputEdges) {
+		outputStream << p.first+1 << " " << p.second+1 << "\n"; //in a GTS file we start counting from 1...
+	}
+
+	//print triangles...
+	for(int meshId=0;meshId<2;meshId++) 
+		for(Triangle &t : outputTriangles[meshId]) {
+			int a = t.p[0];
+			int b = t.p[1];
+			int c = t.p[2];
+			if(t.above != OUTSIDE_OBJECT) {
+				//according to the right hand rule, the ordering of the vertices should be (c,b,a)
+				swap(a,c);
+			} 
+			pair<int,int> e;
+			if (a<b) {e.first = a; e.second = b;}
+			else     {e.first = b; e.second = a;}
+			outputStream << edgesIds[e]+1 << " "; //we start counting from 1 in GTS files...
+
+			if (b<c) {e.first = b; e.second = c;}
+			else     {e.first = c; e.second = b;}
+			outputStream << edgesIds[e]+1 << " ";
+
+			if (c<a) {e.first = c; e.second = a;}
+			else     {e.first = a; e.second = c;}
+			outputStream << edgesIds[e]+1 << "\n";
+		}
+	
+		cerr << "Output vertices         : " << totalNumberOutputVertices << endl;
+		cerr << "Output edges            : " << totalNumberOutputEdges << endl;
+		cerr << "Output triangles non int: " << totalNumberOutputTriangles << endl;
+		cerr << "Intersecting triangles  : " << ctIntersectingTrianglesTotal << endl;
+
+}
 
 
 void readInputMesh(int meshId, string path) {
@@ -141,7 +448,7 @@ void readInputMesh(int meshId, string path) {
 
 int main(int argc, char **argv) {
   if (argc!=7) {
-      cerr << "Error... use ./3dIntersection inputMesh0 inputMesh1 gridSizeLevel1 gridSizeLevel2 triggerSecondLevel" << endl;
+      cerr << "Error... use ./3dIntersection inputMesh0 inputMesh1 gridSizeLevel1 gridSizeLevel2 triggerSecondLevel outputFile.gts" << endl;
       cerr << "The mesh file may be in the gts format or in the lium format (multimaterial)" << endl;
       exit(1);
   }
@@ -184,13 +491,19 @@ int main(int argc, char **argv) {
   cerr << "Bounding box two meshes togetter " << ": " << setprecision(18) << std::fixed << boundingBoxTwoMeshesTogetter[0][0].get_d() << " " << boundingBoxTwoMeshesTogetter[0][1].get_d() <<  " " << boundingBoxTwoMeshesTogetter[0][2].get_d() << " -- " << boundingBoxTwoMeshesTogetter[1][0].get_d() << " " << boundingBoxTwoMeshesTogetter[1][1].get_d() << " " << boundingBoxTwoMeshesTogetter[1][2].get_d() <<endl;
 
 
-  clock_gettime(CLOCK_REALTIME, &t0); 
+  
   cerr <<"Creating nested grid..." << endl;
+
+  clock_gettime(CLOCK_REALTIME, &t0); 
   vector<Triangle *> trianglesPointers[2];
 
   int sz = triangles[0].size();
   trianglesPointers[0].resize(sz);
   for(int i=0;i<sz;i++) trianglesPointers[0][i]  = & (triangles[0][i]);
+
+  sz = triangles[1].size();
+  trianglesPointers[1].resize(sz);
+  for(int i=0;i<sz;i++) trianglesPointers[1][i]  = & (triangles[1][i]);	
 
 
 //  void init(const vector<Triangle *> trianglesInsert[2], const vector<Point> vertices[2], const int gridSizeLevel1, const int gridSizeLevel2, const Point &p0, const Point &p1,const long long prodThreshold);
@@ -203,14 +516,27 @@ int main(int argc, char **argv) {
 
 
   //After the uniform grid is initialized, let's compute the intersection between the triangles...
+  cerr << "Detecting intersections..." << endl;
+  clock_gettime(CLOCK_REALTIME, &t0); 
+  unordered_set<const Triangle *> trianglesThatIntersect[2];
+  unsigned long long numIntersectionsDetected = computeIntersections(&uniformGrid,trianglesThatIntersect);
 
-
-
-
-  vector<ObjectId> pointIds(pointsToLocate.size());
-  locateVerticesInObject(&uniformGrid,gridSizeLevel1,gridSizeLevel2,pointsToLocate,pointIds);
-
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to detect intersections: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();
+
+
+
+  clock_gettime(CLOCK_REALTIME, &t0); 
+
+  ofstream outputStream(argv[6]);
+  assert(outputStream);
+  classifyTrianglesAndGenerateOutput(&uniformGrid,trianglesThatIntersect,outputStream);
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Total time to classify triangles and generate output: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  Print_Current_Process_Memory_Used();
+
 
 /*
   if(isGtsFile)

@@ -164,7 +164,7 @@ void Print_Current_Process_Memory_Used() {
   std::ostringstream sout;
   pid_t p = getpid();
   sout << "cat /proc/" << p << "/status | grep Vm" << std::ends;
-  cout  << sout.str()  << endl;
+  cerr  << sout.str()  << endl;
   system2(sout.str().c_str());
 }
 

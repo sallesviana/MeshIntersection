@@ -720,14 +720,17 @@ ObjectId computeObjectWherePointIsTwoLevel(const Point &p,int globalGridCoordX,i
 
 
 //Locate a set of vertices in the objects in map 0...
-void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize,int nestedGridSize, const vector<Point> &verticesToLocate,std::vector<ObjectId> &verticesIds) {
+//if meshIdToLocate=0, this means that vertices will be located in mesh 0
+void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vector<Point *> &verticesToLocate,std::vector<ObjectId> &verticesIds,int meshIdToLocate) {
   timespec t0,t1,t01;
 
   int sum = 0; //we use this because the compiler may remove the call if we do not use the result...
 
+  verticesIds.resize(verticesToLocate.size());
 
   int numVerticesToLocate = verticesToLocate.size();
-
+  int gridSize = uniformGrid->gridSizeLevel1;
+  int nestedGridSize = uniformGrid->gridSizeLevel2;
   
   cerr << "Computing CCs of empty boxes..." << endl;
   clock_gettime(CLOCK_REALTIME, &t0);
@@ -756,8 +759,8 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
     for(int gy=0;gy<gridSize;gy++)
       for(int gz=0;gz<gridSize;gz++) {
         //const vector<Triangle *> &trianglesInCell = gridCells[gx][gy][gz].triangles[0];
-        Triangle * *trianglesInCell = gridFirstLevel.getPointerStartListTriangles(0,gridSize,gx,gy,gz);
-        int numTrianglesInCell = gridFirstLevel.numTrianglesInGridCell(0,gridSize,gx,gy,gz);
+        Triangle * *trianglesInCell = gridFirstLevel.getPointerStartListTriangles(meshIdToLocate,gridSize,gx,gy,gz);
+        int numTrianglesInCell = gridFirstLevel.numTrianglesInGridCell(meshIdToLocate,gridSize,gx,gy,gz);
 
         if(gridFirstLevel.hasSecondLevel(gx,gy,gz)) { //we have a nested grid...
             const Nested3DGrid &nestedGrid = *gridFirstLevel.childGrids[gx][gy][gz];//*gridCells[gx][gy][gz].childGrid;
@@ -769,7 +772,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
             for(int nx=0;nx<nestedGridSize;nx++)  //lets initialize the nested grid labels...
               for(int ny=0;ny<nestedGridSize;ny++)
                 for(int nz=0;nz<nestedGridSize;nz++)
-                  if (nestedGrid.numTrianglesInGridCell(0, nestedGridSize,nx,ny,nz) !=0)//if (nestedGrid.gridCells[nx][ny][nz].triangles[0].size()!=0)
+                  if (nestedGrid.numTrianglesInGridCell(meshIdToLocate, nestedGridSize,nx,ny,nz) !=0)//if (nestedGrid.gridCells[nx][ny][nz].triangles[0].size()!=0)
                     labels[nx][ny][nz] = -3;
 
         } else { //this grid cell does not have a nested grid... and there is at least one triangle in this grid cell...
@@ -840,7 +843,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
               p[2] = gz*cellWidth + box0[2] + halfCellWidth;
               bool foundUsingGrid;
               //cerr << "computing id level 1......" << endl;
-              ObjectId id = computeObjectWherePointIsTwoLevel(p,gx*nestedGridSize+nestedGridSize/2,gy*nestedGridSize+nestedGridSize/2,gz*nestedGridSize+nestedGridSize/2 ,0, uniformGrid, tempVertCoords, tempVertCoordMatrix, tempVarsInt,cellsLabels,foundUsingGrid);
+              ObjectId id = computeObjectWherePointIsTwoLevel(p,gx*nestedGridSize+nestedGridSize/2,gy*nestedGridSize+nestedGridSize/2,gz*nestedGridSize+nestedGridSize/2 ,meshIdToLocate, uniformGrid, tempVertCoords, tempVertCoordMatrix, tempVarsInt,cellsLabels,foundUsingGrid);
               //cerr << "setiing to " << id <<  endl;
               setObjectInWhereEmptyCellIs2(gx,gy,gz,-1,-1,-1,gridSize,nestedGridSize,cellsLabels,id,start[0],start[1],start[2],end[0],end[1],end[2]);
               //cellsLabels.labels[gx][gy][gz] = id;
@@ -867,7 +870,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
                     p[2] = (gz*cellWidth + box0[2]) + nestedGridCellWidth*nz + halfCellWidthNestedGrid;
                     bool foundUsingGrid;
                    // cerr << "computing id level 2..." ;
-                    ObjectId id = computeObjectWherePointIsTwoLevel(p,gx*nestedGridSize + nx,gy*nestedGridSize + ny,gz*nestedGridSize +nz,0, uniformGrid, tempVertCoords, tempVertCoordMatrix, tempVarsInt,cellsLabels,foundUsingGrid);
+                    ObjectId id = computeObjectWherePointIsTwoLevel(p,gx*nestedGridSize + nx,gy*nestedGridSize + ny,gz*nestedGridSize +nz,meshIdToLocate, uniformGrid, tempVertCoords, tempVertCoordMatrix, tempVarsInt,cellsLabels,foundUsingGrid);
                    // cerr << "setiing 2 to " << id <<  endl;
                     setObjectInWhereEmptyCellIs2(gx,gy,gz,nx,ny,nz,gridSize,nestedGridSize,cellsLabels,id,start[0],start[1],start[2],end[0],end[1],end[2]);
                    // cerr << "set level 2" << endl;
@@ -955,7 +958,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
     
     #pragma omp for schedule(dynamic,1000)
     for(int i=0;i<numVerticesToLocate;i++) {
-      const Point &p = verticesToLocate[i];        
+      const Point &p = *verticesToLocate[i];        
     
       gxVector[i] = uniformGrid->x_global_cell_from_coord(p[0], tempVar,tempVarsInt);
       gyVector[i] = uniformGrid->y_global_cell_from_coord(p[1], tempVar,tempVarsInt);
@@ -984,7 +987,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
     
     #pragma omp for schedule(dynamic,1000)
     for(int i=0;i<numVerticesToLocate;i++) {
-      const Point &p = verticesToLocate[i];        
+      const Point &p = *verticesToLocate[i];        
     
       //int gx = uniformGrid->x_global_cell_from_coord(p[0], tempVar,tempVarsInt);
       //int gy = uniformGrid->y_global_cell_from_coord(p[1], tempVar,tempVarsInt);
@@ -994,7 +997,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
       int gz = gzVector[i];
 
 
-      ObjectId id2 = computeObjectWherePointIsTwoLevel(p,gx,gy,gz,0, uniformGrid, tempVertCoords, tempVertCoordMatrix, tempVarsInt,cellsLabels,foundUsingGrid);
+      ObjectId id2 = computeObjectWherePointIsTwoLevel(p,gx,gy,gz,meshIdToLocate, uniformGrid, tempVertCoords, tempVertCoordMatrix, tempVarsInt,cellsLabels,foundUsingGrid);
       numVerticesFoundUsingGridLocal += foundUsingGrid;
 
      
@@ -1009,3 +1012,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid, int gridSize
   cerr << "Num vertices found using grid: " << numVerticesFoundUsingGrid << endl;
   cerr << "Percentage vertices found using grid: " << (100.0*numVerticesFoundUsingGrid)/numVerticesToLocate << "\n\n";
 }
+
+
+
+

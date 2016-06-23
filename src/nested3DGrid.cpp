@@ -757,6 +757,7 @@ void Nested3DGridWrapper::init(vector<Triangle *> trianglesInsert[2], const vect
   box[0] = p0;
   box[1] = p1;
 
+
     // Prevent any points exactly at the right edge of the grid.
   VertCoord rangec = max(max(box[1][0]-box[0][0], box[1][1]-box[0][1]),box[1][2]-box[0][2])
                      * slightlyMoreThanOne;
