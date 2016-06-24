@@ -109,7 +109,7 @@ Point boundingBoxTwoMeshesTogetter[2]; //bounding box considering both meshes to
 
 Nested3DGridWrapper uniformGrid;
 
-
+timespec t0BeginProgram, t0AfterDatasetRead;
 
 //=======================================================================================================================
 
@@ -404,10 +404,14 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	}
 	clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to create edges: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  cerr << "Total time (excluding I/O) so far: " << convertTimeMsecs(diff(t0AfterDatasetRead,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();	
   clock_gettime(CLOCK_REALTIME, &t0); 
 
   int totalNumberOutputEdges = edgesIds.size();
+
+  
+ 
 
   //now, let's write everything in the output!
   outputStream << totalNumberOutputVertices << " " << totalNumberOutputEdges << " " << totalNumberOutputTriangles << '\n';
@@ -481,6 +485,7 @@ int main(int argc, char **argv) {
       cerr << "The mesh file may be in the gts format or in the lium format (multimaterial)" << endl;
       exit(1);
   }
+  clock_gettime(CLOCK_REALTIME, &t0BeginProgram);
 
   string mesh0Path = argv[1];
   string mesh1Path = argv[2];
@@ -492,8 +497,17 @@ int main(int argc, char **argv) {
   Print_Current_Process_Memory_Used();
   cerr << "Reading meshes..." << endl;
 
+  timespec t0,t1;
+  clock_gettime(CLOCK_REALTIME, &t0); 
+
   readInputMesh(0,mesh0Path);
   readInputMesh(1,mesh1Path);
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  t0AfterDatasetRead = t1;
+  cerr << "Time to read: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  Print_Current_Process_Memory_Used();
+
 
   boundingBoxTwoMeshesTogetter[0] = bBox[0][0];
   boundingBoxTwoMeshesTogetter[1] = bBox[0][1];
@@ -506,14 +520,11 @@ int main(int argc, char **argv) {
   }
   
 
-  timespec t0,t1;
-  clock_gettime(CLOCK_REALTIME, &t0); 
+  
 
   
 
-  clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to read: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-  Print_Current_Process_Memory_Used();
+  
 
   for(int meshId=0;meshId<2;meshId++)
   	cerr << "Bounding box mesh " << meshId << ": " << setprecision(18) << std::fixed << bBox[meshId][0][0].get_d() << " " << bBox[meshId][0][1].get_d() <<  " " << bBox[meshId][0][2].get_d() << " -- " << bBox[meshId][1][0].get_d() << " " << bBox[meshId][1][1].get_d() << " " << bBox[meshId][1][2].get_d() <<endl;
