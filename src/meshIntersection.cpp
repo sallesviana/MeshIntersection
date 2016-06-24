@@ -237,6 +237,32 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   		trianglesThatIntersect[1].insert(vtPairsTrianglesToProcess[i].second);
   	}
 
+  //TODO: remove this from timing data (this is just a statistic)
+  map<const Triangle *,int> ctIntersectionsEachTriangleFromMap[2];
+  for(int i=0;i<numPairsToTest;i++)  
+  	if(pairsIntersect[i]) {
+  		ctIntersectionsEachTriangleFromMap[0][vtPairsTrianglesToProcess[i].first]++;
+  		ctIntersectionsEachTriangleFromMap[1][vtPairsTrianglesToProcess[i].second]++;
+  	}  
+
+  int ctTrianglesIntersect[2]  = {0,0};	
+  int sumIntersections[2] = {0,0};	
+  int maxIntersections[2] = {0,0};
+  for(int meshId=0;meshId<2;meshId++) {
+  	for(auto &a:ctIntersectionsEachTriangleFromMap[meshId]) {
+  		if(a.second>maxIntersections[meshId])
+  			maxIntersections[meshId] = a.second;
+  		ctTrianglesIntersect[meshId]++;
+  		sumIntersections[meshId]+= a.second;
+  	}
+  	cerr << "Mesh: " << meshId << endl;
+  	cerr << "Max intersections                 : " << maxIntersections[meshId] << endl;
+  	cerr << "Total intersections               : " << sumIntersections[meshId] << endl;
+  	cerr << "Mum triangles intersecting        : " << ctTrianglesIntersect[meshId] << endl;
+  	cerr << "Average intersections per triangle: " << sumIntersections[meshId]*1.0/ctTrianglesIntersect[meshId] << endl;
+  }
+
+
   cerr << "Total tests: " << totalTests << endl;
   cerr << "Total intersections: " << totalIntersections << endl;
            
