@@ -167,6 +167,104 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 }
 
 
+array<double,3> toDoublePoint(const Point &p) {
+	array<double,3> pnew;
+  for(int i=0;i<3;i++) {
+    pnew[i] = p[i].get_d();
+  }
+  return pnew;
+}
+
+void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) {
+	map<array<double,3>, int> vertexToId;
+
+	vector<array<double,3> > vertices;
+	for(auto &e:edgesToStore) {
+		if(vertexToId.count(e.first)==0) {
+			int id = vertexToId.size();
+			vertexToId[e.first] = id;
+			vertices.push_back(e.first);
+		}
+		if(vertexToId.count(e.second)==0) {
+			int id = vertexToId.size();
+			vertexToId[e.second] = id;
+			vertices.push_back(e.second);
+		}
+	}
+
+	ofstream out(path.c_str());
+	out << vertices.size() << " " << edgesToStore.size() << " " << edgesToStore.size() << "\n";
+	for(const auto &v:vertices) {
+		out << v[0] << " " << v[1] << " " << v[2] << "\n";
+	}
+	for(auto &a:edgesToStore) {
+		int v1 = vertexToId[a.first];
+		int v2 = vertexToId[a.second];
+		out << v1+1 << " " << v2+1 << "\n"; //in GTS files we count from 1...
+	}
+	for(int i=1;i<=edgesToStore.size();i++) {
+		out << i << " " << i << " " << i << "\n";
+	}
+
+}
+
+void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pairsIntersectingTriangles) {
+	cerr << "Storing triangles that intersect (and intersection edges...)" << endl;
+	map<Triangle *, vector<Triangle *> > trianglesFromOtherMeshIntersectingThisTriangle[2];
+	
+	for(auto &p:pairsIntersectingTriangles) {
+		trianglesFromOtherMeshIntersectingThisTriangle[0][p.first].push_back(p.second);
+		trianglesFromOtherMeshIntersectingThisTriangle[1][p.second].push_back(p.first);
+	}
+
+	VertCoord p0InterLine[3],p1InterLine[3];
+  VertCoord tempRationals[100];
+  int coplanar;
+	for(int meshId=0;meshId<2;meshId++) {
+		int ctTriangles = 0;
+		for(auto &p:trianglesFromOtherMeshIntersectingThisTriangle[meshId]) {
+			Triangle *t0 = p.first;
+			vector<Triangle *> &trianglesIntersectingT0 = p.second;
+
+			vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+			edgesToStore.push_back(make_pair(toDoublePoint(vertices[meshId][t0->p[0]]),toDoublePoint(vertices[meshId][t0->p[1]])));
+			edgesToStore.push_back(make_pair(toDoublePoint(vertices[meshId][t0->p[1]]),toDoublePoint(vertices[meshId][t0->p[2]])));
+			edgesToStore.push_back(make_pair(toDoublePoint(vertices[meshId][t0->p[2]]),toDoublePoint(vertices[meshId][t0->p[0]])));
+			stringstream outputTrianglePath,outputTriangleCutPath;
+			outputTrianglePath << "triangle_" << meshId << "_" << ctTriangles++ ;
+			outputTriangleCutPath << "cut_" << outputTrianglePath.str();
+			outputTriangleCutPath << ".gts";
+			outputTrianglePath << ".gts";
+			storeEdgesAsGts(outputTrianglePath.str(),edgesToStore);
+
+			Triangle &a = *t0;
+			for(auto t1:trianglesIntersectingT0) {				
+      	Triangle &b = *t1;
+      
+      	int ans = tri_tri_intersect_with_isectline(vertices[0][a.p[0]].data(),vertices[0][a.p[1]].data(),vertices[0][a.p[2]].data()     ,     
+                                                  vertices[1][b.p[0]].data(),vertices[1][b.p[1]].data(),vertices[1][b.p[2]].data(),
+                                                  &coplanar, p0InterLine ,p1InterLine,tempRationals);
+
+      	assert(ans);
+      	if(!coplanar) {
+      		array<double,3> p0,p1;
+      		for(int i=0;i<3;i++) {
+      			p0[i] = p0InterLine[i].get_d();
+      			p1[i] = p1InterLine[i].get_d();
+      		}
+      		edgesToStore.push_back(make_pair(p0,p1));
+      	} else {
+      		cerr << "Coplanar found!" << endl << endl << endl;
+      	}
+			}
+			storeEdgesAsGts(outputTriangleCutPath.str(),edgesToStore);
+		}
+	}
+
+}
+
+
+
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
 unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid, unordered_set<const Triangle *> trianglesThatIntersect[2]) {
@@ -265,6 +363,19 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
 
   cerr << "Total tests: " << totalTests << endl;
   cerr << "Total intersections: " << totalIntersections << endl;
+
+
+  //for debugging/visualization, let's store in a file for each triangle the original edges of that triangle and 
+  //the edges formed by the intersection of other triangles...
+
+  vector<pair<Triangle *,Triangle *> > pairsIntersectingTriangles;
+  for(int i=0;i<numPairsToTest;i++)  
+  	if(pairsIntersect[i]) {
+  		pairsIntersectingTriangles.push_back(vtPairsTrianglesToProcess[i]);
+  	}
+  storeTriangleIntersections(pairsIntersectingTriangles);
+
+
            
   return totalIntersections;
 }
