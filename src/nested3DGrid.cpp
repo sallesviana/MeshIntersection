@@ -812,7 +812,7 @@ void Nested3DGridWrapper::init(vector<Triangle *> trianglesInsert[2], const vect
         int sizeGridCellImap0 = grid.numTrianglesInGridCell(0, gridSizeLevel1,ig,jg,kg);
         int sizeGridCellImap1 = grid.numTrianglesInGridCell(1, gridSizeLevel1,ig,jg,kg);
 
-        if(sizeGridCellImap0 >= prodThreshold || sizeGridCellImap1 >= prodThreshold) { //criteria to refine grid cells..
+        if(sizeGridCellImap0*sizeGridCellImap1 >= prodThreshold) { //criteria to refine grid cells..
           //refine this grid cell..
         	//cerr << "Will refine: " << ig << " " << jg << " " << kg << " ---> " << sizeGridCellImap0 << " " << sizeGridCellImap1 << endl;
           gridCellsToRefine.push_back({ig,jg,kg});
