@@ -83,6 +83,8 @@ timespec diff(timespec start, timespec end)
         return temp;
 }
 
+double timeReadData,timeCreateGrid,timeDetectIntersections,timeClassifyTriangles;
+
 //===============================================================
 // Constants...
 //===============================================================
@@ -175,8 +177,38 @@ array<double,3> toDoublePoint(const Point &p) {
   return pnew;
 }
 
+/*
+void saveEdges(const string &path) {
+  ofstream fout(path.c_str());
+
+  int numVert = 3*edges.size();
+  int numEdges = 3*edges.size();
+  int numFaces = edges.size();
+  fout << numVert << " " << numEdges << " " << numFaces << "\n";
+  for(pair< array<VertCoord,3>,array<VertCoord,3> > e:edges) {
+    fout << e.first[0].get_d() << " " << e.first[1].get_d() << " " << e.first[2].get_d() << "\n";
+    fout << e.second[0].get_d() << " " << e.second[1].get_d() << " " << e.second[2].get_d() << "\n";
+    fout << e.second[0].get_d() << " " << e.second[1].get_d() << " " << e.second[2].get_d() << "\n";
+  }
+  fout << endl;
+
+  int start = 1;
+  for(int i=0;i<numFaces;i++) {
+    fout << start << " " << start+1 << "\n";
+    fout << start+1 << " " << start+2 << "\n";
+    fout << start+2 << " " << start << "\n";
+    start+= 3;
+  }
+  fout << endl;
+  start = 1;
+  for(int i=0;i<numFaces;i++) {
+    fout << start << " " << start+1 << " " << start+2 <<  "\n";
+    start+= 3;
+  }
+}
+*/
 void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) {
-	map<array<double,3>, int> vertexToId;
+	/*map<array<double,3>, int> vertexToId;
 
 	vector<array<double,3> > vertices;
 	for(auto &e:edgesToStore) {
@@ -190,23 +222,38 @@ void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<
 			vertexToId[e.second] = id;
 			vertices.push_back(e.second);
 		}
-	}
+	}*/
 
-	ofstream out(path.c_str());
-	out << vertices.size() << " " << edgesToStore.size() << " " << edgesToStore.size() << "\n";
-	for(const auto &v:vertices) {
-		out << v[0] << " " << v[1] << " " << v[2] << "\n";
-	}
-	for(auto &a:edgesToStore) {
-		int v1 = vertexToId[a.first];
-		int v2 = vertexToId[a.second];
-		out << v1+1 << " " << v2+1 << "\n"; //in GTS files we count from 1...
-	}
-	for(int i=1;i<=edgesToStore.size();i++) {
-		out << i << " " << i << " " << i << "\n";
-	}
+	ofstream fout(path.c_str());
+	int numVert = 3*edgesToStore.size();
+  int numEdges = 3*edgesToStore.size();
+  int numFaces = edgesToStore.size();
+
+	fout << numVert << " " << numEdges << " " << numFaces << "\n";
+	for(pair<array<double,3>,array<double,3>> e:edgesToStore) {
+    fout << e.first[0] << " " << e.first[1] << " " << e.first[2] << "\n";
+    fout << e.second[0] << " " << e.second[1] << " " << e.second[2] << "\n";
+    fout << e.second[0] << " " << e.second[1] << " " << e.second[2] << "\n";
+  }
+  int start = 1;
+  for(int i=0;i<numFaces;i++) {
+    fout << start << " " << start+1 << "\n";
+    fout << start+1 << " " << start+2 << "\n";
+    fout << start+2 << " " << start << "\n";
+    start+= 3;
+  }  
+  start = 1;
+  for(int i=0;i<numFaces;i++) {
+    fout << start << " " << start+1 << " " << start+2 <<  "\n";
+    start+= 3;
+  }
+
+
+
 
 }
+
+
 
 void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pairsIntersectingTriangles) {
 	cerr << "Storing triangles that intersect (and intersection edges...)" << endl;
@@ -220,29 +267,31 @@ void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pai
 	VertCoord p0InterLine[3],p1InterLine[3];
   VertCoord tempRationals[100];
   int coplanar;
+
+  
 	for(int meshId=0;meshId<2;meshId++) {
+		vector<pair<array<double,3>,array<double,3>> > edgesToStore;
 		int ctTriangles = 0;
 		for(auto &p:trianglesFromOtherMeshIntersectingThisTriangle[meshId]) {
 			Triangle *t0 = p.first;
 			vector<Triangle *> &trianglesIntersectingT0 = p.second;
 
-			vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+			
 			edgesToStore.push_back(make_pair(toDoublePoint(vertices[meshId][t0->p[0]]),toDoublePoint(vertices[meshId][t0->p[1]])));
 			edgesToStore.push_back(make_pair(toDoublePoint(vertices[meshId][t0->p[1]]),toDoublePoint(vertices[meshId][t0->p[2]])));
 			edgesToStore.push_back(make_pair(toDoublePoint(vertices[meshId][t0->p[2]]),toDoublePoint(vertices[meshId][t0->p[0]])));
-			stringstream outputTrianglePath,outputTriangleCutPath;
-			outputTrianglePath << "triangle_" << meshId << "_" << ctTriangles++ ;
-			outputTriangleCutPath << "cut_" << outputTrianglePath.str();
-			outputTriangleCutPath << ".gts";
-			outputTrianglePath << ".gts";
-			storeEdgesAsGts(outputTrianglePath.str(),edgesToStore);
+			//stringstream outputTrianglePath,outputTriangleCutPath;
+			//outputTrianglePath << "out/triangle_" << meshId << "_" << ctTriangles++  << ".gts";
+			//outputTriangleCutPath << "out/cut_triangle_" << meshId << "_" << ctTriangles << ".gts";
+
+			//storeEdgesAsGts(outputTrianglePath.str(),edgesToStore);
 
 			Triangle &a = *t0;
 			for(auto t1:trianglesIntersectingT0) {				
       	Triangle &b = *t1;
       
-      	int ans = tri_tri_intersect_with_isectline(vertices[0][a.p[0]].data(),vertices[0][a.p[1]].data(),vertices[0][a.p[2]].data()     ,     
-                                                  vertices[1][b.p[0]].data(),vertices[1][b.p[1]].data(),vertices[1][b.p[2]].data(),
+      	int ans = tri_tri_intersect_with_isectline(vertices[meshId][a.p[0]].data(),vertices[meshId][a.p[1]].data(),vertices[meshId][a.p[2]].data()     ,     
+                                                  vertices[1-meshId][b.p[0]].data(),vertices[1-meshId][b.p[1]].data(),vertices[1-meshId][b.p[2]].data(),
                                                   &coplanar, p0InterLine ,p1InterLine,tempRationals);
 
       	assert(ans);
@@ -257,10 +306,14 @@ void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pai
       		cerr << "Coplanar found!" << endl << endl << endl;
       	}
 			}
-			storeEdgesAsGts(outputTriangleCutPath.str(),edgesToStore);
+			
 		}
+		if(meshId==0)
+			storeEdgesAsGts("out/triangles0Intersect.gts",edgesToStore);
+		else 
+			storeEdgesAsGts("out/triangles1Intersect.gts",edgesToStore);
 	}
-
+	
 }
 
 
@@ -268,6 +321,10 @@ void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pai
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
 unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid, unordered_set<const Triangle *> trianglesThatIntersect[2]) {
+  timespec t0,t1;
+  clock_gettime(CLOCK_REALTIME, &t0);
+   
+
   unsigned long long totalIntersections = 0;
 
   vector<pair<Triangle *,Triangle *> > vtPairsTrianglesToProcess;
@@ -335,6 +392,9 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   		trianglesThatIntersect[1].insert(vtPairsTrianglesToProcess[i].second);
   	}
 
+  clock_gettime(CLOCK_REALTIME, &t1);
+  timeDetectIntersections = convertTimeMsecs(diff(t0,t1))/1000; 
+
   //TODO: remove this from timing data (this is just a statistic)
   map<const Triangle *,int> ctIntersectionsEachTriangleFromMap[2];
   for(int i=0;i<numPairsToTest;i++)  
@@ -388,8 +448,10 @@ vector<Point> vertices[2];
 vector<Triangle> triangles[2]; //
 */
 void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, const unordered_set<const Triangle *> trianglesThatIntersect[2],ostream &outputStream) {
-	timespec t0,t1;
+	timespec t0,t0ThisFunction,t1;
 	clock_gettime(CLOCK_REALTIME, &t0);
+	t0ThisFunction = t0;
+
 	int ctIntersectingTrianglesTotal =0;
 	vector<Triangle> outputTriangles[2]; //output triangles generated from triangles of each mesh
 	for(int meshId=0;meshId<2;meshId++){
@@ -514,6 +576,8 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 		}
 	}
 	clock_gettime(CLOCK_REALTIME, &t1);
+	timeClassifyTriangles = convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
+
   cerr << "Time to create edges: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   cerr << "Total time (excluding I/O) so far: " << convertTimeMsecs(diff(t0AfterDatasetRead,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();	
@@ -617,6 +681,7 @@ int main(int argc, char **argv) {
   clock_gettime(CLOCK_REALTIME, &t1);
   t0AfterDatasetRead = t1;
   cerr << "Time to read: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  timeReadData = convertTimeMsecs(diff(t0,t1))/1000; 
   Print_Current_Process_Memory_Used();
 
 
@@ -664,7 +729,7 @@ int main(int argc, char **argv) {
 
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to create and refine grid: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
+  timeCreateGrid = convertTimeMsecs(diff(t0,t1))/1000; 
 
   //After the uniform grid is initialized, let's compute the intersection between the triangles...
   cerr << "Detecting intersections..." << endl;
@@ -673,7 +738,7 @@ int main(int argc, char **argv) {
   unsigned long long numIntersectionsDetected = computeIntersections(&uniformGrid,trianglesThatIntersect);
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to detect intersections: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  cerr << "Time to detect intersections (includes time for computing statistics and for saving intersections for debugging): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();
 
 
@@ -688,7 +753,13 @@ int main(int argc, char **argv) {
   cerr << "Total time to classify triangles and generate output: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();
 
-
+  cerr << "----------------------------------------------------" << endl;
+  cerr << "Summary of ACTUAL times (excluding the times to compute statistics, to write edges for debugging, etc): " << endl;
+  cerr << "Time to read the data         : " << timeReadData << endl;
+  cerr << "Time to create and refine grid: " << timeCreateGrid << endl;
+  cerr << "Time to detect intersections  : " << timeDetectIntersections << endl;  
+  cerr << "Time to classify the triangles: " << timeClassifyTriangles << endl;
+  cerr << "----------------------------------------------------" << endl;
 /*
   if(isGtsFile)
     for(const ObjectId& id:pointIds) {
