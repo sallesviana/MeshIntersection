@@ -655,10 +655,13 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	clock_gettime(CLOCK_REALTIME, &t1);
 	cerr << "T so far: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 
-	int szOutputEdges = outputEdges.size();
-	for (int i=0;i<szOutputEdges;i++) {
+	
+	int totalNumberOutputEdges = outputEdges.size();
+	vector<map<int,int> > mapEdgesIds2(totalNumberOutputVertices);
+	for (int i=0;i<totalNumberOutputEdges;i++) {
 		const pair<int,int> &e = outputEdges[i];
-		edgesIds[e] = i;
+		//edgesIds[e] = i;
+		mapEdgesIds2[e.first][e.second] = i;
 	}
 
 	clock_gettime(CLOCK_REALTIME, &t1);
@@ -669,7 +672,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
   Print_Current_Process_Memory_Used();	
   clock_gettime(CLOCK_REALTIME, &t0); 
 
-  int totalNumberOutputEdges = edgesIds.size();
+  
 
   
  
@@ -705,15 +708,18 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			pair<int,int> e;
 			if (a<b) {e.first = a; e.second = b;}
 			else     {e.first = b; e.second = a;}
-			outputStream << edgesIds[e]+1 << " "; //we start counting from 1 in GTS files...
+			//outputStream << edgesIds[e]+1 << " "; //we start counting from 1 in GTS files...
+			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
 
 			if (b<c) {e.first = b; e.second = c;}
 			else     {e.first = c; e.second = b;}
-			outputStream << edgesIds[e]+1 << " ";
-
+			//outputStream << edgesIds[e]+1 << " ";
+			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
+			
 			if (c<a) {e.first = c; e.second = a;}
 			else     {e.first = a; e.second = c;}
-			outputStream << edgesIds[e]+1 << "\n";
+			//outputStream << edgesIds[e]+1 << "\n";
+			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
 		}
 	
 		cerr << "Output vertices         : " << totalNumberOutputVertices << endl;
