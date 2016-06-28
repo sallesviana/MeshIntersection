@@ -648,6 +648,14 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			}
 		}
 	}
+	sort(outputEdges.begin(),outputEdges.end());
+	auto newEndItr = unique(outputEdges.begin(),outputEdges.end());
+	outputEdges.resize(newEndItr- outputEdges.begin());
+	int szOutputEdges = outputEdges.size();
+	for (int i=0;i<szOutputEdges;i++) {
+		const pair<int,int> &e = outputEdges[i];
+		edgesIds[e] = i;
+	}
 
 	clock_gettime(CLOCK_REALTIME, &t1);
 	timeClassifyTriangles = convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
