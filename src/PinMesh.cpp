@@ -721,7 +721,7 @@ ObjectId computeObjectWherePointIsTwoLevel(const Point &p,int globalGridCoordX,i
 
 //Locate a set of vertices in the objects in map 0...
 //if meshIdToLocate=0, this means that vertices will be located in mesh 0
-//#define PINMESH_VERBOSE
+#define PINMESH_VERBOSE
 
 void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vector<Point *> &verticesToLocate,std::vector<ObjectId> &verticesIds,int meshIdToLocate) {
   timespec t0,t1,t01;
@@ -898,6 +898,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
   cerr << "Time only to compute CCs: " << convertTimeMsecs(diff(t01,t1))/1000 << endl;
   #endif
 
+  #ifdef PINMESH_VERBOSE   
   //computing some statistics...
   int numEmptyGridCells=0,numNonEmptyGridCells= 0;
    for(int gx=0;gx<gridSize;gx++) 
@@ -925,7 +926,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
 			            }
           }                             
         } 
-  #ifdef PINMESH_VERBOSE    
+   
   cerr << "Empty grid cells: " << numEmptyGridCells << endl;
   cerr << "Non empty grid cells: " << numNonEmptyGridCells << endl;
   cerr << "Percent empty cells: " << (100.0*numEmptyGridCells)/(numEmptyGridCells+numNonEmptyGridCells) << endl; 
