@@ -566,8 +566,10 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
   int totalNumberOutputVertices = numVerticesMesh0InOutput+numVerticesMesh1InOutput;
   int totalNumberOutputTriangles = outputTriangles[0].size() + outputTriangles[1].size();
 
+  
   unordered_map<pair<int,int>,int> edgesIds; //maybe use unordered_map for performance (if necessary...)
   vector<pair<int,int> > outputEdges;
+  /*
   for(int meshId=0;meshId<2;meshId++) {
 	  for(const Triangle &t : outputTriangles[meshId]) {
 			int a = t.p[0];
@@ -600,6 +602,52 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			}
 		}
 	}
+	*/
+	
+	//vector<pair<int,int> > outputEdgesWithRepetition[2];
+
+	for(int meshId=0;meshId<2;meshId++) {
+		#pragma omp parallel
+		{
+			vector<pair<int,int> > myEdgesFound;	
+			const int sz = 	outputTriangles[meshId].size();
+			#pragma omp parallel for
+		  for(int i=0;i<sz;i++) {
+		  	const Triangle &t = outputTriangles[meshId][i];
+				int a = t.p[0];
+				int b = t.p[1];
+				int c = t.p[2];
+
+				pair<int,int> e;
+				if (a<b) {e.first = a; e.second = b;}
+				else     {e.first = b; e.second = a;}
+				myEdgesFound.push_back(e);
+
+				if (b<c) {e.first = b; e.second = c;}
+				else     {e.first = c; e.second = b;}
+				myEdgesFound.push_back(e);
+
+				if (c<a) {e.first = c; e.second = a;}
+				else     {e.first = a; e.second = c;}
+				myEdgesFound.push_back(e);
+			}
+			sort(myEdgesFound.begin(),myEdgesFound.end());
+			auto newEndItr = unique(myEdgesFound.begin(),myEdgesFound.end());
+			myEdgesFound.resize(newEndItr- myEdgesFound.begin());
+
+			#pragma omp critical
+			{
+				for (const pair<int,int> &e:myEdgesFound) {
+					if(edgesIds.count(e)==0) {
+						outputEdges.push_back(e);
+						int sz = edgesIds.size();
+						edgesIds[e] = sz;
+					}
+				}
+			}
+		}
+	}
+
 	clock_gettime(CLOCK_REALTIME, &t1);
 	timeClassifyTriangles = convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
 
