@@ -611,7 +611,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 		{
 			vector<pair<int,int> > myEdgesFound;	
 			const int sz = 	outputTriangles[meshId].size();
-			#pragma omp parallel for
+			#pragma omp for
 		  for(int i=0;i<sz;i++) {
 		  	const Triangle &t = outputTriangles[meshId][i];
 				int a = t.p[0];
