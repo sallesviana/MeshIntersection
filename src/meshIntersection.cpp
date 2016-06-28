@@ -637,12 +637,13 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 
 			#pragma omp critical
 			{
+
 				for (const pair<int,int> &e:myEdgesFound) {
-					if(edgesIds.count(e)==0) {
+					//if(edgesIds.count(e)==0) {
 						outputEdges.push_back(e);
-						int sz = edgesIds.size();
-						edgesIds[e] = sz;
-					}
+					//	int sz = edgesIds.size();
+					//	edgesIds[e] = sz;
+					//}
 				}
 			}
 		}
