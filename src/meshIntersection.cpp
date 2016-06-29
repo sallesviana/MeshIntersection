@@ -637,14 +637,14 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 
 			#pragma omp critical
 			{
-
-				for (const pair<int,int> &e:myEdgesFound) {
+				outputEdges.insert(outputEdges.end(),myEdgesFound.begin(),myEdgesFound.end());
+				/*for (const pair<int,int> &e:myEdgesFound) {
 					//if(edgesIds.count(e)==0) {
 						outputEdges.push_back(e);
 					//	int sz = edgesIds.size();
 					//	edgesIds[e] = sz;
 					//}
-				}
+				}*/
 			}
 		}
 	}
@@ -715,7 +715,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			else     {e.first = c; e.second = b;}
 			//outputStream << edgesIds[e]+1 << " ";
 			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
-			
+
 			if (c<a) {e.first = c; e.second = a;}
 			else     {e.first = a; e.second = c;}
 			//outputStream << edgesIds[e]+1 << "\n";
