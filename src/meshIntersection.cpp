@@ -607,6 +607,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	//vector<pair<int,int> > outputEdgesWithRepetition[2];
 
 	for(int meshId=0;meshId<2;meshId++) {
+		int numNewEdgesToAdd =0;
 		#pragma omp parallel
 		{
 			vector<pair<int,int> > myEdgesFound;	
@@ -634,6 +635,14 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			sort(myEdgesFound.begin(),myEdgesFound.end());
 			auto newEndItr = unique(myEdgesFound.begin(),myEdgesFound.end());
 			myEdgesFound.resize(newEndItr- myEdgesFound.begin());
+
+			#pragma omp atomic
+			numNewEdgesToAdd+= myEdgesFound.size();
+
+			#pragma omp barrier
+
+			#pragma omp single
+			outputEdges.resize(outputEdges.size()+numNewEdgesToAdd);
 
 			#pragma omp critical
 			{
