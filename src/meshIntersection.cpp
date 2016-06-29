@@ -30,8 +30,6 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-
-
 using namespace std;
 
 
@@ -615,7 +613,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 		{			
 			const int sz = 	outputTriangles[meshId].size();
 			vector<pair<int,int> > myEdgesFound;	
-			myEdgesFound.reserve((3.05*sz)/omp_get_num_threads());
+			
 
 			#pragma omp for
 		  for(int i=0;i<sz;i++) {
