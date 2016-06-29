@@ -482,9 +482,14 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	vector<Triangle> outputTriangles[2]; //output triangles generated from triangles of each mesh
 	for(int meshId=0;meshId<2;meshId++){
 		vector<Point *> verticesToLocateInOtherMesh;
+
+		vector<int> global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate;
 		for(const Triangle&t:triangles[meshId]) {
 			if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-				verticesToLocateInOtherMesh.push_back(&(vertices[meshId][t.p[0]]));				
+				verticesToLocateInOtherMesh.push_back(&(vertices[meshId][t.p[0]]));			
+				global_x_coord_vertex_to_locate.push_back(uniformGrid->get_global_x_coord_mesh_vertex(meshId,t.p[0]));	
+				global_y_coord_vertex_to_locate.push_back(uniformGrid->get_global_y_coord_mesh_vertex(meshId,t.p[0]));	
+				global_z_coord_vertex_to_locate.push_back(uniformGrid->get_global_z_coord_mesh_vertex(meshId,t.p[0]));	
 			} else {
 				ctIntersectingTrianglesTotal++;
 			}
@@ -495,7 +500,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 
 		timespec t0,t1;
 		clock_gettime(CLOCK_REALTIME, &t0);
-		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,locationOfEachVertexInOtherMesh,1-meshId);
+		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-meshId);
 		clock_gettime(CLOCK_REALTIME, &t1);
   	cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 		//now, we know in what object of the other mesh each triangle that does not intersect other triangles is...

@@ -176,11 +176,18 @@ struct Nested3DGridWrapper {
   int getNumTriangleSecondLevelCell(Nested3DGrid &firstLevelGrid,int ig, int jg, int kg);
 	*/
 
-  
-
+  int get_global_x_coord_mesh_vertex(int iMesh,int vertexId) const {
+    return gridCellEachPointLevel1[iMesh][vertexId][0]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][0];
+  }
+  int get_global_y_coord_mesh_vertex(int iMesh,int vertexId) const {
+    return gridCellEachPointLevel1[iMesh][vertexId][1]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][1];
+  }
+  int get_global_z_coord_mesh_vertex(int iMesh,int vertexId) const {
+    return gridCellEachPointLevel1[iMesh][vertexId][2]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][2];
+  }
 
   //Returns the "global" cell where a point with a given coordinate is...
-  //We call a global grid coordinate the coordinate supposing the grid has  resolution (gridSizeLevel1*gridSizeLevel2)^2
+  //We call a global grid coordinate the coordinate supposing the grid has  resolution (gridSizeLevel1*gridSizeLevel2)^3
   //Thus, if the x global coordinate ix xg --> the coordinate of the point in the first level will be (xg/gridSizeLevel2) and in the second level it will be (xg%gridSizeLevel2)
   int x_global_cell_from_coord(const VertCoord &x, VertCoord &tempVar,big_int tempVarsInt[]) const {
     tempVar = x;
