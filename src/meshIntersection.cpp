@@ -26,6 +26,8 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include <unordered_map>
 #include <time.h>
 #include "rationals.h"
+#include <omp.h>
+
 
 
 
@@ -463,6 +465,7 @@ namespace std
     }
   };
 }
+
 //----------------------------------------------------------------------------
 
 /*//Each vector represents the vertices of a layer
@@ -609,9 +612,11 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	for(int meshId=0;meshId<2;meshId++) {
 		int numNewEdgesToAdd =0;
 		#pragma omp parallel
-		{
-			vector<pair<int,int> > myEdgesFound;	
+		{			
 			const int sz = 	outputTriangles[meshId].size();
+			vector<pair<int,int> > myEdgesFound;	
+			myEdgesFound.reserve((3.05*sz)/omp_get_num_threads());
+
 			#pragma omp for
 		  for(int i=0;i<sz;i++) {
 		  	const Triangle &t = outputTriangles[meshId][i];
@@ -636,13 +641,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			auto newEndItr = unique(myEdgesFound.begin(),myEdgesFound.end());
 			myEdgesFound.resize(newEndItr- myEdgesFound.begin());
 
-			#pragma omp atomic
-			numNewEdgesToAdd+= myEdgesFound.size();
-
-			#pragma omp barrier
-
-			#pragma omp single
-			outputEdges.resize(outputEdges.size()+numNewEdgesToAdd);
+			
 
 			#pragma omp critical
 			{
