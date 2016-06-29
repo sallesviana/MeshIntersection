@@ -719,7 +719,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			if (c<a) {e.first = c; e.second = a;}
 			else     {e.first = a; e.second = c;}
 			//outputStream << edgesIds[e]+1 << "\n";
-			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
+			outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";
 		}
 	
 		cerr << "Output vertices         : " << totalNumberOutputVertices << endl;
