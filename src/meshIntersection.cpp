@@ -145,6 +145,8 @@ void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k
 //pairs will appear maximum once in the vector
 //the first element in the pair is a triangle from mesh 0 and the second one is from mesh 1
 void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
+	timespec t0,t1;
+	clock_gettime(CLOCK_REALTIME, &t0);
 
   int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
 	int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
@@ -159,13 +161,20 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 			      		  extractPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2,pairsTrianglesToProcess);   
 			      	}    
         } else {
-
         	extractPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1,pairsTrianglesToProcess);         
         }
       }
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "T before sort: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+
   sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
   vector<pair<Triangle *,Triangle *> >::iterator it = std::unique (pairsTrianglesToProcess.begin(), pairsTrianglesToProcess.end());
-  pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10    
+  pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10 
+
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "T after sort: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";    
 }
 
 
