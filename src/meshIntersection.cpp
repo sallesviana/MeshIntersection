@@ -131,6 +131,7 @@ void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k
 
   Triangle **ptrTriMesh0 = grid->getPointerStartListTriangles(0,gridSize,i,j,k);
   Triangle **ptrTriMesh1Temp = grid->getPointerStartListTriangles(1,gridSize,i,j,k);
+
   for(int tA = 0;tA < numTrianglesMesh0; tA++) {
   	Triangle **ptrTriMesh1 = ptrTriMesh1Temp;
     for(int tB=0;tB<numTrianglesMesh1;tB++) {
@@ -147,6 +148,8 @@ void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k
 void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
 	timespec t0,t1;
 	clock_gettime(CLOCK_REALTIME, &t0);
+
+	pairsTrianglesToProcess.reserve(min(uniformGrid->trianglesInGrid[0]->size(),uniformGrid->trianglesInGrid[1]->size()));
 
   int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
 	int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
@@ -359,7 +362,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
     VertCoord tempRationals[100];
 
     vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edgesTemp;
-    edgesTemp.reserve(numPairsToTest/10);
+    //edgesTemp.reserve(numPairsToTest/10);
     
     unsigned long long totalIntersectionsTemp = 0;
     unsigned long long totalTestsTemp = 0;
