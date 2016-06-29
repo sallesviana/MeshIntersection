@@ -331,7 +331,8 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   
   
   getPairsTrianglesInSameUnifGridCells(uniformGrid,vtPairsTrianglesToProcess);
-
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time creating list of pairs of triangles to process (intersection): " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
   //pairsTrianglesToProcess.reserve(1804900);
   
 
@@ -433,7 +434,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   	if(pairsIntersect[i]) {
   		pairsIntersectingTriangles.push_back(vtPairsTrianglesToProcess[i]);
   	}
-  storeTriangleIntersections(pairsIntersectingTriangles);
+  storeTriangleIntersections(pairsIntersectingTriangles); // TODO: use the edges vector (we already have the edges from intersections!!!)
 
 
            
