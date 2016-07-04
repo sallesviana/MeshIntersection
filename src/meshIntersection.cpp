@@ -63,6 +63,30 @@ T square(const T x) { return x*x; }
 template <class T>    // Squared length from dx and dy
 T sqlen(const T dx, const T dy) { return square(dx)+square(dy); }
 
+
+//From Boost, for using pairs in unordered_sets:
+template <class T>
+inline void hash_combine(std::size_t & seed, const T & v)
+{
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+namespace std
+{
+  template<typename S, typename T> struct hash<pair<S, T>>
+  {
+    inline size_t operator()(const pair<S, T> & v) const
+    {
+      size_t seed = 0;
+      ::hash_combine(seed, v.first);
+      ::hash_combine(seed, v.second);
+      return seed;
+    }
+  };
+}
+
+
 // Utils for measuring time...
 
 double convertTimeMsecs(const timespec &t){
@@ -83,7 +107,7 @@ timespec diff(timespec start, timespec end)
         return temp;
 }
 
-double timeReadData,timeCreateGrid,timeDetectIntersections,timeClassifyTriangles;
+double timeReadData,timeCreateGrid,timeDetectIntersections,timeRetesselate,timeClassifyTriangles;
 
 //===============================================================
 // Constants...
@@ -100,11 +124,13 @@ double timeReadData,timeCreateGrid,timeDetectIntersections,timeClassifyTriangles
 
 
 //Each vector represents the vertices of a layer
-vector<Point> vertices[2];
+//The first layear is mesh 0, the second is mesh1 and the third contains vertices generated from the intersection of the two meshes...
+vector<Point> vertices[3]; 
 
 //Each vector represents a set of objects in the same layer
 //The objects are represented by a set of triangles (defining their boundaries)
-vector<Triangle> triangles[2]; //
+vector<Triangle> triangles[2]; 
+//vector<Triangle> trianglesFromRetesselation[2]; //triangles formed by retesselating triangles from each mesh...
 
 Point bBox[2][2] ;//bounding box of each mesh (each boundingbox has two vertices)
 Point boundingBoxTwoMeshesTogetter[2]; //bounding box considering both meshes togetter
@@ -115,7 +141,6 @@ timespec t0BeginProgram, t0AfterDatasetRead;
 
 //=======================================================================================================================
 
-vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edges;
 
 #include "PinMesh.cpp"
 
@@ -330,6 +355,160 @@ void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pai
 
 
 
+
+
+
+
+
+
+
+//returns true iff the candidate edge (represented using the ids of the vertices in meshIdToProcess -- negative vertices are in the "common layer")
+//intersects an edge from the set edgesToTest (these edges are in the same layer).
+//we do not consider intersections in endpoints..
+bool intersects(const pair<int,int> &candidateEdge,const set<pair<int,int> > &edgesToTest,int meshIdToProcess) {
+	return false;
+}
+
+
+
+
+//edges represent the edges generated from the intersection of the intersecting triangles.
+//intersectingTrianglesThatGeneratedEdges[i] contains the pair of triangles whose intersection generated edges[i]
+
+void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,array<VertCoord,3> > > &edges, const vector< pair<Triangle *,Triangle *> > &intersectingTrianglesThatGeneratedEdges) {
+	assert(edges.size()==intersectingTrianglesThatGeneratedEdges.size());
+	timespec t0,t1;
+  cerr << "Retesselating triangles..." << "\n";
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+
+	unordered_map<const Triangle *, vector<int> > intersectingEdgesInEachTriangle[2];
+  //trianglesIntersectingEachTriangle[0] --> for each triangle t from map 0 (that intersects other triangles), 
+  //trianglesIntersectingEachTriangle[0][t] is a vector of triangles from mesh 1 intersecting t...
+
+  map< Point, int > vertexIdPlusOne; //lets add 1 to the ids (this will simplify the creation of new entries...)
+  
+  int numEdges = edges.size();
+  vector<pair<int,int> > edgesUsingVertexId(numEdges); //if we have an edge (a,b)  --> a<b
+  for(int i=0;i<numEdges;i++) {
+  	//cerr << "i " << i << " " << numEdges << endl;
+  	const auto &e = edges[i];
+  	int idA = vertexIdPlusOne[e.first];
+  	if(idA==0) {
+  		idA = vertexIdPlusOne[e.first] = vertices[2].size()+1; //when we create a new vertex we start counting from 1 (only here!!!)
+  		vertices[2].push_back(e.first);
+  	}
+  	int idB = vertexIdPlusOne[e.second];
+  	if(idB==0) {
+  		idB = vertexIdPlusOne[e.second] = vertices[2].size()+1;  //when we create a new vertex we start counting from 1 (only here!!!)
+  		vertices[2].push_back(e.second);
+  	}
+  	idA = -idA; //for simplicity, let's use a negative id to referrence a "shared" vertex (from layer 2)
+  	idB = -idB;
+  	if(idA > idB) swap(idA,idB); 
+  	edgesUsingVertexId[i] = make_pair(idA,idB); 
+
+  	//the intersection of tA (from mesh 0) with tB generated the i-th edge...
+  	const Triangle *tA = intersectingTrianglesThatGeneratedEdges[i].first;
+  	const Triangle *tB = intersectingTrianglesThatGeneratedEdges[i].second;
+
+  	intersectingEdgesInEachTriangle[0][tA].push_back(i);
+  	intersectingEdgesInEachTriangle[1][tB].push_back(i);
+  }
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to extract the edges intersecting each triangle and create the new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+ 
+
+  //edgesUsingVertexId : each edge contains the ids of its two vertices (idA,idB)
+  //idA,idB start with 0 and they represent the position of the vertex in vertices[2].
+  //i.e., if an edge is = (idA,idB) --> the two vertices that form this edge are vertices[2][idA],vertices[2][idB]
+
+  //for each triangle t from mesh meshId, intersectingEdgesInEachTriangle[meshId][t] contains a vector of ids of edges formed by the intersection
+  //of t with other triangles...
+
+
+  //TODO: special cases, collinear, etc..
+
+  vector<pair<int,int> > newTriEdgesFromEachMap[2];
+
+  for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++)
+	  for(const auto &ts:intersectingEdgesInEachTriangle[meshIdToProcess]) {
+	  	//ts.first = a triangle from map 0
+	  	//ts.second = list of edges formed by the intersection of ts.first with other triangles...
+	  	const auto &t = *ts.first;
+	  	const auto &edgesFromIntersection =  ts.second;
+
+	  	//we need to "retesselate" t and orient all the new triangles properly
+
+	  	//this set will store the edges we used in the retesselated triangle
+	  	//we need to choose what edges to create and, then, use these new edges to reconstruct the triangulation..
+	  	set<pair<int,int> > edgesUsedInThisTriangle; //TODO: maybe use unordered_set (see overhead difference...)
+
+	  	//The edges from intersection will, necessarelly, be in the triangulation...
+	  	//edgesUsedInThisTriangle.insert(edgesFromIntersection.begin(),edgesFromIntersection.end());
+	  	for(int edgeId:edgesFromIntersection) {
+	  		//cerr << edgesUsingVertexId[edgeId].first << " " << edgesUsingVertexId[edgeId].second << endl;
+	  		edgesUsedInThisTriangle.insert(edgesUsingVertexId[edgeId]);
+	  	}
+
+	  	vector<int> verticesToTesselate;
+	  	for(const auto &p:edgesUsedInThisTriangle) {
+	  		verticesToTesselate.push_back(p.first);
+	  		verticesToTesselate.push_back(p.second);
+	  	}
+	  	verticesToTesselate.push_back(t.p[0]);
+	  	verticesToTesselate.push_back(t.p[1]);
+	  	verticesToTesselate.push_back(t.p[2]);
+	  	sort(verticesToTesselate.begin(),verticesToTesselate.end());
+	  	auto newEnd = unique(verticesToTesselate.begin(),verticesToTesselate.end());
+	  	verticesToTesselate.resize(newEnd-verticesToTesselate.begin());
+	  	int numVTriangle = verticesToTesselate.size();
+	  	//cerr << "Num vertices to tesselate: " << numVTriangle << "\n";
+	  	for(int i=0;i<numVTriangle;i++)
+	  		for(int j=i+1;j<numVTriangle;j++) {
+	  			int v1 = verticesToTesselate[i];
+	  			int v2 = verticesToTesselate[j];
+	  						
+	  			assert(v1<v2); //the vector was previously sorted! also, all elements should be unique!
+	  			//let's try to insert edge (v1,v2)...
+	  			pair<int,int> candidateEdge(v1,v2);
+	  			if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; //the edge was already used...
+	  			if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshIdToProcess)) {
+	  				edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
+	  			}	  			
+	  		}
+	  	//edgesUsedInThisTriangle.insert(pair<int,int>(t.p[0],t.p[1]));		
+	  	//edgesUsedInThisTriangle.insert(pair<int,int>(t.p[1],t.p[2]));	
+	  	//edgesUsedInThisTriangle.insert(pair<int,int>(t.p[2],t.p[0]));	
+	  	for(auto &elem:edgesUsedInThisTriangle)
+	  		newTriEdgesFromEachMap[meshIdToProcess].push_back(elem);		 
+	  } 
+
+
+	clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to retesselate creating new tri edges: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
+
+  for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
+  	vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+
+  	for(const pair<int,int> &edge:newTriEdgesFromEachMap[meshIdToProcess]) {
+  		const Point *v1 = (edge.first>=0)?&vertices[meshIdToProcess][edge.first]:&vertices[2][-edge.first -1];
+  		const Point *v2 = (edge.second>=0)?&vertices[meshIdToProcess][edge.second]:&vertices[2][-edge.second -1];
+  		edgesToStore.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+  	}
+
+  	
+  	if(meshIdToProcess==0)
+  		storeEdgesAsGts("out/retesselatedMesh0.gts",edgesToStore);
+  	else 
+  		storeEdgesAsGts("out/retesselatedMesh1.gts",edgesToStore);
+  }
+  
+}
+
+
+
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
 unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid, unordered_set<const Triangle *> trianglesThatIntersect[2]) {
@@ -356,12 +535,17 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
 
   unsigned long long totalTests = 0;
 
+  //TODO: try to reduce amount of computation here...
+
+  vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edges;
+  vector< pair<Triangle *,Triangle *> >  intersectingTrianglesThatGeneratedEdges;
   #pragma omp parallel
   {
     VertCoord p0InterLine[3],p1InterLine[3];
     VertCoord tempRationals[100];
 
     vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edgesTemp;
+    vector< pair<Triangle *,Triangle *> >  intersectingTrianglesTemp;
     //edgesTemp.reserve(numPairsToTest/10);
     
     unsigned long long totalIntersectionsTemp = 0;
@@ -382,6 +566,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
       totalTestsTemp++;
       if (ans && !coplanar) {
         edgesTemp.push_back( pair<array<VertCoord,3>,array<VertCoord,3>>( {p0InterLine[0],p0InterLine[1],p0InterLine[2]} , {p1InterLine[0],p1InterLine[1],p1InterLine[2]}   ) );
+      	intersectingTrianglesTemp.push_back(pairTriangles);
       }
 
       if(ans) {
@@ -395,9 +580,24 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
       totalIntersections += totalIntersectionsTemp;
       totalTests += totalTestsTemp;
       edges.insert(edges.end(), edgesTemp.begin(), edgesTemp.end());
+      intersectingTrianglesThatGeneratedEdges.insert(intersectingTrianglesThatGeneratedEdges.end(), intersectingTrianglesTemp.begin(), intersectingTrianglesTemp.end());
     }
   }
+  
+  clock_gettime(CLOCK_REALTIME, &t1);
+  timeDetectIntersections = convertTimeMsecs(diff(t0,t1))/1000; 
 
+
+
+
+  clock_gettime(CLOCK_REALTIME, &t0);
+  retesselateIntersectingTriangles(edges,intersectingTrianglesThatGeneratedEdges);
+  clock_gettime(CLOCK_REALTIME, &t1);
+  timeRetesselate = convertTimeMsecs(diff(t0,t1))/1000; 
+
+
+
+  //Some statistics...
 
   for(int i=0;i<numPairsToTest;i++)  
   	if(pairsIntersect[i]) {
@@ -405,8 +605,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   		trianglesThatIntersect[1].insert(vtPairsTrianglesToProcess[i].second);
   	}
 
-  clock_gettime(CLOCK_REALTIME, &t1);
-  timeDetectIntersections = convertTimeMsecs(diff(t0,t1))/1000; 
+
 
   //TODO: remove this from timing data (this is just a statistic)
   map<const Triangle *,int> ctIntersectionsEachTriangleFromMap[2];
@@ -455,27 +654,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
 
 
 
-//From Boost, for using pairs in unordered_sets:
-template <class T>
-inline void hash_combine(std::size_t & seed, const T & v)
-{
-  std::hash<T> hasher;
-  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
 
-namespace std
-{
-  template<typename S, typename T> struct hash<pair<S, T>>
-  {
-    inline size_t operator()(const pair<S, T> & v) const
-    {
-      size_t seed = 0;
-      ::hash_combine(seed, v.first);
-      ::hash_combine(seed, v.second);
-      return seed;
-    }
-  };
-}
 
 //----------------------------------------------------------------------------
 
