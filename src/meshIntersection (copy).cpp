@@ -154,65 +154,6 @@ Point * getPointFromVertexId(int vertexId, int meshId) {
 
 
 
-const int PLANE_X0 =0;
-const int PLANE_Y0 =1;
-const int PLANE_Z0 =2;
-// TODO: perform ONLY necessary computation..
-//TODO: example we do not need z to check if the z component of the normal is 0...
-//Given a triangle, returns a plane (X=0,Y=0 or Z=0) such that the triangle is not perpendicular to that plane..
-//A triangle is perpendicular to a plane iff its normal has the corresponding coordinate equal to 0
-//a = p2-p1
-//b = p3-p1
-//normal: (a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x)
-//tempVars should have at least 8 elements...
-int getPlaneTriangleIsNotPerpendicular(const Point &p1, const Point &p2,const Point &p3, VertCoord tempVars[]) {
-  //a = (tempVars[0],tempVars[1],tempVars[2])
-  tempVars[0]=p2[0];
-  tempVars[0]-=p1[0];
-
-  tempVars[1]=p2[1];
-  tempVars[1]-=p1[1];
-
-  
-  //b = (tempVars[3],tempVars[4],tempVars[5])
-  tempVars[3]=p3[0]; 
-  tempVars[3]-=p1[0];
-
-  tempVars[4]=p3[1];
-  tempVars[4]-=p1[1];
-
-  
-
-  //Let's check if the z-component of the normal is 0
-  //if it is --> the triangle is perpendicular to z=0...
-  tempVars[6] = tempVars[0]; //a.x
-  tempVars[6] *= tempVars[4]; //b.y
-  tempVars[7] = tempVars[1]; //a.y
-  tempVars[7] *=tempVars[3]; //b.x
-  tempVars[6] -= tempVars[7]; //a.x*b.y - a.y*b.x
-  if(sgn(tempVars[6])!=0) return PLANE_Z0; //the triangle is NOT perpendicular to z=0...
-
-
-  tempVars[2]=p2[2];
-  tempVars[2]-=p1[2];
-
-  tempVars[5]=p3[2];
-  tempVars[5]-=p1[2];
-
-  tempVars[6] = tempVars[2]; //a.z
-  tempVars[6] *= tempVars[3]; //b.x
-  tempVars[7] = tempVars[0]; //a.x
-  tempVars[7] *=tempVars[5]; //b.z
-  tempVars[6] -= tempVars[7]; //a.z*b.x - a.x*b.z
-  if(sgn(tempVars[6])!=0) return PLANE_Y0; //the triangle is NOT perpendicular to y=0...
-  
-  return PLANE_X0; //we do not need to check... (unless the triangle is just a point...)
-
-}
-
-
-
-
 void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
 	int numTrianglesMesh0 = grid->numTrianglesInGridCell(0, gridSize,i,j,k);//cell.triangles[0].size();
   int numTrianglesMesh1 = grid->numTrianglesInGridCell(1, gridSize,i,j,k);
@@ -452,49 +393,34 @@ void storeTriangleIntersections(const vector<pair<Triangle *,Triangle *> >  &pai
 // 1 --> Clockwise
 // 2 --> Counterclockwise
 //tempVars should have at least 3 elements...
-//
-int orientation(const Point &p, const Point &q, const Point &r, int whatPlaneProjectTo,  VertCoord tempVars[])
+int orientation(const Point &p, const Point &q, const Point &r, VertCoord tempVars[])
 {
     /*VertCoord val = (q[1] - p[1]) * (r[0] - q[0]) -
               (q[0] - p[0]) * (r[1] - q[1]);
  
+ 		cerr << "val: " <<  val.get_d() << endl;
     if (val == 0) return 0;  // colinear
  
     return (val > 0)? 1: 2; // clock or counterclock wise*/
 
-    //we will project the points to the plane whatPlaneProjectTriangleTo
-    //what coordinates should we check during computations?
-    //if the points are projected to z=0 --> we have to use x and y
-    //if the points are projected to y=0 --> we have to use x and z
-    //...............................x=0 --> we have to use y and z
-    int coord1=0,coord2=1;
-    if(whatPlaneProjectTo==PLANE_Y0) {
-      coord1=0;
-      coord2=2;
-    } else if(whatPlaneProjectTo==PLANE_X0) {
-      coord1=1;
-      coord2=2;
-    }
 
-    tempVars[0] = q[coord2];
-    tempVars[0] -= p[coord2];
-    tempVars[1] = r[coord1];
-    tempVars[1] -= q[coord1];
+
+    tempVars[0] = q[1];
+    tempVars[0] -= p[1];
+    tempVars[1] = r[0];
+    tempVars[1] -= q[0];
     tempVars[0]*=tempVars[1];//tempVars[0] = (q[1] - p[1]) * (r[0] - q[0])
 
-    tempVars[2] = q[coord1];
-    tempVars[2] -=p[coord1];
-    tempVars[1] = r[coord2];
-    tempVars[1] -= q[coord2];
+    tempVars[2] = q[0];
+    tempVars[2] -=p[0];
+    tempVars[1] = r[1];
+    tempVars[1] -= q[1];
     tempVars[1] *= tempVars[2]; //tempVars[1] =  (q[0] - p[0]) * (r[1] - q[1])
 
-   /* tempVars[0] -= tempVars[1]; 
+    tempVars[0] -= tempVars[1]; 
     int sign = sgn(tempVars[0]);
     if(sign==0) return 0;
-    return sign>0?1:2; */
-    if(tempVars[0]==tempVars[1]) return 0;
-    if(tempVars[0]>tempVars[1]) return 1;
-    return 2;
+    return sign>0?1:2;
 }
 
 //TODO : reduce amount of tests...
@@ -502,89 +428,65 @@ int orientation(const Point &p, const Point &q, const Point &r, int whatPlanePro
 //TODO: avoid memory copy... (remove max, min, etc);
 // Given three colinear points p, q, r, the function checks if
 // point q lies on line segment 'pr'
-//All segments are co-planar (obvious) and are projected to plane whatPlaneProjectTriangleTo
-bool onSegment(const Point & p, const Point & q, const Point & r, int whatPlaneProjectTo)
+bool onSegment(const Point & p, const Point & q, const Point & r)
 {
 		//if (&q==&r || &q==&p) return false; //the endpoints coincide...
-    //we will project the points to the plane whatPlaneProjectTriangleTo
-    //what coordinates should we check during computations?
-    //if the points are projected to z=0 --> we have to use x and y
-    //if the points are projected to y=0 --> we have to use x and z
-    //...............................x=0 --> we have to use y and z
-    int coord1=0,coord2=1;
-    if(whatPlaneProjectTo==PLANE_Y0) {
-      coord1=0;
-      coord2=2;
-    } else if(whatPlaneProjectTo==PLANE_X0) {
-      coord1=1;
-      coord2=2;
-    }
 
-    if (q[coord1] < max(p[coord1], r[coord1]) && q[coord1] > min(p[coord1], r[coord1]) &&
-        q[coord2] <= max(p[coord2], r[coord2]) && q[coord2] >= min(p[coord2], r[coord2]))
+    if (q[0] < max(p[0], r[0]) && q[0] > min(p[0], r[0]) &&
+        q[1] <= max(p[1], r[1]) && q[1] >= min(p[1], r[1]))
        return true;
 
-    if (q[0] <= max(p[coord1], r[coord1]) && q[coord1] >= min(p[coord1], r[coord1]) &&
-        q[coord2] < max(p[coord2], r[coord2]) && q[coord2] > min(p[coord2], r[coord2])) 
+    if (q[0] <= max(p[0], r[0]) && q[0] >= min(p[0], r[0]) &&
+        q[1] < max(p[1], r[1]) && q[1] > min(p[1], r[1])) 
     	return true;
  
     return false;
 }
  
 // TODO: special cases!!!
-//do p1-q1 intersect p2-q2 ?
-//the two segments are co-planar
-//during computation, we project them to whatPlaneProjectTriangleTo plane... 
-bool doIntersect(const Point &p1, const Point &q1, const Point &p2, const Point &q2, int whatPlaneProjectTriangleTo, VertCoord tempVars[])
+bool doIntersect(const Point &p1, const Point &q1, const Point &p2, const Point &q2, VertCoord tempVars[])
 {
     // Find the four orientations needed for general and
     // special cases
-    int o1 = orientation(p1, q1, p2,whatPlaneProjectTriangleTo,tempVars);
+    int o1 = orientation(p1, q1, p2,tempVars);
+    int o2 = orientation(p1, q1, q2,tempVars);
+    
+    int o3 = orientation(p2, q2, p1,tempVars);
+    int o4 = orientation(p2, q2, q1,tempVars);
+ 
+
+        
 
     // Special Cases
     // p1, q1 and p2 are colinear and p2 lies on segment p1q1
-    if (o1 == 0 && onSegment(p1, p2, q1,whatPlaneProjectTriangleTo)) return true;
-
-
-    int o2 = orientation(p1, q1, q2,whatPlaneProjectTriangleTo,tempVars);
-
+    if (o1 == 0 && onSegment(p1, p2, q1)) return true;
+ 
     // p1, q1 and p2 are colinear and q2 lies on segment p1q1
-    if (o2 == 0 && onSegment(p1, q2, q1,whatPlaneProjectTriangleTo)) return true;
-
-    //the two segments are collinear, but they do not intersect 
-    if(o1==0 && o2==0) return false;
-
-
-    int o3 = orientation(p2, q2, p1,whatPlaneProjectTriangleTo,tempVars);
-
+    if (o2 == 0 && onSegment(p1, q2, q1)) return true;
+ 
     // p2, q2 and p1 are colinear and p1 lies on segment p2q2
-    if (o3 == 0 && onSegment(p2, p1, q2,whatPlaneProjectTriangleTo)) return true;
-
-    int o4 = orientation(p2, q2, q1,whatPlaneProjectTriangleTo,tempVars); 
-    
+    if (o3 == 0 && onSegment(p2, p1, q2)) return true;
  
      // p2, q2 and q1 are colinear and q1 lies on segment p2q2
-    if (o4 == 0 && onSegment(p2, q1, q2,whatPlaneProjectTriangleTo)) return true;
+    if (o4 == 0 && onSegment(p2, q1, q2)) return true;
 
     // General case
     if (o1!=0 && o2!=0 && o3!=0  && o4!=0)
-      if (o1 != o2 && o3 != o4) {
-    	 return true;
-      }
+    if (o1 != o2 && o3 != o4) {
+    	return true;
+    }
 
  
     return false; // Doesn't fall in any of the above cases
 }
 
 
-
 //returns true iff the candidate edge (represented using the ids of the vertices in meshIdToProcess -- negative vertices are in the "common layer")
 //intersects an edge from the set edgesToTest (these edges are in the same layer).
 //we do not consider intersections in endpoints..
 //TODO: consider special cases: vertical triangle, parallel edges, etc...
-long long ctEdgeIntersect  = 0; //how many of the intersection tests performed are true?
-long long ctEdgeDoNotIntersect = 0;
-bool intersects(const pair<int,int> &candidateEdge,const set<pair<int,int> > &edgesToTest,int meshIdToProcess, int whatPlaneProjectTriangleTo, VertCoord tempVars[]) {
+
+bool intersects(const pair<int,int> &candidateEdge,const set<pair<int,int> > &edgesToTest,int meshIdToProcess, VertCoord tempVars[]) {
 	const Point *v1CandidateEdge = (candidateEdge.first>=0)?&vertices[meshIdToProcess][candidateEdge.first]:&vertices[2][-candidateEdge.first -1];
   const Point *v2CandidateEdge = (candidateEdge.second>=0)?&vertices[meshIdToProcess][candidateEdge.second]:&vertices[2][-candidateEdge.second -1];
   
@@ -600,10 +502,131 @@ bool intersects(const pair<int,int> &candidateEdge,const set<pair<int,int> > &ed
   	//if (v1EdgeToTest==v1CandidateEdge || v1EdgeToTest==v2CandidateEdge || v2EdgeToTest==v1CandidateEdge || v2EdgeToTest==v2CandidateEdge )
   	//	continue; //they intersect at common vertices...
 
-  	bool inter = doIntersect(*v1CandidateEdge,*v2CandidateEdge,*v1EdgeToTest,*v2EdgeToTest,whatPlaneProjectTriangleTo,tempVars);
+  	bool inter = doIntersect(*v1CandidateEdge,*v2CandidateEdge,*v1EdgeToTest,*v2EdgeToTest,tempVars);
+  	//cerr << "Testing : " << edgeToTest.first << " " << edgeToTest.second << " ?? " << inter << endl;
+
+  	/*if (candidateEdge.first ==-7 && candidateEdge.second ==-4 && edgeToTest.first == -6 && edgeToTest.second==-4) {
+  		cerr << "Coords: " << endl;
+  		cerr << (*v1CandidateEdge)[0] << " " << (*v1CandidateEdge)[1] << endl;
+  		cerr << (*v2CandidateEdge)[0] << " " << (*v2CandidateEdge)[1] << endl;
+  		cerr << "------" << endl;
+  		cerr << (*v1EdgeToTest)[0] << " " << (*v1EdgeToTest)[1] << endl;
+  		cerr << (*v2EdgeToTest)[0] << " " << (*v2EdgeToTest)[1] << endl;
+  		cerr << endl << endl;
+
+  		cerr << (*v1CandidateEdge)[0].get_d() << " " << (*v1CandidateEdge)[1].get_d() << endl;
+  		cerr << (*v2CandidateEdge)[0].get_d() << " " << (*v2CandidateEdge)[1].get_d() << endl;
+  		cerr << "------" << endl;
+  		cerr << (*v1EdgeToTest)[0].get_d() << " " << (*v1EdgeToTest)[1].get_d() << endl;
+  		cerr << (*v2EdgeToTest)[0].get_d() << " " << (*v2EdgeToTest)[1].get_d() << endl;
+
+  		const Point &p1 = *v1CandidateEdge;
+  		const Point &q1 = *v2CandidateEdge;
+  		const Point &p2 = *v1EdgeToTest;
+  		const Point &q2 = *v2EdgeToTest;
+
+
+  		const Point &p = *v1EdgeToTest;
+  		const Point &q = *v1CandidateEdge;
+  		const Point &r = *v2CandidateEdge;
+
+  		VertCoord val = (q[1] - p[1]) * (r[0] - q[0]) -
+              (q[0] - p[0]) * (r[1] - q[1]);
+
+      cerr << "pqrval" << endl;
+      cerr << p[0] << " " << p[1] << " " << endl;
+      cerr << q[0] << " " << q[1] << endl;
+      cerr << r[0] << " " << r[1] << endl;
+      cerr << val << endl;
+
+	    int o1 = orientation(p1, q1, p2,tempVars);
+	    int o2 = orientation(p1, q1, q2,tempVars);
+	    
+	    int o3 = orientation(p2, q2, p1,tempVars);
+	    int o4 = orientation(p2, q2, q1,tempVars);
+	   	cerr << o1 << o2 << o3 << o4 << endl;
+	   	exit(0);
+  	}*/
+  	if(inter) 
+  		return true;
+
+  }
+  return false;
+}
+
+
+bool debugIntersects(const pair<int,int> &candidateEdge,const set<pair<int,int> > &edgesToTest,int meshIdToProcess, VertCoord tempVars[]) {
+	const Point *v1CandidateEdge = (candidateEdge.first>=0)?&vertices[meshIdToProcess][candidateEdge.first]:&vertices[2][-candidateEdge.first -1];
+  const Point *v2CandidateEdge = (candidateEdge.second>=0)?&vertices[meshIdToProcess][candidateEdge.second]:&vertices[2][-candidateEdge.second -1];
+  
+  cerr << "Testing intersection: " << candidateEdge.first << " " << candidateEdge.second << endl;
+
+  for(const pair<int,int> &edgeToTest:edgesToTest) {
+
+
+  	const Point *v1EdgeToTest = (edgeToTest.first>=0)?&vertices[meshIdToProcess][edgeToTest.first]:&vertices[2][-edgeToTest.first -1];
+  	const Point *v2EdgeToTest = (edgeToTest.second>=0)?&vertices[meshIdToProcess][edgeToTest.second]:&vertices[2][-edgeToTest.second -1];
   	
-    if(inter) ctEdgeIntersect++;
-    else ctEdgeDoNotIntersect++;
+  	//check if edges (v1EdgeToTest,v2EdgeToTest) intersects (v1CandidateEdge,v2CandidateEdge) (it is ok if they intersect at common vertices..)
+  	//if (v1EdgeToTest==v1CandidateEdge || v1EdgeToTest==v2CandidateEdge || v2EdgeToTest==v1CandidateEdge || v2EdgeToTest==v2CandidateEdge )
+  	//	continue; //they intersect at common vertices...
+
+  	bool inter = doIntersect(*v1CandidateEdge,*v2CandidateEdge,*v1EdgeToTest,*v2EdgeToTest,tempVars);
+  	cerr << "Testing : " << edgeToTest.first << " " << edgeToTest.second << " ?? " << inter << endl;
+
+
+  	cerr << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Problem edge storing..." << endl;
+  	vector<pair<array<double,3>,array<double,3>> > edgesToStoreTemp;
+		const Point *v1 = v1EdgeToTest;
+		const Point *v2 = v2EdgeToTest;
+		edgesToStoreTemp.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+					  	
+		stringstream stream;
+		stream << "out/edge_intersecting_problemEdge.gts";
+		storeEdgesAsGts(stream.str(),edgesToStoreTemp);
+
+  	
+  		cerr << "Coords: " << endl;
+  		cerr << (*v1CandidateEdge)[0] << " " << (*v1CandidateEdge)[1] << endl;
+  		cerr << (*v2CandidateEdge)[0] << " " << (*v2CandidateEdge)[1] << endl;
+  		cerr << "------" << endl;
+  		cerr << (*v1EdgeToTest)[0] << " " << (*v1EdgeToTest)[1] << endl;
+  		cerr << (*v2EdgeToTest)[0] << " " << (*v2EdgeToTest)[1] << endl;
+  		cerr << endl << endl;
+
+  		cerr << (*v1CandidateEdge)[0].get_d() << " " << (*v1CandidateEdge)[1].get_d() << endl;
+  		cerr << (*v2CandidateEdge)[0].get_d() << " " << (*v2CandidateEdge)[1].get_d() << endl;
+  		cerr << "------" << endl;
+  		cerr << (*v1EdgeToTest)[0].get_d() << " " << (*v1EdgeToTest)[1].get_d() << endl;
+  		cerr << (*v2EdgeToTest)[0].get_d() << " " << (*v2EdgeToTest)[1].get_d() << endl;
+
+  		const Point &p1 = *v1CandidateEdge;
+  		const Point &q1 = *v2CandidateEdge;
+  		const Point &p2 = *v1EdgeToTest;
+  		const Point &q2 = *v2EdgeToTest;
+
+
+  		const Point &p = *v1CandidateEdge;
+  		const Point &q = *v2CandidateEdge;
+  		const Point &r = *v2EdgeToTest;
+
+  		VertCoord val = (q[1] - p[1]) * (r[0] - q[0]) -
+              (q[0] - p[0]) * (r[1] - q[1]);
+
+      cerr << "pqrval" << endl;
+      cerr << p[0] << " " << p[1] << " " << endl;
+      cerr << q[0] << " " << q[1] << endl;
+      cerr << r[0] << " " << r[1] << endl;
+      cerr << val << endl;
+
+	    int o1 = orientation(p1, q1, p2,tempVars);
+	    int o2 = orientation(p1, q1, q2,tempVars);
+	    
+	    int o3 = orientation(p2, q2, p1,tempVars);
+	    int o4 = orientation(p2, q2, q1,tempVars);
+	   	cerr << o1 << o2 << o3 << o4 << endl;
+	   
+  	
 
   	if(inter) 
   		return true;
@@ -613,33 +636,18 @@ bool intersects(const pair<int,int> &candidateEdge,const set<pair<int,int> > &ed
 }
 
 
-
 //TODO: avoid memory allocation!!!
-bool isInTriangleProj(const Point &p, const Point &p0,const Point &p1,const Point &p2, int whatPlaneProjectTriangleTo) {
+bool isInTriangleProj(const Point &p, const Point &p0,const Point &p1,const Point &p2) {
   if ( p==p0 || p==p1 || p==p2) return false; //is the point directly above a vertex of the triangle?
-
-  //what coordinates should we check during computations?
-  //if the points are projected to z=0 --> we have to use x and y
-  //if the points are projected to y=0 --> we have to use x and z
-  //...............................x=0 --> we have to use y and z
-  int coord1=0,coord2=1;
-  if(whatPlaneProjectTriangleTo==PLANE_Y0) {
-    coord1=0;
-    coord2=2;
-  } else if(whatPlaneProjectTriangleTo==PLANE_X0) {
-    coord1=1;
-    coord2=2;
-  }
-
   
-  VertCoord denominator = ((p1[coord2] - p2[coord2])*(p0[coord1] - p2[coord1]) + (p2[coord1] - p1[coord1])*(p0[coord2] - p2[coord2]));
+  VertCoord denominator = ((p1[1] - p2[1])*(p0[0] - p2[0]) + (p2[0] - p1[0])*(p0[1] - p2[1]));
   if (denominator==0) { //TODO: check this.... degenerate triangles or vertical triangles (a segment never intersects a vertical triangle...)
     return false;
   }
-  VertCoord a = ((p1[coord2] - p2[coord2])*(p[coord1] - p2[coord1]) + (p2[coord1] - p1[coord1])*(p[coord2] - p2[coord2])) / denominator;
+  VertCoord a = ((p1[1] - p2[1])*(p[0] - p2[0]) + (p2[0] - p1[0])*(p[1] - p2[1])) / denominator;
   if ( a<=0 || a >=1) return false;
   
-  VertCoord b = ((p2[coord2] - p0[coord2])*(p[coord1] - p2[coord1]) + (p0[coord1] - p2[coord1])*(p[coord2] - p2[coord2])) / denominator;
+  VertCoord b = ((p2[1] - p0[1])*(p[0] - p2[0]) + (p0[0] - p2[0])*(p[1] - p2[1])) / denominator;
 
   if (b<=0 || b>=1) return false;
   VertCoord c = 1 - a - b;
@@ -652,9 +660,9 @@ bool isInTriangleProj(const Point &p, const Point &p0,const Point &p1,const Poin
 //the positives ids represent vertices from the meshId mesh
 //all vertices are coplanar...thus, we just check if a vertex is in the projection of a,b,c to z=0 (TODO: consider vertical triangle..try to project to x=0 and also y=0 depending on the triangle...)
 //we check if the point is completely inside the triangle (i.e., not in the border or outside..)
-bool isThereAVertexInsideTriangle(const vector<int> &vertices,const int p0, const int p1, const int p2, const int meshId, int whatPlaneProjectTriangleTo) {
+bool isThereAVertexInsideTriangle(const vector<int> &vertices,const int p0, const int p1, const int p2, const int meshId) {
 	for(const int v:vertices) {
-		if(isInTriangleProj(*getPointFromVertexId(v,meshId),*getPointFromVertexId(p0,meshId),*getPointFromVertexId(p1,meshId),*getPointFromVertexId(p2,meshId), whatPlaneProjectTriangleTo)) {
+		if(isInTriangleProj(*getPointFromVertexId(v,meshId),*getPointFromVertexId(p0,meshId),*getPointFromVertexId(p1,meshId),*getPointFromVertexId(p2,meshId))) {
 			return true;
 		}
 	}
@@ -664,7 +672,7 @@ bool isThereAVertexInsideTriangle(const vector<int> &vertices,const int p0, cons
 //seedEdge is an edge containint originalTriangleRetesselated.p[0] and that is collinear with (originalTriangleRetesselated.p[0],originalTriangleRetesselated.p[1])
 //it will be use to determine the orientation of the retesselated triangles...
 //meshIdToProcess is the id of the mesh of the triangle being split..
-void createNewTrianglesFromRetesselationAndOrient(const set<pair<int,int> > &edgesUsedInThisTriangle,const Triangle &originalTriangleRetesselated,vector<TriangleNoBB> &newTrianglesFromRetesselation,  pair<int,int> seedEdge,const int meshIdToProcess, const int  whatPlaneProjectTriangleTo) {
+void createNewTrianglesFromRetesselationAndOrient(const set<pair<int,int> > &edgesUsedInThisTriangle,const Triangle &originalTriangleRetesselated,vector<TriangleNoBB> &newTrianglesFromRetesselation,  pair<int,int> seedEdge,const int meshIdToProcess) {
 	map<int,int>  verticesStartingFrom0; //TODO: optimize this part...
 	vector<int> vertexFrom0ToVertexId;
 
@@ -771,7 +779,7 @@ void createNewTrianglesFromRetesselationAndOrient(const set<pair<int,int> > &edg
 
 				//if a vertex from the retesselation is inside this candidate triangle, we will not create this triangle..
 				//test all "numVertices" vertices in vertexFrom0ToVertexId
-				if(isThereAVertexInsideTriangle(vertexFrom0ToVertexId,vertexFrom0ToVertexId[i],vertexFrom0ToVertexId[j],vertexFrom0ToVertexId[k],meshIdToProcess,whatPlaneProjectTriangleTo)) {
+				if(isThereAVertexInsideTriangle(vertexFrom0ToVertexId,vertexFrom0ToVertexId[i],vertexFrom0ToVertexId[j],vertexFrom0ToVertexId[k],meshIdToProcess)) {
 					//cerr << "Ignoring triangle: " << vertexFrom0ToVertexId[i] << " " << vertexFrom0ToVertexId[j] << " " << vertexFrom0ToVertexId[k] << endl;
 					continue;
 				}
@@ -807,7 +815,6 @@ void createNewTrianglesFromRetesselationAndOrient(const set<pair<int,int> > &edg
 }
 
 
-
 //edges represent the edges generated from the intersection of the intersecting triangles.
 //intersectingTrianglesThatGeneratedEdges[i] contains the pair of triangles whose intersection generated edges[i]
 
@@ -816,12 +823,6 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 	timespec t0,t1;
   cerr << "Retesselating triangles..." << "\n";
   clock_gettime(CLOCK_REALTIME, &t0);
-
-  long long ctTrianglesRetesselate = 0;
-  long long ctVerticesInsertedTrianglesToRetesselate = 0;
-  long long ctEdgesTestedToInsertInRetesselation = 0;
-  long long ctEdgesActuallyInsertedInRetesselation = 0; //besides the constraint edges (the ones from intersection)
-  long long ctEdgesInsertedBecauseOfConstraint = 0; //constraint edges inserted in retesselation
 
 
 	unordered_map<const Triangle *, vector<int> > intersectingEdgesInEachTriangle[2];
@@ -881,19 +882,17 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
   	int numTrianglesToProcess = intersectingEdgesInEachTriangleToProcess.size();
 
-    ctTrianglesRetesselate += numTrianglesToProcess;
-
   	//#pragma omp parallel 
   	{
   		vector<pair<int,int> > myNewTriEdgesFromEachMap;
 
   		vector<TriangleNoBB> myNewTrianglesFromRetesselation;
-  		VertCoord tempVars[8];
+  		VertCoord tempVars[3];
 
   		//#pragma omp for
-		  for(int i=0;i<numTrianglesToProcess;i++) {  		  		
-        //for each triangle ts, let's process the triangles intersecting t and the edges
-        //formed by the intersection of ts and these triangles
+		  for(int i=0;i<numTrianglesToProcess;i++) {  		
+  		
+
 
 		  	const auto &ts  = *intersectingEdgesInEachTriangleToProcess[i];
 		  	//ts.first = a triangle from map 0
@@ -901,31 +900,51 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 		  	const auto &t = *ts.first;
 		  	const auto &edgesFromIntersection =  ts.second;
 
-        //A triangle (except if it is degenerate to a single point) cannot be perpendicular to all 3 planes (x=0,y=0,z=0)
-        //Thus, we chose one of these planes to project the triangle during computations...
-        const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]],vertices[meshIdToProcess][t.p[2]], tempVars);
 
-	  	
+		  	/*if(meshIdToProcess==1 )
+		  	{
+			  				  		  		
+				  	Point *a = (t.p[0]>=0)?&vertices[meshIdToProcess][t.p[0]]:&vertices[2][-t.p[0] -1];
+				  	Point *b = (t.p[1]>=0)?&vertices[meshIdToProcess][t.p[1]]:&vertices[2][-t.p[1] -1];
+				  	Point *c = (t.p[2]>=0)?&vertices[meshIdToProcess][t.p[2]]:&vertices[2][-t.p[2] -1];			  	
 
-		  	//we need to "retesselate" ts and orient all the new triangles properly
+				  	cerr << "Storing tri " << i << endl;
+				  	cerr << t.p[0] << " " << t.p[1] << " " << t.p[2] << endl;
+			  		stringstream stream;
+					  stream << "out/tri_Created_" << i  << ".gts";
+					  storeOneTriangleAsGts(stream.str(),toDoublePoint(*a),toDoublePoint(*b),toDoublePoint(*c),t.above==OUTSIDE_OBJECT);
+
+			  }*/
+
+		  	//we need to "retesselate" t and orient all the new triangles properly
+
 		  	//this set will store the edges we used in the retesselated triangle
 		  	//we need to choose what edges to create and, then, use these new edges to reconstruct the triangulation..
-        //This set will have the edges that will form the retriangulation of ts..
 		  	set<pair<int,int> > edgesUsedInThisTriangle; //TODO: maybe use unordered_set (see overhead difference...)
 
 
 		  	int ct =0;
 		  	//The edges from intersection will, necessarelly, be in the triangulation...
+		  	//edgesUsedInThisTriangle.insert(edgesFromIntersection.begin(),edgesFromIntersection.end());
 		  	for(int edgeId:edgesFromIntersection) {
 		  		//cerr << edgesUsingVertexId[edgeId].first << " " << edgesUsingVertexId[edgeId].second << endl;
-		  		edgesUsedInThisTriangle.insert(edgesUsingVertexId[edgeId]);		
-          ctEdgesInsertedBecauseOfConstraint++; 	
+		  		edgesUsedInThisTriangle.insert(edgesUsingVertexId[edgeId]);
+
+		  		/*pair<int,int>  &candidateEdge = edgesUsingVertexId[edgeId];
+
+		  		cerr << ++ct <<  " Used edge from intersection: " << edgesUsingVertexId[edgeId].first << " " << edgesUsingVertexId[edgeId].second <<endl;
+
+		  		vector<pair<array<double,3>,array<double,3>> > edgesToStoreTemp;
+					const Point *v1 = (candidateEdge.first>=0)?&vertices[meshIdToProcess][candidateEdge.first]:&vertices[2][-candidateEdge.first -1];
+					const Point *v2 = (candidateEdge.second>=0)?&vertices[meshIdToProcess][candidateEdge.second]:&vertices[2][-candidateEdge.second -1];
+					edgesToStoreTemp.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+					  	
+				  stringstream stream;
+				  stream << "out/edge_intersection_" << ct << "_" << candidateEdge.first << "_" << candidateEdge.second<< ".gts";
+				  storeEdgesAsGts(stream.str(),edgesToStoreTemp);*/
 		  	}
 
-
-        //Now, we need to add more edges to fill the parts of ts that still do not form triangle
 		  	vector<int> verticesToTesselate;
-        //what vertices will we have in the new triangulation of ts? (the original vertices + the vertices of the edges from intersections)
 		  	for(const auto &p:edgesUsedInThisTriangle) {
 		  		verticesToTesselate.push_back(p.first);
 		  		verticesToTesselate.push_back(p.second);
@@ -938,18 +957,14 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 		  	verticesToTesselate.resize(newEnd-verticesToTesselate.begin());
 		  	int numVTriangle = verticesToTesselate.size();
 
-        ctVerticesInsertedTrianglesToRetesselate += numVTriangle;
-
 		  	pair<int,int> seedEdge(-1,-1); //we need a seed output edge that will be oriented in the same way t is oriented..
 		  													 //we will use this seed to reorient all the triangles resulting from the retesselation of t
 
-		  	
+		  	//cerr << "Edges already added to this triangle: " << edgesUsedInThisTriangle.size() << endl;
+		  	//cerr << endl;
+		  	//cerr << "Num vertices to tesselate: " << numVTriangle << "\n";
 
 		  	set<pair<int,int> > nonStoredEdges;
-
-        cerr << "\n\nTesting edges: " << "\n";
-        //for each pair of vertices (forming an edge), let's try to add this edge e to the triangulation
-        //
 		  	for(int i=0;i<numVTriangle;i++)
 		  		for(int j=i+1;j<numVTriangle;j++) {
 		  			int v1 = verticesToTesselate[i];
@@ -959,13 +974,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 		  			//let's try to insert edge (v1,v2)...
 		  			pair<int,int> candidateEdge(v1,v2);
 		  			if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; //the edge was already used...
-
-            ctEdgesTestedToInsertInRetesselation++;
-
-            //if edge e=(v1,v2) does not intersect other edges already inserted in this triangle,
-            //we will add e to the new triangulation...
-            //any triangulation is fine as soon as the edges from the intersection of the meshes are there...
-		  			if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshIdToProcess,whatPlaneProjectTriangleTo,tempVars)) {
+		  			if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshIdToProcess,tempVars)) {
 		  				if (v1 == t.p[0] && v2 == t.p[1]) {
 		  					seedEdge.first = t.p[0];
 		  					seedEdge.second = t.p[1];
@@ -974,27 +983,55 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 		  					seedEdge.second = t.p[0];
 		  				}
 
-		  				ctEdgesActuallyInsertedInRetesselation++;
+		  				/*
+		  				cerr << ++ct <<  " Used edge: " <<v1 << " " << v2 <<endl;
+
+		  				vector<pair<array<double,3>,array<double,3>> > edgesToStoreTemp;
+					  	const Point *v1 = (candidateEdge.first>=0)?&vertices[meshIdToProcess][candidateEdge.first]:&vertices[2][-candidateEdge.first -1];
+					  	const Point *v2 = (candidateEdge.second>=0)?&vertices[meshIdToProcess][candidateEdge.second]:&vertices[2][-candidateEdge.second -1];
+					  	edgesToStoreTemp.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+					  	
+				  		stringstream stream;
+				  		stream << "out/edge_intersection_" << ct << "_" << candidateEdge.first << "_" << candidateEdge.second<< ".gts";
+				  		storeEdgesAsGts(stream.str(),edgesToStoreTemp);
+							*/
+
 		  				edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
-		  			
-              cerr << "Dont intersect\n";
-            }	else {
-              cerr << "Intersects\n";
-            }
+		  			}	/*else if(meshIdToProcess==1 && i==0 && j==3) {
+		  				cerr <<"Testing debug intersection..." << endl;
+		  				//Triangle... let's check if vertical..
+		  				Point *a = (t.p[0]>=0)?&vertices[meshIdToProcess][t.p[0]]:&vertices[2][-t.p[0] -1];
+				  		Point *b = (t.p[1]>=0)?&vertices[meshIdToProcess][t.p[1]]:&vertices[2][-t.p[1] -1];
+				  		Point *c = (t.p[2]>=0)?&vertices[meshIdToProcess][t.p[2]]:&vertices[2][-t.p[2] -1];		
+				  		Point u,v;
+				  		for(int i=0;i<3;i++) {
+				  			u[i] = (*b)[i]-(*a)[i];
+				  			v[i] = (*c)[i]-(*a)[i];
+				  		}
+				  		Point cross;
+				  		cross[0] = u[1]*v[2]-u[2]*v[1];
+				  		cross[1] = u[2]*v[0]-u[0]*v[2];
+				  		cross[2] = u[0]*v[1]-u[1]*v[0];
+				  		cerr << "Cross:: " << cross[0] << " , " << cross[1] << " , " << cross[2] << endl;
+				  		cerr << "Cross:: " << cross[0].get_d() << " , " << cross[1].get_d() << " , " << cross[2].get_d() << endl;
+
+		  				debugIntersects(candidateEdge,edgesUsedInThisTriangle,meshIdToProcess,tempVars);
+		  				nonStoredEdges.insert(candidateEdge) ;		
+		  				cerr << "End of debug" << endl << endl;
+		  			}	*/
 		  		}		  	
 		  	if(seedEdge.first == -1) { //the edge t.p[0] - t.p[1] is not in the output because other edges intersects it...
 		  		for(const pair<int,int> &e:edgesUsedInThisTriangle) 
 		  			if(e.first == t.p[0] ) { //let's try to find an edge (t.p[0],x) (or (x,t.p[0])) collinear with (t.p[0], t.p[1])
 		  				//is e.second on line (t.p[0]-t.p[1]) ??
-              //TODO: this is computed with the projected triangle... we should consider vertical triangles...
-		  				if (orientation(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]], *getPointFromVertexId(e.second, meshIdToProcess),whatPlaneProjectTriangleTo, tempVars)==0) {
+		  				if (orientation(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]], *getPointFromVertexId(e.second, meshIdToProcess),tempVars)==0) {
 								seedEdge.first = t.p[0];
 								seedEdge.second = e.second;
 								//cerr << "Aqui" << endl;
 								break;
 							}
 		  			} else if (e.second == t.p[0]) {
-		  				if (orientation(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]], *getPointFromVertexId(e.first, meshIdToProcess),whatPlaneProjectTriangleTo,tempVars)==0) {
+		  				if (orientation(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]], *getPointFromVertexId(e.first, meshIdToProcess),tempVars)==0) {
 								seedEdge.first = e.first;
 								seedEdge.second = t.p[0];
 								//cerr << "Ali" << endl;
@@ -1005,13 +1042,83 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
 
 
-		  	createNewTrianglesFromRetesselationAndOrient(edgesUsedInThisTriangle,t,myNewTrianglesFromRetesselation,seedEdge,meshIdToProcess, whatPlaneProjectTriangleTo);
-		  			  	
+		  	createNewTrianglesFromRetesselationAndOrient(edgesUsedInThisTriangle,t,myNewTrianglesFromRetesselation,seedEdge,meshIdToProcess);
+		  	
+		  	
+		  	/*if(meshIdToProcess==1 && i==612)
+		  	{
+		  		cerr << "Mesh id , i: "<< meshIdToProcess << " " << i << endl;
+		  		cerr << "Num: " << myNewTrianglesFromRetesselation.size() << endl;
+			  	int ctTri = 0;
+			  	for (const TriangleNoBB&t:myNewTrianglesFromRetesselation) {
+			  		ctTri++;
+
+			  		
+				  	Point *a = (t.p[0]>=0)?&vertices[meshIdToProcess][t.p[0]]:&vertices[2][-t.p[0] -1];
+				  	Point *b = (t.p[1]>=0)?&vertices[meshIdToProcess][t.p[1]]:&vertices[2][-t.p[1] -1];
+				  	Point *c = (t.p[2]>=0)?&vertices[meshIdToProcess][t.p[2]]:&vertices[2][-t.p[2] -1];			  	
+
+				  	cerr << "Storing tri " << ctTri << endl;
+				  	cerr << t.p[0] << " " << t.p[1] << " " << t.p[2] << endl;
+			  		stringstream stream;
+					  stream << "out/tri_Created_" << ctTri <<  "_" << t.p[0] << "_" << t.p[1] << "_" << t.p[2]<< ".gts";
+					  storeOneTriangleAsGts(stream.str(),toDoublePoint(*a),toDoublePoint(*b),toDoublePoint(*c),t.above==OUTSIDE_OBJECT);
+
+			  	}
+			  	cerr << "end" << endl << endl;
+
+
+			  	{
+				  	vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+
+				  	for(const pair<int,int> &edge:edgesUsedInThisTriangle) {
+				  		const Point *v1 = (edge.first>=0)?&vertices[meshIdToProcess][edge.first]:&vertices[2][-edge.first -1];
+				  		const Point *v2 = (edge.second>=0)?&vertices[meshIdToProcess][edge.second]:&vertices[2][-edge.second -1];
+				  		edgesToStore.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+				  	}
+
+			  		cerr << "Storting tri mesh 1..." << endl;
+			  		cerr << "Number of edges: " << edgesUsedInThisTriangle.size() << endl;
+			  		storeEdgesAsGts("out/triMesh1.gts",edgesToStore);
+		  		}
+
+		  		{
+			  		vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+
+				  	for(const pair<int,int> &edge:nonStoredEdges) {
+				  		const Point *v1 = (edge.first>=0)?&vertices[meshIdToProcess][edge.first]:&vertices[2][-edge.first -1];
+				  		const Point *v2 = (edge.second>=0)?&vertices[meshIdToProcess][edge.second]:&vertices[2][-edge.second -1];
+				  		edgesToStore.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+				  	}
+
+			  		cerr << "Storting tri mesh 1..." << endl;
+			  		cerr << "Number of edges: " << edgesUsedInThisTriangle.size() << endl;
+			  		storeEdgesAsGts("out/triMesh1NonUsed.gts",edgesToStore);
+		  		}
+		  	}
+				/*
+		  	//if(i==4 && meshIdToProcess==1) {
+		  	
+		  		vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+
+			  	for(const pair<int,int> &edge:edgesUsedInThisTriangle) {
+			  		const Point *v1 = (edge.first>=0)?&vertices[meshIdToProcess][edge.first]:&vertices[2][-edge.first -1];
+			  		const Point *v2 = (edge.second>=0)?&vertices[meshIdToProcess][edge.second]:&vertices[2][-edge.second -1];
+			  		edgesToStore.push_back(make_pair(toDoublePoint(*v1),toDoublePoint(*v2)));
+			  	}
+
+		  		cerr << "Storting tri mesh 0..." << endl;
+		  		cerr << "Number of edges: " << edgesUsedInThisTriangle.size() << endl;
+		  		storeEdgesAsGts("out/triMesh0.gts",edgesToStore);
+		  	//}
+		  	*/
 
 		  	//cerr << meshIdToProcess << " " << i << " " << myNewTrianglesFromRetesselation.size() << endl;
 		  	for(auto &elem:edgesUsedInThisTriangle)
 		  		myNewTriEdgesFromEachMap.push_back(elem);	;//newTriEdgesFromEachMap[meshIdToProcess].push_back(elem);		 
 		  
+
+		  	//break;
 		  }
 
 		  //#pragma omp critical 
@@ -1028,17 +1135,10 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   cerr << "Time to retesselate creating new tri edges: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
 
 
-  cerr << "Counts computed during retesselation: " << "\n";
-  cerr << "Num triangles to retesselate                                 : "  << ctTrianglesRetesselate << "\n";
-  cerr << "Total number of edges we tried to insert during retesselation: "  << ctEdgesTestedToInsertInRetesselation << "\n";  
-  cerr << "Total edges tried insert and actually inserted               : " << ctEdgesActuallyInsertedInRetesselation  <<"\n";
-  cerr << "Total edges inserted because are constraint edges            : " << ctEdgesInsertedBecauseOfConstraint <<"\n";
-  cerr << "Total number of edges in retesselated triangles (add prev. 2): " << ctEdgesInsertedBecauseOfConstraint+ctEdgesActuallyInsertedInRetesselation <<"\n";
-  cerr << "Total number of vertices in retesselated triangles           : "  << ctVerticesInsertedTrianglesToRetesselate << "\n";
-  cerr << "Number of inters. tests (for insertin tris.)that are true    : " << ctEdgeIntersect << "\n";
-  cerr << "Number of inters. tests (for insertin tris.)that are false    : " << ctEdgeDoNotIntersect << "\n";
   
- 
+
+
+
 
 
   for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
@@ -1246,12 +1346,12 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 		cerr << "Mesh " << meshId << " Num tri from retesselation: " << numIntersectingT << endl;
 		vector<Point> centerOfIntersectingTriangles(numIntersectingT);
 		
-		//#pragma omp parallel 
+		#pragma omp parallel 
 		{
 			VertCoord tempVar;
       big_int tempVarsInt[3];
 
-      //#pragma omp for
+      #pragma omp for
 			for(int tid=0;tid<numIntersectingT;tid++) {
 			 	const TriangleNoBB&t = trianglesFromRetesselation[meshId][tid];
 				Point *a = getPointFromVertexId(t.p[0], meshId);
@@ -1740,7 +1840,6 @@ int main(int argc, char **argv) {
   cerr << "Time to read the data         : " << timeReadData << endl;
   cerr << "Time to create and refine grid: " << timeCreateGrid << endl;
   cerr << "Time to detect intersections  : " << timeDetectIntersections << endl;  
-  cerr << "Time to retesselate trinagles : " << timeRetesselate << endl;
   cerr << "Time to classify the triangles: " << timeClassifyTriangles << endl;
   cerr << "----------------------------------------------------" << endl;
 /*

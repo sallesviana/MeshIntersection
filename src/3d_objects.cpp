@@ -67,15 +67,7 @@ public:
 			boundingBox[1][i] = p0;
 			if (vertices[p1][i] > vertices[p0][i]) boundingBox[1][i] = 	p1;
 			if (vertices[p2][i] > vertices[ boundingBox[1][i] ][i]) boundingBox[1][i] = 	p2;
-		}
-
-		/*cerr << "Triangle: " << endl;
-		cerr << p0 << "  " << p1 << "  " << p2 << endl;
-		for(int i=0;i<2;i++) {
-			for(int j=0;j<3;j++)
-				 cerr << "BBox: " << i << " " << j << "  " << boundingBox[i][j] << endl;
-			cerr << endl;
-		}*/
+		}		
 	}
 
 
@@ -92,6 +84,25 @@ public:
 };
 
 
+//Triangle without bounding box...
+class TriangleNoBB {
+public:
+	VertexId p[3];
+	ObjectId above, below; //ids of the objects above and below the triangle (considering the right hand rule)
+
+	TriangleNoBB() {}
+
+	TriangleNoBB(VertexId p0, VertexId p1, VertexId p2,ObjectId above, ObjectId below) {
+		p[0] = p0;
+		p[1] = p1;
+		p[2] = p2;
+		this->above = above;
+		this->below = below;	
+	}
+
+	VertexId& operator[](const int i) { return this->p[i]; }
+  const VertexId& operator[](const int i) const { return this->p[i]; }
+};
 
 
 
