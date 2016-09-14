@@ -806,6 +806,144 @@ void createNewTrianglesFromRetesselationAndOrient(const set<pair<int,int> > &edg
 	*/
 }
 
+//stores some counters (statistics)
+struct StatisticsAboutRetesseation {
+  StatisticsAboutRetesseation() {
+    ctTrianglesRetesselate = 0;
+    ctEdgesActuallyInsertedInRetesselation =0;
+    ctEdgesInsertedBecauseOfConstraint=0;
+    ctVerticesInsertedTrianglesToRetesselate=0;
+    ctEdgesTestedToInsertInRetesselation=0;
+
+  }
+  void printStatsSoFar() {
+    cerr << "Num triangles to retesselate                                 : "  << ctTrianglesRetesselate << "\n";
+    cerr << "Total number of edges we tried to insert during retesselation: "  << ctEdgesTestedToInsertInRetesselation << "\n";  
+    cerr << "Total edges tried insert and actually inserted               : " << ctEdgesActuallyInsertedInRetesselation  <<"\n";
+    cerr << "Total edges inserted because are constraint edges            : " << ctEdgesInsertedBecauseOfConstraint <<"\n";
+    cerr << "Total number of edges in retesselated triangles (add prev. 2): " << ctEdgesInsertedBecauseOfConstraint+ctEdgesActuallyInsertedInRetesselation <<"\n";
+    cerr << "Total number of vertices in retesselated triangles           : "  << ctVerticesInsertedTrianglesToRetesselate << "\n";
+  }
+  long long ctTrianglesRetesselate;
+  long long ctEdgesActuallyInsertedInRetesselation;
+  long long ctEdgesInsertedBecauseOfConstraint;
+  long long ctVerticesInsertedTrianglesToRetesselate;
+  long long ctEdgesTestedToInsertInRetesselation;
+};
+
+
+//given a triangle t, this function will split t at the intersection edges (intersection with other triangles)
+//and retesselate t, creating more triangles.
+void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, int meshWhereTriangleIs, vector<TriangleNoBB> &newTrianglesGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
+  //A triangle (except if it is degenerate to a single point) cannot be perpendicular to all 3 planes (x=0,y=0,z=0)
+  //Thus, we chose one of these planes to project the triangle during computations...
+  const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]],vertices[meshWhereTriangleIs][t.p[2]], tempVars);
+
+  //we need to "retesselate" ts and orient all the new triangles properly
+  //this set will store the edges we used in the retesselated triangle
+  //we need to choose what edges to create and, then, use these new edges to reconstruct the triangulation..
+  //This set will have the edges that will form the retriangulation of ts..
+  set<pair<int,int> > edgesUsedInThisTriangle; //TODO: maybe use unordered_set (see overhead difference...)
+
+
+  int ct =0;
+  //The edges from intersection will, necessarelly, be in the triangulation...
+  for(int edgeId:edgesFromIntersection) {
+    //cerr << edgesUsingVertexId[edgeId].first << " " << edgesUsingVertexId[edgeId].second << endl;
+    edgesUsedInThisTriangle.insert(edgesUsingVertexId[edgeId]);   
+    statistics.ctEdgesInsertedBecauseOfConstraint++;   
+  }
+
+
+  //Now, we need to add more edges to fill the parts of ts that still do not form triangle
+  vector<int> verticesToTesselate;
+  //what vertices will we have in the new triangulation of ts? (the original vertices + the vertices of the edges from intersections)
+  for(const auto &p:edgesUsedInThisTriangle) {
+    verticesToTesselate.push_back(p.first);
+    verticesToTesselate.push_back(p.second);
+  }
+  verticesToTesselate.push_back(t.p[0]);
+  verticesToTesselate.push_back(t.p[1]);
+  verticesToTesselate.push_back(t.p[2]);
+  sort(verticesToTesselate.begin(),verticesToTesselate.end());
+  auto newEnd = unique(verticesToTesselate.begin(),verticesToTesselate.end());
+  verticesToTesselate.resize(newEnd-verticesToTesselate.begin());
+  int numVTriangle = verticesToTesselate.size();
+
+  statistics.ctVerticesInsertedTrianglesToRetesselate += numVTriangle;
+
+  pair<int,int> seedEdge(-1,-1); //we need a seed output edge that will be oriented in the same way t is oriented..
+                           //we will use this seed to reorient all the triangles resulting from the retesselation of t
+
+  
+
+  set<pair<int,int> > nonStoredEdges;
+
+  //cerr << "\n\nTesting edges: " << "\n";
+  //for each pair of vertices (forming an edge), let's try to add this edge e to the triangulation
+  //
+  for(int i=0;i<numVTriangle;i++)
+    for(int j=i+1;j<numVTriangle;j++) {
+      int v1 = verticesToTesselate[i];
+      int v2 = verticesToTesselate[j];
+            
+      assert(v1<v2); //the vector was previously sorted! also, all elements should be unique!
+      //let's try to insert edge (v1,v2)...
+      pair<int,int> candidateEdge(v1,v2);
+      if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; //the edge was already used...
+
+      statistics.ctEdgesTestedToInsertInRetesselation++;
+
+      //if edge e=(v1,v2) does not intersect other edges already inserted in this triangle,
+      //we will add e to the new triangulation...
+      //any triangulation is fine as soon as the edges from the intersection of the meshes are there...
+      if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshWhereTriangleIs,whatPlaneProjectTriangleTo,tempVars)) {
+        if (v1 == t.p[0] && v2 == t.p[1]) {
+          seedEdge.first = t.p[0];
+          seedEdge.second = t.p[1];
+        } else if  (v1 == t.p[1] && v2 == t.p[0]) {
+          seedEdge.first = t.p[1];
+          seedEdge.second = t.p[0];
+        }
+
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+        edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
+      
+        //cerr << "Dont intersect\n";
+      } else {
+        //cerr << "Intersects\n";
+      }
+    }       
+  if(seedEdge.first == -1) { //the edge t.p[0] - t.p[1] is not in the output because other edges intersects it...
+    for(const pair<int,int> &e:edgesUsedInThisTriangle) 
+      if(e.first == t.p[0] ) { //let's try to find an edge (t.p[0],x) (or (x,t.p[0])) collinear with (t.p[0], t.p[1])
+        //is e.second on line (t.p[0]-t.p[1]) ??
+        //TODO: this is computed with the projected triangle... we should consider vertical triangles...
+        if (orientation(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]], *getPointFromVertexId(e.second, meshWhereTriangleIs),whatPlaneProjectTriangleTo, tempVars)==0) {
+          seedEdge.first = t.p[0];
+          seedEdge.second = e.second;
+          //cerr << "Aqui" << endl;
+          break;
+        }
+      } else if (e.second == t.p[0]) {
+        if (orientation(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]], *getPointFromVertexId(e.first, meshWhereTriangleIs),whatPlaneProjectTriangleTo,tempVars)==0) {
+          seedEdge.first = e.first;
+          seedEdge.second = t.p[0];
+          //cerr << "Ali" << endl;
+          break;
+        }
+      }         
+  }
+
+
+
+  createNewTrianglesFromRetesselationAndOrient(edgesUsedInThisTriangle,t,newTrianglesGeneratedFromRetesselation,seedEdge,meshWhereTriangleIs, whatPlaneProjectTriangleTo);
+          
+
+  //cerr << meshWhereTriangleIs << " " << i << " " << myNewTrianglesFromRetesselation.size() << endl;
+ // for(auto &elem:edgesUsedInThisTriangle)
+   // myNewTriEdgesFromEachMap.push_back(elem); ;//newTriEdgesFromEachMap[meshWhereTriangleIs].push_back(elem);   
+}
 
 
 //edges represent the edges generated from the intersection of the intersecting triangles.
@@ -817,12 +955,12 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   cerr << "Retesselating triangles..." << "\n";
   clock_gettime(CLOCK_REALTIME, &t0);
 
-  long long ctTrianglesRetesselate = 0;
+  /*long long ctTrianglesRetesselate = 0;
   long long ctVerticesInsertedTrianglesToRetesselate = 0;
   long long ctEdgesTestedToInsertInRetesselation = 0;
   long long ctEdgesActuallyInsertedInRetesselation = 0; //besides the constraint edges (the ones from intersection)
-  long long ctEdgesInsertedBecauseOfConstraint = 0; //constraint edges inserted in retesselation
-
+  long long ctEdgesInsertedBecauseOfConstraint = 0; //constraint edges inserted in retesselation*/
+  StatisticsAboutRetesseation statisticsAboutRetesseation;
 
 	unordered_map<const Triangle *, vector<int> > intersectingEdgesInEachTriangle[2];
   //trianglesIntersectingEachTriangle[0] --> for each triangle t from map 0 (that intersects other triangles), 
@@ -881,11 +1019,11 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
   	int numTrianglesToProcess = intersectingEdgesInEachTriangleToProcess.size();
 
-    ctTrianglesRetesselate += numTrianglesToProcess;
+    statisticsAboutRetesseation.ctTrianglesRetesselate += numTrianglesToProcess;
 
   	//#pragma omp parallel 
   	{
-  		vector<pair<int,int> > myNewTriEdgesFromEachMap;
+  		//vector<pair<int,int> > myNewTriEdgesFromEachMap;
 
   		vector<TriangleNoBB> myNewTrianglesFromRetesselation;
   		VertCoord tempVars[8];
@@ -901,122 +1039,12 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 		  	const auto &t = *ts.first;
 		  	const auto &edgesFromIntersection =  ts.second;
 
-        //A triangle (except if it is degenerate to a single point) cannot be perpendicular to all 3 planes (x=0,y=0,z=0)
-        //Thus, we chose one of these planes to project the triangle during computations...
-        const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]],vertices[meshIdToProcess][t.p[2]], tempVars);
-
-	  	
-
-		  	//we need to "retesselate" ts and orient all the new triangles properly
-		  	//this set will store the edges we used in the retesselated triangle
-		  	//we need to choose what edges to create and, then, use these new edges to reconstruct the triangulation..
-        //This set will have the edges that will form the retriangulation of ts..
-		  	set<pair<int,int> > edgesUsedInThisTriangle; //TODO: maybe use unordered_set (see overhead difference...)
-
-
-		  	int ct =0;
-		  	//The edges from intersection will, necessarelly, be in the triangulation...
-		  	for(int edgeId:edgesFromIntersection) {
-		  		//cerr << edgesUsingVertexId[edgeId].first << " " << edgesUsingVertexId[edgeId].second << endl;
-		  		edgesUsedInThisTriangle.insert(edgesUsingVertexId[edgeId]);		
-          ctEdgesInsertedBecauseOfConstraint++; 	
-		  	}
-
-
-        //Now, we need to add more edges to fill the parts of ts that still do not form triangle
-		  	vector<int> verticesToTesselate;
-        //what vertices will we have in the new triangulation of ts? (the original vertices + the vertices of the edges from intersections)
-		  	for(const auto &p:edgesUsedInThisTriangle) {
-		  		verticesToTesselate.push_back(p.first);
-		  		verticesToTesselate.push_back(p.second);
-		  	}
-		  	verticesToTesselate.push_back(t.p[0]);
-		  	verticesToTesselate.push_back(t.p[1]);
-		  	verticesToTesselate.push_back(t.p[2]);
-		  	sort(verticesToTesselate.begin(),verticesToTesselate.end());
-		  	auto newEnd = unique(verticesToTesselate.begin(),verticesToTesselate.end());
-		  	verticesToTesselate.resize(newEnd-verticesToTesselate.begin());
-		  	int numVTriangle = verticesToTesselate.size();
-
-        ctVerticesInsertedTrianglesToRetesselate += numVTriangle;
-
-		  	pair<int,int> seedEdge(-1,-1); //we need a seed output edge that will be oriented in the same way t is oriented..
-		  													 //we will use this seed to reorient all the triangles resulting from the retesselation of t
-
-		  	
-
-		  	set<pair<int,int> > nonStoredEdges;
-
-        cerr << "\n\nTesting edges: " << "\n";
-        //for each pair of vertices (forming an edge), let's try to add this edge e to the triangulation
-        //
-		  	for(int i=0;i<numVTriangle;i++)
-		  		for(int j=i+1;j<numVTriangle;j++) {
-		  			int v1 = verticesToTesselate[i];
-		  			int v2 = verticesToTesselate[j];
-		  						
-		  			assert(v1<v2); //the vector was previously sorted! also, all elements should be unique!
-		  			//let's try to insert edge (v1,v2)...
-		  			pair<int,int> candidateEdge(v1,v2);
-		  			if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; //the edge was already used...
-
-            ctEdgesTestedToInsertInRetesselation++;
-
-            //if edge e=(v1,v2) does not intersect other edges already inserted in this triangle,
-            //we will add e to the new triangulation...
-            //any triangulation is fine as soon as the edges from the intersection of the meshes are there...
-		  			if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshIdToProcess,whatPlaneProjectTriangleTo,tempVars)) {
-		  				if (v1 == t.p[0] && v2 == t.p[1]) {
-		  					seedEdge.first = t.p[0];
-		  					seedEdge.second = t.p[1];
-		  				} else if  (v1 == t.p[1] && v2 == t.p[0]) {
-		  					seedEdge.first = t.p[1];
-		  					seedEdge.second = t.p[0];
-		  				}
-
-		  				ctEdgesActuallyInsertedInRetesselation++;
-		  				edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
-		  			
-              cerr << "Dont intersect\n";
-            }	else {
-              cerr << "Intersects\n";
-            }
-		  		}		  	
-		  	if(seedEdge.first == -1) { //the edge t.p[0] - t.p[1] is not in the output because other edges intersects it...
-		  		for(const pair<int,int> &e:edgesUsedInThisTriangle) 
-		  			if(e.first == t.p[0] ) { //let's try to find an edge (t.p[0],x) (or (x,t.p[0])) collinear with (t.p[0], t.p[1])
-		  				//is e.second on line (t.p[0]-t.p[1]) ??
-              //TODO: this is computed with the projected triangle... we should consider vertical triangles...
-		  				if (orientation(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]], *getPointFromVertexId(e.second, meshIdToProcess),whatPlaneProjectTriangleTo, tempVars)==0) {
-								seedEdge.first = t.p[0];
-								seedEdge.second = e.second;
-								//cerr << "Aqui" << endl;
-								break;
-							}
-		  			} else if (e.second == t.p[0]) {
-		  				if (orientation(vertices[meshIdToProcess][t.p[0]], vertices[meshIdToProcess][t.p[1]], *getPointFromVertexId(e.first, meshIdToProcess),whatPlaneProjectTriangleTo,tempVars)==0) {
-								seedEdge.first = e.first;
-								seedEdge.second = t.p[0];
-								//cerr << "Ali" << endl;
-								break;
-							}
-		  			}		  		
-		  	}
-
-
-
-		  	createNewTrianglesFromRetesselationAndOrient(edgesUsedInThisTriangle,t,myNewTrianglesFromRetesselation,seedEdge,meshIdToProcess, whatPlaneProjectTriangleTo);
-		  			  	
-
-		  	//cerr << meshIdToProcess << " " << i << " " << myNewTrianglesFromRetesselation.size() << endl;
-		  	for(auto &elem:edgesUsedInThisTriangle)
-		  		myNewTriEdgesFromEachMap.push_back(elem);	;//newTriEdgesFromEachMap[meshIdToProcess].push_back(elem);		 
-		  
+        retesselateTriangle(edgesUsingVertexId, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
 		  }
 
 		  //#pragma omp critical 
 		  {
-		  	newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
+		  	//newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
 				trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
 			}
 
@@ -1027,20 +1055,15 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 	clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to retesselate creating new tri edges: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
 
-
+  
   cerr << "Counts computed during retesselation: " << "\n";
-  cerr << "Num triangles to retesselate                                 : "  << ctTrianglesRetesselate << "\n";
-  cerr << "Total number of edges we tried to insert during retesselation: "  << ctEdgesTestedToInsertInRetesselation << "\n";  
-  cerr << "Total edges tried insert and actually inserted               : " << ctEdgesActuallyInsertedInRetesselation  <<"\n";
-  cerr << "Total edges inserted because are constraint edges            : " << ctEdgesInsertedBecauseOfConstraint <<"\n";
-  cerr << "Total number of edges in retesselated triangles (add prev. 2): " << ctEdgesInsertedBecauseOfConstraint+ctEdgesActuallyInsertedInRetesselation <<"\n";
-  cerr << "Total number of vertices in retesselated triangles           : "  << ctVerticesInsertedTrianglesToRetesselate << "\n";
+  statisticsAboutRetesseation.printStatsSoFar();
   cerr << "Number of inters. tests (for insertin tris.)that are true    : " << ctEdgeIntersect << "\n";
   cerr << "Number of inters. tests (for insertin tris.)that are false    : " << ctEdgeDoNotIntersect << "\n";
   
  
 
-
+  /*
   for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
   	vector<pair<array<double,3>,array<double,3>> > edgesToStore;
 
@@ -1056,7 +1079,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   	else 
   		storeEdgesAsGts("out/retesselatedMesh1.gts",edgesToStore);
   }
-  
+  */
 }
 
 
