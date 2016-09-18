@@ -1513,11 +1513,11 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 
     clock_gettime(CLOCK_REALTIME, &t0);
 
+		
 
-		#pragma omp parallel 
+    #pragma omp parallel 
 		{
-			VertCoord tempVar;
-      big_int tempVarsInt[3];
+      VertCoord tempVar;
 
       #pragma omp for
 			for(int tid=0;tid<numIntersectingT;tid++) {
@@ -1526,28 +1526,47 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 				Point *b = getPointFromVertexId(t.p[1], meshId);
 				Point *c = getPointFromVertexId(t.p[2], meshId);
 				
-				for(int i=0;i<3;i++) centerOfIntersectingTriangles[tid][i] = 0;
+				//for(int i=0;i<3;i++) centerOfIntersectingTriangles[tid][i] = 0;
 				for(int i=0;i<3;i++) {
-					centerOfIntersectingTriangles[tid][i] += (*a)[i];
-					centerOfIntersectingTriangles[tid][i] += (*b)[i];
-					centerOfIntersectingTriangles[tid][i] += (*c)[i];
-					centerOfIntersectingTriangles[tid][i] /= 3;
-				}
-				verticesToLocateInOtherMesh[tid+numVerticesLocateFromNonIntersectingTriangles] = (&centerOfIntersectingTriangles[tid]);
-				global_x_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[tid][0], tempVar,tempVarsInt));	
-				global_y_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[tid][1], tempVar,tempVarsInt));	
-				global_z_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[tid][2], tempVar,tempVarsInt));	
+					//centerOfIntersectingTriangles[tid][i] += (*a)[i];
+					//centerOfIntersectingTriangles[tid][i] += (*b)[i];
+					//centerOfIntersectingTriangles[tid][i] += (*c)[i];
+					//centerOfIntersectingTriangles[tid][i] /= 3;
+          tempVar = (*a)[i];
+          tempVar += (*b)[i];
+          tempVar += (*c)[i];
+          tempVar /= 3;
+          centerOfIntersectingTriangles[tid][i] = tempVar;
+				}				
 			}
 		}
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to compute center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+    #pragma omp parallel 
+    {
+      VertCoord tempVar;
+      big_int tempVarsInt[3];
+
+      #pragma omp for
+      for(int tid=0;tid<numIntersectingT;tid++) {        
+        verticesToLocateInOtherMesh[tid+numVerticesLocateFromNonIntersectingTriangles] = (&centerOfIntersectingTriangles[tid]);
+        global_x_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[tid][0], tempVar,tempVarsInt)); 
+        global_y_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[tid][1], tempVar,tempVarsInt)); 
+        global_z_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[tid][2], tempVar,tempVarsInt)); 
+      }
+    }
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to get grid cell of center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 
 
 		//TODO: locate unique vertices???
 		vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
 		//vertices of mesh "meshId" will be located in mesh "1-meshId"
 
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to get grid coord of vertices from intersection (preparing for classification): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-		
+    
 		clock_gettime(CLOCK_REALTIME, &t0);
 		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-meshId);
 		clock_gettime(CLOCK_REALTIME, &t1);
