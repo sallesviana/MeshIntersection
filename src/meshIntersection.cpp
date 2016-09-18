@@ -841,7 +841,7 @@ struct StatisticsAboutRetesseation {
 
 //given a triangle t, this function will split t at the intersection edges (intersection with other triangles)
 //and retesselate t, creating more triangles.
-void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, int meshWhereTriangleIs, vector<TriangleNoBB> &newTrianglesGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
+void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, const int meshWhereTriangleIs, vector<TriangleNoBB> &newTrianglesGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
   //A triangle (except if it is degenerate to a single point) cannot be perpendicular to all 3 planes (x=0,y=0,z=0)
   //Thus, we chose one of these planes to project the triangle during computations...
   const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]],vertices[meshWhereTriangleIs][t.p[2]], tempVars);
@@ -1249,14 +1249,14 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
     statisticsAboutRetesseation.ctTrianglesRetesselate += numTrianglesToProcess;
 
-  	//#pragma omp parallel 
+  	#pragma omp parallel 
   	{
   		//vector<pair<int,int> > myNewTriEdgesFromEachMap;
 
   		vector<TriangleNoBB> myNewTrianglesFromRetesselation;
   		VertCoord tempVars[8];
 
-  		//#pragma omp for
+  		#pragma omp for
 		  for(int i=0;i<numTrianglesToProcess;i++) {  		  		
         //for each triangle ts, let's process the triangles intersecting t and the edges
         //formed by the intersection of ts and these triangles
@@ -1270,7 +1270,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
         retesselateTriangle(edgesUsingVertexId, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
 		  }
 
-		  //#pragma omp critical 
+		  #pragma omp critical 
 		  {
 		  	//newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
 				trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
@@ -1477,6 +1477,9 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	vector<Triangle> outputTriangles[2]; //output triangles generated from triangles of each mesh
 	vector<TriangleNoBB> outputTrianglesFromRetesselation[2];
 	for(int meshId=0;meshId<2;meshId++){
+    timespec t0,t1;
+    clock_gettime(CLOCK_REALTIME, &t0);
+
 		vector<Point *> verticesToLocateInOtherMesh;
 
 
@@ -1492,19 +1495,33 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 			}
 		}
 
+
+
 		int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
-		int numIntersectingT = trianglesFromRetesselation[meshId].size();
+		const int numIntersectingT = trianglesFromRetesselation[meshId].size();
 		cerr << "Mesh " << meshId << " Num tri from retesselation: " << numIntersectingT << endl;
 		vector<Point> centerOfIntersectingTriangles(numIntersectingT);
 		
-		//#pragma omp parallel 
+
+    const int numVerticesLocateFromNonIntersectingTriangles = verticesToLocateInOtherMesh.size();
+    //Resize all vectors to fit the data related to the intersecting triangles...
+    global_x_coord_vertex_to_locate.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
+    global_y_coord_vertex_to_locate.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
+    global_z_coord_vertex_to_locate.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
+    verticesToLocateInOtherMesh.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
+
+
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+
+		#pragma omp parallel 
 		{
 			VertCoord tempVar;
       big_int tempVarsInt[3];
 
-      //#pragma omp for
+      #pragma omp for
 			for(int tid=0;tid<numIntersectingT;tid++) {
-			 	const TriangleNoBB&t = trianglesFromRetesselation[meshId][tid];
+			 	const TriangleNoBB& t = trianglesFromRetesselation[meshId][tid];
 				Point *a = getPointFromVertexId(t.p[0], meshId);
 				Point *b = getPointFromVertexId(t.p[1], meshId);
 				Point *c = getPointFromVertexId(t.p[2], meshId);
@@ -1516,10 +1533,10 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 					centerOfIntersectingTriangles[tid][i] += (*c)[i];
 					centerOfIntersectingTriangles[tid][i] /= 3;
 				}
-				verticesToLocateInOtherMesh.push_back(&centerOfIntersectingTriangles[tid]);
-				global_x_coord_vertex_to_locate.push_back(uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[tid][0], tempVar,tempVarsInt));	
-				global_y_coord_vertex_to_locate.push_back(uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[tid][1], tempVar,tempVarsInt));	
-				global_z_coord_vertex_to_locate.push_back(uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[tid][2], tempVar,tempVarsInt));	
+				verticesToLocateInOtherMesh[tid+numVerticesLocateFromNonIntersectingTriangles] = (&centerOfIntersectingTriangles[tid]);
+				global_x_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[tid][0], tempVar,tempVarsInt));	
+				global_y_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[tid][1], tempVar,tempVarsInt));	
+				global_z_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[tid][2], tempVar,tempVarsInt));	
 			}
 		}
 
@@ -1528,7 +1545,9 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 		vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
 		//vertices of mesh "meshId" will be located in mesh "1-meshId"
 
-		timespec t0,t1;
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to get grid coord of vertices from intersection (preparing for classification): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+		
 		clock_gettime(CLOCK_REALTIME, &t0);
 		locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-meshId);
 		clock_gettime(CLOCK_REALTIME, &t1);
