@@ -717,6 +717,7 @@ ObjectId computeObjectWherePointIsTwoLevel(const Point &p,int globalGridCoordX,i
 
 #include "floodFillScanline.cpp"
 
+//#define PINMESH_VERBOSE
 
 
 //Locate a set of vertices in the objects in map 0...
