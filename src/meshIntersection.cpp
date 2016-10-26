@@ -34,6 +34,19 @@ using namespace std;
 
 
 //===============================================================
+// Constants, flags...
+//===============================================================
+
+//#define DEBUGGING_MODE
+
+//This may slow down the algorithm
+#define COLLECT_STATISTICS
+
+//===============================================================
+
+
+
+//===============================================================
 // General templates (from WRF source codes)
 //===============================================================
 
@@ -109,13 +122,7 @@ timespec diff(timespec start, timespec end)
 
 double timeReadData,timeCreateGrid,timeDetectIntersections,timeRetesselate,timeClassifyTriangles;
 
-//===============================================================
-// Constants...
-//===============================================================
 
-
-
-//===============================================================
 #include "3d_objects.cpp"
 
 #include "nested3DGrid.cpp"
@@ -145,12 +152,16 @@ Point * getPointFromVertexId(int vertexId, int meshId) {
  return (vertexId>=0)?&vertices[meshId][vertexId]:&vertices[2][-vertexId -1];
 }
 
+bool isVertexSharedBetweenMeshes(int vertexId) {
+  return vertexId<0;
+}
+
 //=======================================================================================================================
 
 
 #include "PinMesh.cpp"
 
-
+#include "debuggingUtils.cpp"
 
 
 
@@ -230,6 +241,38 @@ void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k
     }
     ptrTriMesh0++;
   }
+
+}
+
+
+unsigned long long sumPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
+	int numTrianglesMesh0 = grid->numTrianglesInGridCell(0, gridSize,i,j,k);//cell.triangles[0].size();
+  int numTrianglesMesh1 = grid->numTrianglesInGridCell(1, gridSize,i,j,k);
+
+  return ((unsigned long long)numTrianglesMesh0)*numTrianglesMesh1;
+
+}
+
+unsigned long long computeNumPairsTrianglesToProcessBeforeUnique(const Nested3DGridWrapper *uniformGrid,vector<pair<Triangle *,Triangle *> > &pairsTrianglesToProcess) {
+	int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
+	int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
+
+	unsigned long long ans = 0;
+	for(int i=0;i<gridSizeLevel1;i++) 
+    for(int j=0;j<gridSizeLevel1;j++) 
+      for(int k=0;k<gridSizeLevel1;k++) {
+        if (uniformGrid->grid.hasSecondLevel(i,j,k) ) {
+        	Nested3DGrid *secondLevelGrid = uniformGrid->grid.getChildGrid(i,j,k); 
+			    for(int iLevel2=0;iLevel2<gridSizeLevel2;iLevel2++) 
+			    	for(int jLevel2=0;jLevel2<gridSizeLevel2;jLevel2++) 
+			      	for(int kLevel2=0;kLevel2<gridSizeLevel2;kLevel2++) {
+			      		  ans += sumPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2,pairsTrianglesToProcess);   
+			      	}    
+        } else {
+        	ans += sumPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1,pairsTrianglesToProcess);         
+        }
+      }
+  return ans;
 }
 
 //the vector will be filled with pointers to the triangles in the same uniform grid cells
@@ -239,10 +282,17 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 	//timespec t0,t1;
 	//clock_gettime(CLOCK_REALTIME, &t0);
 
+	//TODO: remove this for performance purposess.... just for debugging
+	//cerr << "Num pairs to process according to this configuration: " << computeNumPairsTrianglesToProcessBeforeUnique(uniformGrid,pairsTrianglesToProcess) << "\n";
+	//exit(0);
+
 	pairsTrianglesToProcess.reserve(min(uniformGrid->trianglesInGrid[0]->size(),uniformGrid->trianglesInGrid[1]->size()));
 
   int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
 	int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
+
+
+
   for(int i=0;i<gridSizeLevel1;i++) 
     for(int j=0;j<gridSizeLevel1;j++) 
       for(int k=0;k<gridSizeLevel1;k++) {
@@ -261,10 +311,12 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 //  clock_gettime(CLOCK_REALTIME, &t1);
   //cerr << "T before sort: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
+  cerr << "Pairs before unique: " << pairsTrianglesToProcess.size() << "\n";
   sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
   vector<pair<Triangle *,Triangle *> >::iterator it = std::unique (pairsTrianglesToProcess.begin(), pairsTrianglesToProcess.end());
   pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10 
 
+  cerr << "Pairs after unique: " << pairsTrianglesToProcess.size() << "\n";
 
  // clock_gettime(CLOCK_REALTIME, &t1);
   //cerr << "T after sort: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";    
@@ -670,6 +722,7 @@ void createNewTrianglesFromRetesselationAndOrient(const set<pair<int,int> > &edg
 
 	vector<pair<int,int> > edgesInTriangleCountingFrom0;
 	for(const pair<int,int> &p:edgesUsedInThisTriangle) {
+		assert(p.first!=p.second);
 		if(verticesStartingFrom0.count(p.first)==0) {
 			verticesStartingFrom0[p.first] = vertexFrom0ToVertexId.size();
 			vertexFrom0ToVertexId.push_back(p.first);
@@ -817,9 +870,9 @@ struct StatisticsAboutRetesseation {
     ctVerticesInsertedTrianglesToRetesselate=0;
     ctEdgesTestedToInsertInRetesselation=0;
     simple = difficult = 0;
+}
 
-  }
-  void printStatsSoFar() {
+void printStatsSoFar() {
     cerr << numVerticesInEdges << endl;
     cerr << "Num triangles to retesselate                                 : "  << ctTrianglesRetesselate << "\n";
     cerr << "Total number of edges we tried to insert during retesselation: "  << ctEdgesTestedToInsertInRetesselation << "\n";  
@@ -857,8 +910,13 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
   //The edges from intersection will, necessarelly, be in the triangulation...
   for(int edgeId:edgesFromIntersection) {
     //cerr << edgesUsingVertexId[edgeId].first << " " << edgesUsingVertexId[edgeId].second << endl;
+    assert(edgesUsingVertexId[edgeId].first != edgesUsingVertexId[edgeId].second);
     edgesUsedInThisTriangle.insert(edgesUsingVertexId[edgeId]);   
-    statistics.ctEdgesInsertedBecauseOfConstraint++;   
+
+    #ifdef COLLECT_STATISTICS
+      #pragma omp atomic
+      statistics.ctEdgesInsertedBecauseOfConstraint++;   
+    #endif
   }
 
 
@@ -877,8 +935,10 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
   verticesToTesselate.resize(newEnd-verticesToTesselate.begin());
   int numVTriangle = verticesToTesselate.size();
 
-  statistics.ctVerticesInsertedTrianglesToRetesselate += numVTriangle;
-
+  #ifdef COLLECT_STATISTICS
+    #pragma omp atomic
+    statistics.ctVerticesInsertedTrianglesToRetesselate += numVTriangle;
+  #endif
 
   
 
@@ -949,7 +1009,12 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
       seedEdge.second = t.p[0];
     }
 
-    statistics.ctEdgesActuallyInsertedInRetesselation++;
+    #ifdef COLLECT_STATISTICS
+      #pragma omp atomic
+      statistics.ctEdgesActuallyInsertedInRetesselation++;
+    #endif
+
+    assert(candidateEdge.first != candidateEdge.second);
     edgesUsedInThisTriangle.insert(candidateEdge);
   } else {
     if(verticesIncidentEdge==1) {
@@ -961,12 +1026,23 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
 
       if(v1<v) {candidateEdge.first = v1; candidateEdge.second = v;}
       else {candidateEdge.first = v; candidateEdge.second = v1;}
-      statistics.ctEdgesActuallyInsertedInRetesselation++;
+
+      #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #endif
+
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.insert(candidateEdge);
 
       if(v2<v) {candidateEdge.first = v2; candidateEdge.second = v;}
       else {candidateEdge.first = v; candidateEdge.second = v2;}
-      statistics.ctEdgesActuallyInsertedInRetesselation++;
+
+      #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #endif
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.insert(candidateEdge);
     } else {
       allSimple= false;
@@ -981,7 +1057,12 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
     if(v2<v1) swap(v1,v2); //the first vertex is always smaller than the second in the edges... (to simplify tests)
     pair<int,int> candidateEdge(v1,v2);    
 
-    statistics.ctEdgesActuallyInsertedInRetesselation++;
+    #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+    #endif
+
+    assert(candidateEdge.first != candidateEdge.second);
     edgesUsedInThisTriangle.insert(candidateEdge);
   } else {
     if(verticesIncidentEdge==1) {
@@ -993,12 +1074,22 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
 
       if(v1<v) {candidateEdge.first = v1; candidateEdge.second = v;}
       else {candidateEdge.first = v; candidateEdge.second = v1;}
-      statistics.ctEdgesActuallyInsertedInRetesselation++;
+
+      #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #endif
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.insert(candidateEdge);
 
       if(v2<v) {candidateEdge.first = v2; candidateEdge.second = v;}
       else {candidateEdge.first = v; candidateEdge.second = v2;}
-      statistics.ctEdgesActuallyInsertedInRetesselation++;
+
+      #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #endif
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.insert(candidateEdge);
     } else {
       allSimple= false;
@@ -1013,7 +1104,11 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
     if(v2<v1) swap(v1,v2); //the first vertex is always smaller than the second in the edges... (to simplify tests)
     pair<int,int> candidateEdge(v1,v2);
 
-    statistics.ctEdgesActuallyInsertedInRetesselation++;
+    #ifdef COLLECT_STATISTICS
+      #pragma omp atomic
+      statistics.ctEdgesActuallyInsertedInRetesselation++;
+    #endif
+    assert(candidateEdge.first != candidateEdge.second);
     edgesUsedInThisTriangle.insert(candidateEdge);
   } else {
     if(verticesIncidentEdge==1) {
@@ -1025,22 +1120,37 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
 
       if(v1<v) {candidateEdge.first = v1; candidateEdge.second = v;}
       else {candidateEdge.first = v; candidateEdge.second = v1;}
-      statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #endif
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.insert(candidateEdge);
 
       if(v2<v) {candidateEdge.first = v2; candidateEdge.second = v;}
       else {candidateEdge.first = v; candidateEdge.second = v2;}
-      statistics.ctEdgesActuallyInsertedInRetesselation++;
+
+      #ifdef COLLECT_STATISTICS
+        #pragma omp atomic
+        statistics.ctEdgesActuallyInsertedInRetesselation++;
+      #endif
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.insert(candidateEdge);
     } else {
       allSimple= false;
     }
   }
   
-
-  if(allSimple) statistics.simple++;
-  else statistics.difficult++;
-  
+  #ifdef COLLECT_STATISTICS        
+      if(allSimple) {
+        #pragma omp atomic
+        statistics.simple++;
+      }
+      else {
+        #pragma omp atomic
+        statistics.difficult++;
+      }
+  #endif
 
   if(allSimple) {
     //vertices should connect: internal - boundary , two boundary iff from intersection...
@@ -1071,13 +1181,19 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
         else {candidateEdge.first = v2; candidateEdge.second = v1;}
 
         if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; 
+        assert(candidateEdge.first != candidateEdge.second);
 
-        statistics.ctEdgesTestedToInsertInRetesselation++;
-
+        #ifdef COLLECT_STATISTICS   
+          #pragma omp atomic
+          statistics.ctEdgesTestedToInsertInRetesselation++;
+        #endif
         
         if(!intersects(candidateEdge,internalEdgesThisTriangle,meshWhereTriangleIs,whatPlaneProjectTriangleTo,tempVars)) {        
 
-          statistics.ctEdgesActuallyInsertedInRetesselation++;
+          #ifdef COLLECT_STATISTICS   
+            #pragma omp atomic
+            statistics.ctEdgesActuallyInsertedInRetesselation++;
+          #endif
           edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
           internalEdgesThisTriangle.insert(candidateEdge); 
           //cerr << "Dont intersect\n";
@@ -1121,16 +1237,20 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
           //cerr << "continuing..." << endl;
           continue;
         }*/
-
-        statistics.ctEdgesTestedToInsertInRetesselation++;
+        #ifdef COLLECT_STATISTICS   
+          #pragma omp atomic
+          statistics.ctEdgesTestedToInsertInRetesselation++;
+        #endif
 
         //if edge e=(v1,v2) does not intersect other edges already inserted in this triangle,
         //we will add e to the new triangulation...
         //any triangulation is fine as soon as the edges from the intersection of the meshes are there...
         if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshWhereTriangleIs,whatPlaneProjectTriangleTo,tempVars)) {        
 
-
-          statistics.ctEdgesActuallyInsertedInRetesselation++;
+          #ifdef COLLECT_STATISTICS   
+            #pragma omp atomic
+            statistics.ctEdgesActuallyInsertedInRetesselation++;
+          #endif
           edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
         
           //cerr << "Dont intersect\n";
@@ -1174,6 +1294,43 @@ void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const
 }
 
 
+
+/*
+  const Triangle *tA = intersectingTrianglesThatGeneratedEdges[i].first;
+  const Triangle *tB = intersectingTrianglesThatGeneratedEdges[i].second;
+
+*/
+void printTriangleWithManyIntersection(const Triangle &t,int meshOfT,const vector<int> &edgesFromIntersection,const vector< pair<Triangle *,Triangle *> > &intersectingTrianglesThatGeneratedEdges) {
+  cout << "Triangle with many intersection" << "\n";
+  cout << "Num intersections: " << edgesFromIntersection.size() << "\n";
+  cout << "Mesh of t: " << meshOfT << "\n";
+  cout << t.p[0] << " " << t.p[1] << " " << t.p[2] << "\n";
+
+
+  for(int edge:edgesFromIntersection) {
+    const Triangle *ts;
+    if(meshOfT==0) {
+      ts = intersectingTrianglesThatGeneratedEdges[edge].second;
+    } else {
+      ts = intersectingTrianglesThatGeneratedEdges[edge].first;
+    }
+    cout << ts->p[0] << " " << ts->p[1] << " " << ts->p[2] << "\n";
+  }
+
+} 
+
+void saveEdgesAsGTS(const vector< pair< array<VertCoord,3>,array<VertCoord,3> > > &edges,const vector<int> &edgesToSelect,const string &path) {
+  vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+  for(int edgeId:edgesToSelect) {
+    array<double,3> v0 = {edges[edgeId].first[0].get_d(),edges[edgeId].first[1].get_d(),edges[edgeId].first[2].get_d()};
+    array<double,3> v1 = {edges[edgeId].second[0].get_d(),edges[edgeId].second[1].get_d(),edges[edgeId].second[2].get_d()};
+    edgesToStore.push_back({v0,v1});
+  }
+
+  storeEdgesAsGts(path,edgesToStore );
+}
+
+
 //edges represent the edges generated from the intersection of the intersecting triangles.
 //intersectingTrianglesThatGeneratedEdges[i] contains the pair of triangles whose intersection generated edges[i]
 
@@ -1188,6 +1345,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   long long ctEdgesTestedToInsertInRetesselation = 0;
   long long ctEdgesActuallyInsertedInRetesselation = 0; //besides the constraint edges (the ones from intersection)
   long long ctEdgesInsertedBecauseOfConstraint = 0; //constraint edges inserted in retesselation*/
+
   StatisticsAboutRetesseation statisticsAboutRetesseation;
 
 	unordered_map<const Triangle *, vector<int> > intersectingEdgesInEachTriangle[2];
@@ -1247,6 +1405,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
   	int numTrianglesToProcess = intersectingEdgesInEachTriangleToProcess.size();
 
+  	cerr << "Number of triangles to retesselate in this mesh: " << numTrianglesToProcess << "\n";
+
     statisticsAboutRetesseation.ctTrianglesRetesselate += numTrianglesToProcess;
 
   	#pragma omp parallel 
@@ -1266,6 +1426,20 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 		  	//ts.second = list of edges formed by the intersection of ts.first with other triangles...
 		  	const auto &t = *ts.first;
 		  	const auto &edgesFromIntersection =  ts.second;
+
+        
+        #ifdef COLLECT_STATISTICS
+          #pragma omp critical
+          cout << "Triangle from mesh " << meshIdToProcess << " intersects: " << ts.second.size() << "\n";
+          if(ts.second.size()==6) {
+            #pragma omp critical
+            printTriangleWithManyIntersection(t,meshIdToProcess,ts.second,intersectingTrianglesThatGeneratedEdges);
+          }
+          if(ts.second.size()==6) {
+            #pragma omp critical
+            saveEdgesAsGTS(edges,ts.second,"edgesFromTriangleIntersetingManyTriangles6.gts");
+          }
+        #endif
 
         retesselateTriangle(edgesUsingVertexId, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
 		  }
@@ -1312,6 +1486,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
 
 
+
+
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
 unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid, unordered_set<const Triangle *> trianglesThatIntersect[2]) {
@@ -1323,7 +1499,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
 
   vector<pair<Triangle *,Triangle *> > vtPairsTrianglesToProcess;
   
-  
+  cerr << "Getting pairs of triangles from grid cells" << "\n";
   getPairsTrianglesInSameUnifGridCells(uniformGrid,vtPairsTrianglesToProcess);
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time creating list of pairs of triangles to process (intersection): " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
@@ -1369,6 +1545,28 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
       totalTestsTemp++;
       if (ans && !coplanar) {
         edgesTemp.push_back( pair<array<VertCoord,3>,array<VertCoord,3>>( {p0InterLine[0],p0InterLine[1],p0InterLine[2]} , {p1InterLine[0],p1InterLine[1],p1InterLine[2]}   ) );
+      	
+        #ifdef DEBUGGING_MODE
+      	if(edgesTemp.back().first == edgesTemp.back().second) {
+      		#pragma omp critical
+      		{
+      		cerr << "Triangle 1: " << endl;
+      		printVertexForDebugging(vertices[0][a.p[0]].data());
+      		printVertexForDebugging(vertices[0][a.p[1]].data());
+      		printVertexForDebugging(vertices[0][a.p[2]].data());
+
+      		cerr << "Triangle 2: " << endl;
+      		printVertexForDebugging(vertices[1][a.p[0]].data());
+      		printVertexForDebugging(vertices[1][a.p[1]].data());
+      		printVertexForDebugging(vertices[1][a.p[2]].data());
+
+      		cerr << "Inters:" << endl;
+      		printVertexForDebugging(edgesTemp.back().first);
+      		printVertexForDebugging(edgesTemp.back().second);
+      		assert(false);
+      		}
+      	}
+      	#endif
       	intersectingTrianglesTemp.push_back(pairTriangles);
       }
 
@@ -1496,7 +1694,297 @@ int labelConnectedComponentsEachVertex(const vector<list<int> > &adjList,vector<
 }
 
 
+int labelConnectedComponentsEachVertex(const vector<vector<int> > &adjList,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
+  int numComponentsSeenSoFar = 0;
+  queue< int >   vertexToLabel;
+  int numVertices = adjList.size();
+
+  vector<bool> shouldLabel(adjList.size(),true);
+  for(int i=0;i<numVertices;i++) 
+    if(shouldLabel[i]) {
+      vertexToLabel.push(i);
+      connectedComponentEachVertex[i] = numComponentsSeenSoFar;
+      shouldLabel[i] = false;
+      sampleVertexIdFromEachConnectedComponent.push_back(i);
+
+      while(!vertexToLabel.empty()) {
+        int v = vertexToLabel.front();
+        vertexToLabel.pop(); 
+        
+
+        for(int neighbor:adjList[v]) {
+          if(shouldLabel[neighbor]) {
+            shouldLabel[neighbor] = false;
+            connectedComponentEachVertex[neighbor] = numComponentsSeenSoFar;
+            vertexToLabel.push(neighbor);
+          }
+        }
+      }
+
+      numComponentsSeenSoFar++;
+    }
+  
+
+  
+  
+
+  return numComponentsSeenSoFar;
+}
+
+
 void locateTrianglesInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
+                                            const unordered_set<const Triangle *> trianglesThatIntersect[2],
+                                            int thisMeshId,
+                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
+                                            vector<ObjectId> &locationOfTrianglesFromRetesselationInTheOtherMesh) {  
+    const int DONT_KNOW_FLAG = -999999999;
+    timespec t0,t1,t0Function;
+
+    
+    clock_gettime(CLOCK_REALTIME, &t0);
+    t0Function  = t0;
+
+    vector<Point *> verticesToLocateInOtherMesh;
+
+    clock_gettime(CLOCK_REALTIME, &t0);
+    
+    vector<ObjectId> locationEachVertex(vertices[thisMeshId].size(),DONT_KNOW_FLAG);
+    vector<int> connectedComponentEachVertex(vertices[thisMeshId].size(),DONT_KNOW_FLAG);
+    vector<int> sampleVertexIdFromEachConnectedComponent;
+    int numComponents;
+
+{
+    vector<vector<int> > adjList(vertices[thisMeshId].size());
+    for(const Triangle&t:triangles[thisMeshId]) {
+      if(trianglesThatIntersect[thisMeshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+        adjList[t.p[0]].push_back(t.p[1]);
+        adjList[t.p[1]].push_back(t.p[2]);
+        adjList[t.p[2]].push_back(t.p[0]);
+        
+        adjList[t.p[1]].push_back(t.p[0]);
+        adjList[t.p[2]].push_back(t.p[1]);
+        adjList[t.p[0]].push_back(t.p[2]);
+      } 
+    }
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to create adj. list: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+    
+
+    cerr << "Labeling connected components\n";
+    
+    numComponents = labelConnectedComponentsEachVertex(adjList,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
+    assert(numComponents==sampleVertexIdFromEachConnectedComponent.size());
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to compute CCs: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+}
+
+
+    cerr << "Num connected components to locate: " << numComponents << "\n";
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to free adj. list memory: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+    vector<int> global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate;
+    for(int i=0;i<numComponents;i++) {      
+      int vertexToLocate = sampleVertexIdFromEachConnectedComponent[i];
+
+      verticesToLocateInOtherMesh.push_back(&(vertices[thisMeshId][vertexToLocate]));     
+      global_x_coord_vertex_to_locate.push_back(uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
+      global_y_coord_vertex_to_locate.push_back(uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
+      global_z_coord_vertex_to_locate.push_back(uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));         
+    }
+
+
+
+    int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
+    const int numIntersectingT = trianglesFromRetesselation[thisMeshId].size();
+    cerr << "Mesh " << thisMeshId << " Num tri from retesselation: " << numIntersectingT << endl;
+    
+    
+
+ 
+    
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to select vertices to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+    int numberIntersectingTrianglesWithNonSharedVertices =0;
+    int numberIntersectingTrianglesWithoutNonSharedVertices =0;
+
+
+    vector<int> triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices;
+    for(int tid=0;tid<numIntersectingT;tid++) {
+        const TriangleNoBB& t = trianglesFromRetesselation[thisMeshId][tid];
+        if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) 
+          numberIntersectingTrianglesWithNonSharedVertices++;
+        else {          
+          triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.push_back(tid);     
+          numberIntersectingTrianglesWithoutNonSharedVertices++;   
+        }
+    }
+
+    //Resize all vectors to fit the data related to the intersecting triangles...
+    global_x_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
+    global_y_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
+    global_z_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
+    verticesToLocateInOtherMesh.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
+    vector<Point> centerOfIntersectingTriangles(numberIntersectingTrianglesWithoutNonSharedVertices);
+
+    cerr << "Number of triangles from retesselation with all vertices shared: " << triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size() << "\n";
+    #pragma omp parallel 
+    {
+      VertCoord tempVar;
+      big_int tempVarsInt[3];
+
+      #pragma omp for 
+      for(int t =0;t<triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size();t++) {
+        int tid = triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices[t];
+        const TriangleNoBB& triangle = trianglesFromRetesselation[thisMeshId][tid];
+
+        /*if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) {
+          int vertexToLocate = -1;
+          if(!isVertexSharedBetweenMeshes(t.p[0]))
+            vertexToLocate = t.p[0];
+          else if(!isVertexSharedBetweenMeshes(t.p[1]))
+            vertexToLocate = t.p[1];
+          else if(!isVertexSharedBetweenMeshes(t.p[2]))
+            vertexToLocate = t.p[2];
+
+          verticesToLocateInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (&(vertices[thisMeshId][vertexToLocate]));     
+          global_x_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
+          global_y_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
+          global_z_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));     
+        } else {*/
+          Point *a = getPointFromVertexId(triangle.p[0], thisMeshId);
+          Point *b = getPointFromVertexId(triangle.p[1], thisMeshId);
+          Point *c = getPointFromVertexId(triangle.p[2], thisMeshId);
+          
+          //for(int i=0;i<3;i++) centerOfIntersectingTriangles[tid][i] = 0;
+          for(int i=0;i<3;i++) {
+            //centerOfIntersectingTriangles[tid][i] += (*a)[i];
+            //centerOfIntersectingTriangles[tid][i] += (*b)[i];
+            //centerOfIntersectingTriangles[tid][i] += (*c)[i];
+            //centerOfIntersectingTriangles[tid][i] /= 3;
+            tempVar = (*a)[i];
+            tempVar += (*b)[i];
+            tempVar += (*c)[i];
+            tempVar /= 3;
+            centerOfIntersectingTriangles[t][i] = tempVar;
+          }  
+          verticesToLocateInOtherMesh[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (&centerOfIntersectingTriangles[t]);
+          global_x_coord_vertex_to_locate[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[t][0], tempVar,tempVarsInt)); 
+          global_y_coord_vertex_to_locate[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[t][1], tempVar,tempVarsInt)); 
+          global_z_coord_vertex_to_locate[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[t][2], tempVar,tempVarsInt));      
+                  
+      }
+    }
+    
+    //TODO: locate unique vertices???
+    vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
+    //vertices of mesh "meshId" will be located in mesh "1-meshId"
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to compute center and get grid cell of center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+
+    
+
+    
+    clock_gettime(CLOCK_REALTIME, &t0);
+    locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-thisMeshId);
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
+    clock_gettime(CLOCK_REALTIME, &t0);
+    
+    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(triangles[thisMeshId].size(),DONT_KNOW_FLAG);
+    locationOfTrianglesFromRetesselationInTheOtherMesh = vector<ObjectId>(numIntersectingT,DONT_KNOW_FLAG);
+
+
+    int ct =0;
+    for(int tid = 0; tid < triangles[thisMeshId].size();tid++) {
+      const Triangle &t = triangles[thisMeshId][tid];
+      if(trianglesThatIntersect[thisMeshId].count(&t)==0) {
+        int connectedComponentOfThisVertex = connectedComponentEachVertex[t.p[0]];
+        locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
+      }
+    }
+
+
+
+    #pragma omp parallel for 
+    for(int tid=0;tid<numIntersectingT;tid++) {
+      const TriangleNoBB& t = trianglesFromRetesselation[thisMeshId][tid];
+      if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) {
+        int vertexFromOriginalTriangle = -1;
+        if(!isVertexSharedBetweenMeshes(t.p[0]))
+          vertexFromOriginalTriangle = t.p[0];
+        else if(!isVertexSharedBetweenMeshes(t.p[1]))
+          vertexFromOriginalTriangle = t.p[1];
+        else if(!isVertexSharedBetweenMeshes(t.p[2]))
+          vertexFromOriginalTriangle = t.p[2];
+
+        int connectedComponentOfThisVertex = connectedComponentEachVertex[vertexFromOriginalTriangle];
+        locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
+      } /*else {
+        
+        locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[ctSetAllNew +posStartVerticesOfIntersectingTrianglesInThisMesh];
+        ctSetAllNew++;
+      }*/
+    }
+
+         // cerr << "Ct set: " << ctSet << " " << locationOfTrianglesFromRetesselationInTheOtherMesh.size() << "\n";
+         // cerr << "Ct all new: " << ctSetAllNew << "\n";
+        //  cerr << "Num triangles all new: " << triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size() << "\n";
+         // return;
+
+      #pragma omp parallel for 
+      for(int t =0;t<triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size();t++) {
+        int tid = triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices[t];
+        
+        assert(locationOfTrianglesFromRetesselationInTheOtherMesh[tid] ==DONT_KNOW_FLAG);
+    
+          //triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.push_back(numberIntersectingTrianglesWithoutNonSharedVertices);     
+          //numberIntersectingTrianglesWithoutNonSharedVertices++;   
+        locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[t +posStartVerticesOfIntersectingTrianglesInThisMesh];
+      }
+     // cerr << "Ct set: " << ctSet << " " << locationOfTrianglesFromRetesselationInTheOtherMesh.size() << "\n";
+      /*
+      if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) {
+          int vertexToLocate = -1;
+          if(!isVertexSharedBetweenMeshes(t.p[0]))
+            vertexToLocate = t.p[0];
+          else if(!isVertexSharedBetweenMeshes(t.p[1]))
+            vertexToLocate = t.p[1];
+          else if(!isVertexSharedBetweenMeshes(t.p[2]))
+            vertexToLocate = t.p[2];
+
+          verticesToLocateInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (&(vertices[thisMeshId][vertexToLocate]));     
+          global_x_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
+          global_y_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
+          global_z_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));     
+      } 
+
+      locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh];
+      */
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total copy triangle labels: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+
+    
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total entire location functions: " << convertTimeMsecs(diff(t0Function,t1))/1000 << endl;
+}
+
+void locateTrianglesInOtherMeshCC(const Nested3DGridWrapper *uniformGrid, 
                                             const unordered_set<const Triangle *> trianglesThatIntersect[2],
                                             int thisMeshId,
                                             vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
@@ -1647,6 +2135,7 @@ void locateTrianglesInOtherMeshOrig(const Nested3DGridWrapper *uniformGrid,
                                             int thisMeshId,
                                             vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
                                             vector<ObjectId> &locationOfTrianglesFromRetesselationInTheOtherMesh) {  
+    const int DONT_KNOW_FLAG = -999999999;
     timespec t0,t1;
 
     vector<Point *> verticesToLocateInOtherMesh;
@@ -1741,8 +2230,8 @@ void locateTrianglesInOtherMeshOrig(const Nested3DGridWrapper *uniformGrid,
     //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
 
     
-    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(triangles[thisMeshId].size(),-999);
-    locationOfTrianglesFromRetesselationInTheOtherMesh = vector<ObjectId>(numIntersectingT,-999);
+    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(triangles[thisMeshId].size(),DONT_KNOW_FLAG);
+    locationOfTrianglesFromRetesselationInTheOtherMesh = vector<ObjectId>(numIntersectingT,DONT_KNOW_FLAG);
 
 
     int ct =0;
@@ -1781,13 +2270,13 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	vector<TriangleNoBB> outputTrianglesFromRetesselation[2];
 	for(int meshId=0;meshId<2;meshId++){
     timespec t0,t1;
-    clock_gettime(CLOCK_REALTIME, &t0);
 
 
     vector<ObjectId> locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh;
-    locateTrianglesInOtherMesh(uniformGrid,trianglesThatIntersect,meshId,locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh);
 
-    clock_gettime(CLOCK_REALTIME, &t1);
+    clock_gettime(CLOCK_REALTIME, &t0);
+    locateTrianglesInOtherMesh(uniformGrid,trianglesThatIntersect,meshId,locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh);
+     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "# Time to locate vertices in other mesh: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
     clock_gettime(CLOCK_REALTIME, &t0);
 
