@@ -649,7 +649,7 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   compute_intervals_isectline(U0,U1,U2,up0,up1,up2,du0,du1,du2,
 			      du0du1,du0du2,&isect2[0],&isect2[1],isectpointB1,isectpointB2,tempRationals+54);
 
-  SORT2(isect1[0],isect1[1],smallest1,tmp);
+  SORT2(isect1[0],isect1[1],smallest1,tmp); //smallest1 == 0 iff isect1[0] < isect1[1]
   SORT2(isect2[0],isect2[1],smallest2,tmp);
 
   if(isect1[1]<isect2[0] || isect2[1]<isect1[0]) return 0;
@@ -658,7 +658,7 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
 
   if(isect2[0]<isect1[0])
   {
-    if(smallest1==0) { SET(isectpt1,isectpointA1); }
+    if(smallest1==0) { SET(isectpt1,isectpointA1); } // if(isect1[0] < isect1[1]) copy the point isectpointA1 to the output isectpoint1..
     else { SET(isectpt1,isectpointA2); }
 
     if(isect2[1]<isect1[1])
