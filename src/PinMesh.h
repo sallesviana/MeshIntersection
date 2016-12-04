@@ -1,7 +1,11 @@
+#ifndef PINMESH_H
+#define PINMESH_H
+
 #include "utils.h"
 #include "3d_objects.h"
 #include "rationals.h"
 #include "nested3DGrid.h"
+
 
 
 #include "floodFillScanline.cpp"
@@ -729,11 +733,65 @@ ObjectId computeObjectWherePointIsTwoLevel(const Point &p,int globalGridCoordX,i
 //#define PINMESH_VERBOSE
 
 
+
+
+const Nested3DGridWrapper *uniformGrid;
+const vector<Point> *vertices;  //array with size at least 2 (one for each mesh)
+const vector<Triangle> *triangles; //array with size 2 (one for each mesh)
+
+
+public:
+
+PinMesh(const Nested3DGridWrapper *uniformGrid_,const vector<Point> vertices_[3], const vector<Triangle> triangles_[2]): 
+            vertices(vertices_), uniformGrid(uniformGrid_),triangles(triangles_) {
+  
+}  
+
+void  locateVerticesInObject(const vector<const Point *> &verticesToLocate,std::vector<ObjectId> &verticesIds,int meshIdToLocate){
+  timespec t0,t1;
+  int numVerticesToLocate  = verticesToLocate.size();
+  vector<int> gxVector(numVerticesToLocate);
+  vector<int> gyVector(numVerticesToLocate);
+  vector<int> gzVector(numVerticesToLocate);
+
+  #ifdef PINMESH_VERBOSE
+  cerr << "Computing vertices  " << verticesToLocate.size() << " grid coordinates..." << endl;
+  clock_gettime(CLOCK_REALTIME, &t0);
+  #endif
+  
+
+  #pragma omp parallel
+  {
+    big_int tempVarsInt[2];
+    VertCoord tempVar;
+    
+    #pragma omp for schedule(dynamic,1000)
+    for(int i=0;i<numVerticesToLocate;i++) {
+      const Point &p = *verticesToLocate[i];        
+    
+      gxVector[i] = uniformGrid->x_global_cell_from_coord(p[0], tempVar,tempVarsInt);
+      gyVector[i] = uniformGrid->y_global_cell_from_coord(p[1], tempVar,tempVarsInt);
+      gzVector[i] = uniformGrid->z_global_cell_from_coord(p[2], tempVar,tempVarsInt);
+      
+    }
+  }
+  
+
+  #ifdef PINMESH_VERBOSE
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to compute vertices grid...: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  #endif
+
+  locateVerticesInObject(verticesToLocate, gxVector, gyVector,gzVector, verticesIds,meshIdToLocate);
+
+}
+
+
 //Locate a set of vertices in the objects in map 0...
 //if meshIdToLocate=0, this means that vertices will be located in mesh 0
 //#define PINMESH_VERBOSE
 //the vectors gridXGlobalVertexToLocate (idem Y,Z) indicate in what grid cell (global coord) each vertex to locate is
-void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vector<Point *> &verticesToLocate, const vector<int> &gridXGlobalVertexToLocate, const vector<int> &gridYGlobalVertexToLocate,const vector<int> &gridZGlobalVertexToLocate, std::vector<ObjectId> &verticesIds,int meshIdToLocate) {
+void locateVerticesInObject(const vector<const Point *> &verticesToLocate, const vector<int> &gridXGlobalVertexToLocate, const vector<int> &gridYGlobalVertexToLocate,const vector<int> &gridZGlobalVertexToLocate, std::vector<ObjectId> &verticesIds,int meshIdToLocate) {
   timespec t0,t1,t01;
 
   int sum = 0; //we use this because the compiler may remove the call if we do not use the result...
@@ -803,7 +861,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
 
  // #define DONT_USE_GRID_ACCELERATION
 
-  #ifndef DONT_USE_GRID_ACCELERATION 	
+  #ifndef DONT_USE_GRID_ACCELERATION  
 
 
   assert( (gridSize%4) == 0);
@@ -847,7 +905,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
       for(int gy=start[1];gy<end[1];gy++)
         for(int gz=start[2];gz<end[2];gz++) {
           if(!gridFirstLevel.hasSecondLevel(gx,gy,gz)) { //if(!gridCells[gx][gy][gz].hasChild()) {       
-          	
+            
             if(cellsLabels.labels[gx][gy][gz]==DONT_KNOW_ID) {
               //cerr << "Computing id..." << endl;
               Point p;
@@ -887,7 +945,7 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
                    // cerr << "setiing 2 to " << id <<  endl;
                     setObjectInWhereEmptyCellIs2(gx,gy,gz,nx,ny,nz,gridSize,nestedGridSize,cellsLabels,id,start[0],start[1],start[2],end[0],end[1],end[2]);
                    // cerr << "set level 2" << endl;
-        					//	labels[nx][ny][nz] = id;
+                  //  labels[nx][ny][nz] = id;
 
                     numSearchsPerformedToFillGrid++;
                   }
@@ -916,11 +974,11 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
       for(int gy=0;gy<gridSize;gy++)
         for(int gz=0;gz<gridSize;gz++) {
           if(!gridFirstLevel.hasSecondLevel(gx,gy,gz)) { //if(!gridCells[gx][gy][gz].hasChild()) {       
-          	
+            
             if(cellsLabels.labels[gx][gy][gz]==-3) {
               numNonEmptyGridCells++;
             }   else {
-            	numEmptyGridCells++;
+              numEmptyGridCells++;
             }
 
           } else { 
@@ -931,10 +989,10 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
               for(int ny=0;ny<nestedGridSize;ny++)
                 for(int nz=0;nz<nestedGridSize;nz++)
                   if (labels[nx][ny][nz]==-3) {
-			              numNonEmptyGridCells++;
-			            }   else {
-			            	numEmptyGridCells++;
-			            }
+                    numNonEmptyGridCells++;
+                  }   else {
+                    numEmptyGridCells++;
+                  }
           }                             
         } 
    
@@ -1042,55 +1100,6 @@ void locateVerticesInObject(const Nested3DGridWrapper *uniformGrid,  const vecto
   #endif
 }
 
-const Nested3DGridWrapper *uniformGrid;
-const vector<Point> *vertices;  //array with size at least 2 (one for each mesh)
-const vector<Triangle> *triangles; //array with size 2 (one for each mesh)
-
-
-public:
-
-PinMesh(const Nested3DGridWrapper *uniformGrid_,const vector<Point> vertices_[3], const vector<Triangle> triangles_[2]): 
-            vertices(vertices_), uniformGrid(uniformGrid_),triangles(triangles_) {
-  
-}  
-
-void  locateVerticesInObject(const vector<Point *> &verticesToLocate,std::vector<ObjectId> &verticesIds,int meshIdToLocate){
-  timespec t0,t1;
-  int numVerticesToLocate  = verticesToLocate.size();
-  vector<int> gxVector(numVerticesToLocate);
-  vector<int> gyVector(numVerticesToLocate);
-  vector<int> gzVector(numVerticesToLocate);
-
-  #ifdef PINMESH_VERBOSE
-  cerr << "Computing vertices  " << verticesToLocate.size() << " grid coordinates..." << endl;
-  clock_gettime(CLOCK_REALTIME, &t0);
-  #endif
-  
-
-  #pragma omp parallel
-  {
-    big_int tempVarsInt[2];
-    VertCoord tempVar;
-    
-    #pragma omp for schedule(dynamic,1000)
-    for(int i=0;i<numVerticesToLocate;i++) {
-      const Point &p = *verticesToLocate[i];        
-    
-      gxVector[i] = uniformGrid->x_global_cell_from_coord(p[0], tempVar,tempVarsInt);
-      gyVector[i] = uniformGrid->y_global_cell_from_coord(p[1], tempVar,tempVarsInt);
-      gzVector[i] = uniformGrid->z_global_cell_from_coord(p[2], tempVar,tempVarsInt);
-      
-    }
-  }
-  
-
-  #ifdef PINMESH_VERBOSE
-  clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to compute vertices grid...: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-  #endif
-
-  locateVerticesInObject(uniformGrid,  verticesToLocate, gxVector, gyVector,gzVector, verticesIds,meshIdToLocate);
-
-}
-
 };
+
+#endif

@@ -10,6 +10,7 @@
 // Don't include this if including cuda.h
 
 #ifndef __COMMON_H__
+#define __COMMON_H__
 
 //================================================================
 // Includes
@@ -285,4 +286,4 @@ void die2(const std::string msg, const int i) {
 }
 
 #endif
-#define __COMMON_H__
+

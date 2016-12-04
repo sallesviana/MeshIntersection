@@ -21,6 +21,8 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 //Some wrappers for rational and big numbers
 //
 
+#ifndef RATIONALS_H
+#define RATIONALS_H
 
 #define USE_GMPXX
 #undef USE_BOOST
@@ -106,3 +108,6 @@ inline void divide_qrWrap(const big_int &n,const big_int &d, big_int &i,big_int 
 	divide_qr(n,d,i,r);
 #endif
 }
+
+
+#endif

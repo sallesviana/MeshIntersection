@@ -24,8 +24,16 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstdlib>
 #include <unordered_set>
 #include <unordered_map>
+#include <set>
+#include <queue>
+#include <sstream>
 #include <time.h>
+#include "3d_objects.h"
 #include "rationals.h"
+#include "utils.h"
+#include "nested3DGrid.h"
+#include "triangleClassification.h"
+#include "common2.h"
 #include <omp.h>
 
 
@@ -47,86 +55,12 @@ using namespace std;
 
 
 
-//===============================================================
-// General templates (from WRF source codes)
-//===============================================================
 
-template <class T>
-T max(const T a, const T b, const T c, const T d) {
-  return max(max(a,b), max(c,d));
-}
-
-template <class T>
-T min(const T a, const T b, const T c, const T d) {
-  return min(min(a,b), min(c,d));
-}
-
-template <class T, class U>
-void accum_max(T &maxsofar, const U x) {
-  if (x>maxsofar) maxsofar = x;
-}
-
-template <class T>
-void accum_min(T &minsofar, const T x) {
-  if (x<minsofar) minsofar = x;
-}
-
-template <class T>
-T square(const T x) { return x*x; }
-
-template <class T>    // Squared length from dx and dy
-T sqlen(const T dx, const T dy) { return square(dx)+square(dy); }
-
-
-//From Boost, for using pairs in unordered_sets:
-template <class T>
-inline void hash_combine(std::size_t & seed, const T & v)
-{
-  std::hash<T> hasher;
-  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
-
-namespace std
-{
-  template<typename S, typename T> struct hash<pair<S, T>>
-  {
-    inline size_t operator()(const pair<S, T> & v) const
-    {
-      size_t seed = 0;
-      ::hash_combine(seed, v.first);
-      ::hash_combine(seed, v.second);
-      return seed;
-    }
-  };
-}
-
-
-// Utils for measuring time...
-
-double convertTimeMsecs(const timespec &t){
-  return (t.tv_sec*1000 + t.tv_nsec/1000000.0);
-}
-
-//source: http://www.guyrutenberg.com/2007/09/22/profiling-code-using-clock_gettime/
-timespec diff(timespec start, timespec end)
-{
-        timespec temp;
-        if ((end.tv_nsec-start.tv_nsec)<0) {
-                temp.tv_sec = end.tv_sec-start.tv_sec-1;
-                temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
-        } else {
-                temp.tv_sec = end.tv_sec-start.tv_sec;
-                temp.tv_nsec = end.tv_nsec-start.tv_nsec;
-        }
-        return temp;
-}
 
 double timeReadData,timeCreateGrid,timeDetectIntersections,timeRetesselate,timeClassifyTriangles;
 
 
-#include "3d_objects.cpp"
 
-#include "nested3DGrid.cpp"
 
 #include "tritri_isectline.c"
 
@@ -140,6 +74,9 @@ vector<Point> vertices[3];
 vector<Triangle> triangles[2]; 
 //we don't need bounding-boxes for the output triangles...
 vector<TriangleNoBB> trianglesFromRetesselation[2]; //triangles formed by retesselating triangles from each mesh...
+
+vector<BoundaryPolygon> polygonsFromRetesselation[2]; //polygons generated after retesselation of triangles from each mesh..
+
 
 Point bBox[2][2] ;//bounding box of each mesh (each boundingbox has two vertices)
 Point boundingBoxTwoMeshesTogetter[2]; //bounding box considering both meshes togetter
@@ -163,15 +100,13 @@ bool isVertexSharedBetweenMeshes(int vertexId) {
 //=======================================================================================================================
 
 
-#include "PinMesh.cpp"
+
 
 #include "debuggingUtils.cpp"
 
 
 
-const int PLANE_X0 =0;
-const int PLANE_Y0 =1;
-const int PLANE_Z0 =2;
+
 // TODO: perform ONLY necessary computation..
 //TODO: example we do not need z to check if the z component of the normal is 0...
 //Given a triangle, returns a plane (X=0,Y=0 or Z=0) such that the triangle is not perpendicular to that plane..
@@ -1334,8 +1269,9 @@ bool checkIfPolygonsAreConnected(const vector<pair<int,int> > &raggedArraySorted
 
 //raggedArraySortedEdges will be filled with the edges in the triangle (if we have an edge (a,b) , the array will have both (a,b) and (b,a)). Also,
 //at the end of the function the edges in raggedArraySortedEdges will be sorted by the first vertex and, if there is a tie, by the slope of the edge (w.r.t. the projection to whatPlaneProjectTo)
-//Returns true iff all the polygons are in a single connected component
-bool extractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesUsingVertexId,const int numEdgesFromIntersection, const int meshIdToProcess, const int whatPlaneProjectTo, vector<int> &polygons,vector<array<int,3> > &wedgesTemp, vector<pair<int,int> > &raggedArraySortedEdges, vector<bool> &usedWedgesTemp, VertCoord tempCoords[2] ) {
+//at the end of this function raggedArraySortedEdges will contain the edges (two directed edges for each edge) sorted
+//by the first vertex and by the angle of the edge 
+void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesUsingVertexId,const int numEdgesFromIntersection, const int meshIdToProcess, const int whatPlaneProjectTo, vector<int> &polygons,vector<array<int,3> > &wedgesTemp, vector<pair<int,int> > &raggedArraySortedEdges, vector<bool> &usedWedgesTemp, VertCoord tempCoords[2] ) {
   //Algorithm: http://ac.els-cdn.com/016786559390104L/1-s2.0-016786559390104L-main.pdf?_tid=7586b72e-a059-11e6-afdd-00000aacb35d&acdnat=1478021856_7213cc56dd2148587a06891102f5d518
    
   //First, we need to find all the wedges:
@@ -1365,7 +1301,7 @@ bool extractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesU
   //now we need to sort the edges basing on the first vertex and, then, on the angle with horizon (considering whatPlaneProjectTo)
   
   sortTriangleEdgesByAngle(meshIdToProcess, whatPlaneProjectTo, raggedArraySortedEdges);  
-  bool arePolygonsConnected = checkIfPolygonsAreConnected(raggedArraySortedEdges);
+  
 
   wedgesTemp.resize(0);
   int numWedgesFound = 0;
@@ -1421,6 +1357,8 @@ bool extractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesU
   //Let's use a ragged array for performance...
   polygons.resize(0);  
 
+
+
   for(int wedgeStart=0;wedgeStart<numWedges;wedgeStart++) {
     if(usedWedgesTemp[wedgeStart]) continue;
     usedWedgesTemp[wedgeStart] = true; //mark w as used...
@@ -1444,7 +1382,7 @@ bool extractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesU
     }
   }
 
-  return arePolygonsConnected;  
+  
 }
 
 //sort the vertices from meshIdToProcess (or created from intersection) basing on the distance to vertex orig
@@ -1488,6 +1426,153 @@ void sortVerticesBasingOnDistance(vector<int> &vertices,int origId,int meshIdToP
 
 
 
+//returns the index i of the array v, where v[i][0] = key.first and v[i][1] = key.second 
+int binarySearch(array<int,3> v[],int size,int first,int second) {
+  int lo = 0, hi = size-1, mid;
+  while (lo<=hi) {
+    mid = lo + (hi-lo)/2;
+    if(v[mid][0]==first && v[mid][1]==second) 
+      return mid;
+    else if ( (v[mid][0] < first) || ((v[mid][0] == first) && (v[mid][1] < second)) ) //is the element v[mid] smaller than the key?
+      lo = mid+1;
+    else 
+      hi = mid-1;
+  }
+  return -1;
+};
+
+//we suppose the polygons are connected
+//after this function all polygons will be oriented in clockwise orientation
+void orientPolygonsClockwise(vector<BoundaryPolygon>::iterator itBeginPolygonsToOrient, 
+                             vector<BoundaryPolygon>::iterator itEndPolygonsToOrient,pair<int,int> seedEdge,
+                             bool isSeedEdgeClockwisedOriented,bool isOrientationOfRetesselatedEqualToTriangle, int meshIdToProcess) {
+
+  const int numPolygons = itEndPolygonsToOrient-itBeginPolygonsToOrient;
+  cerr << "Num Polygons: " << numPolygons << endl;
+  bool alreadyFound[numPolygons];
+  memset(alreadyFound,0,sizeof(alreadyFound));
+
+  queue< pair<int,bool> > polygonsToProcess;
+
+
+  //find the polygon containing the seed edge and add to queue with correct orientation label
+  int polygonContainingSeedEdge = -1;
+  for(int id=0;id<numPolygons;id++) {
+    BoundaryPolygon &polygon = *(itBeginPolygonsToOrient+id);
+    vector<VertexId> &verticesPolygon = polygon.vertexSequence;
+    int numVerticesPolygon = verticesPolygon.size()-1; //the last vertex is equal to the first...
+    for(int i=0;i<numVerticesPolygon;i++) {
+      if(isOrientationOfRetesselatedEqualToTriangle) {
+        if(verticesPolygon[i]==seedEdge.first && verticesPolygon[i+1]==seedEdge.second) {
+          polygonContainingSeedEdge = id;  
+          break;    
+        }
+      } else
+        if(verticesPolygon[i]==seedEdge.second && verticesPolygon[i+1]==seedEdge.first) {
+          polygonContainingSeedEdge = id;  
+          break;    
+        }
+    }
+  }
+  assert(polygonContainingSeedEdge!=-1);
+  cerr << "Polygon containing seed: " << polygonContainingSeedEdge << endl;
+
+  if(isOrientationOfRetesselatedEqualToTriangle)
+    polygonsToProcess.push(make_pair(polygonContainingSeedEdge,isSeedEdgeClockwisedOriented));
+  else
+    polygonsToProcess.push(make_pair(polygonContainingSeedEdge,!isSeedEdgeClockwisedOriented));
+
+  cerr << "Seed clockwise: " << isSeedEdgeClockwisedOriented << " retesselated equal: " << isOrientationOfRetesselatedEqualToTriangle << endl;
+  cerr << polygonsToProcess.front().second << endl;
+
+  //label as already found..
+  alreadyFound[polygonContainingSeedEdge] = true;
+
+
+  int numEdges = 0;
+  for(int id=0;id<numPolygons;id++) { //count number of edges
+    BoundaryPolygon &polygon = *(itBeginPolygonsToOrient+id);
+    vector<VertexId> &verticesPolygon = polygon.vertexSequence;
+    numEdges += verticesPolygon.size()-1;
+    cerr << "Size: "<< verticesPolygon.size() << endl;
+    cerr << id << " id num vertices -1 ; " << verticesPolygon.size()-1 << endl;
+  }
+
+  array<int,3> edges[numEdges]; //for each edge, in what polygon is it?  (edges[i][0]=first vertex,edges[i][1]=second vertex, edges[i][2] = polygon id (starting in 0))
+
+  cerr << "Number of edges: " << numEdges << endl;
+  //copy the edges (and polygon id) to the edges array...
+  numEdges = 0;
+  for(int id=0;id<numPolygons;id++) {
+    BoundaryPolygon &polygon = *(itBeginPolygonsToOrient+id);
+    vector<VertexId> &verticesPolygon = polygon.vertexSequence;
+    int numVerticesPolygon = verticesPolygon.size()-1; //the last vertex is equal to the first...
+    //cerr << id << " id num vertices -1 ; " << numVerticesPolygon << endl;
+    //cerr << "Curr num edges: " << numEdges << endl;
+    for(int i=0;i<numVerticesPolygon;i++) {
+      edges[numEdges][0] = verticesPolygon[i];
+      edges[numEdges][1] = verticesPolygon[i+1];
+      edges[numEdges][2] = id;
+      //cerr << edges[numEdges][0] << " " << edges[numEdges][1] << " polygon: " << id << endl;
+      numEdges++;
+    }
+  }
+ // cerr << "Number of edges: " << numEdges << endl;
+
+  //sort the edges for binary search...
+  sort(edges,edges+numEdges,[](const array<int,3> &a,const array<int,3> &b) { //sort by first element, then by second element..
+                                  if(a[0]!=b[0]) return a[0]<b[0]; 
+                                  else return a[1]<b[1]; 
+                                } ); //for binary search...
+
+
+  cerr << "Orientation of polygons in set: " << endl;
+  for(int id=0;id<numPolygons;id++) {
+    BoundaryPolygon &polygon = *(itBeginPolygonsToOrient+id);
+    polygon.isInClockwiseDirection(vertices,meshIdToProcess);
+  }
+  cerr << endl;
+
+  //while queue is not empty
+  //remove a polygon, set as processed, add neighbors, re-orient
+  while(!polygonsToProcess.empty()) {
+    const pair<int,bool> &polygonToProcess = polygonsToProcess.front();
+    //cerr << "Polygon to process: " << polygonToProcess.first << endl;
+    BoundaryPolygon &polygon = *(itBeginPolygonsToOrient+polygonToProcess.first);
+    //cerr << "Get polygon" << endl;
+
+    vector<VertexId> &verticesPolygon = polygon.vertexSequence;
+    int numVerticesPolygon = verticesPolygon.size()-1; //the last vertex is equal to the first...
+    for(int i=0;i<numVerticesPolygon;i++) {
+      int u = verticesPolygon[i];
+      int v = verticesPolygon[i+1];
+
+
+      int vuPolygon = edges[binarySearch(edges,numEdges,v,u)][2] ;//what polygon contains v,u?
+      //cerr << "Vu polygon: " << vuPolygon << " " << numPolygons << endl;
+      if(vuPolygon>=0 && !alreadyFound[vuPolygon]) { //if vuPolygon <0 --> vuPolygon=-1 --> no polygon contain vu --> this happens for the boundary! (the neighbor of a polygon close to the boundary is the exterior! --> we, obviously, do not re-orient the exterior polygon)
+        alreadyFound[vuPolygon] = true;
+        polygonsToProcess.push(make_pair(vuPolygon,polygonToProcess.second)); //if this polygon is oriented clockwiselly, the neighbor will be in counterclockwise and vice versa...
+      }
+    }
+
+    bool clockWise = false;
+    //cerr << "Sum before: " << endl;
+    clockWise = polygon.isInClockwiseDirection(vertices,meshIdToProcess);
+  
+    if(!polygonToProcess.second) {
+      cerr << "Reverting... to ...\n";
+      polygon.reverseVerticesOrder();
+      clockWise =polygon.isInClockwiseDirection(vertices,meshIdToProcess);
+    }
+    cerr << endl;
+    assert(clockWise);
+    
+    polygonsToProcess.pop();    
+  }
+}
+
+
 
 
 
@@ -1499,9 +1584,9 @@ int signCrossProduct2D(const Point &v11,const Point &v12,const Point &v21,const 
     if(component1>component2) return 1;
     return -1;
   }
-  else if(whatPlaneProjectTo == PLANE_Y0) {
-    VertCoord component1 = (v12[0]-v11[0])*(v22[2]-v21[2]); //v1.x * v2.z 
-    VertCoord component2 = (v22[0]-v21[0])*(v12[2]-v11[2]); //v2.x*v1.z
+  else if(whatPlaneProjectTo == PLANE_Y0) { //TODO: xz or zx ?
+    VertCoord component1 = (v12[2]-v11[2])*(v22[0]-v21[0]); //v1.z * v2.x 
+    VertCoord component2 = (v22[2]-v21[2])*(v12[0]-v11[0]); //v2.z*v1.x
     if(component1==component2) return 0;
     if(component1>component2) return 1;
     return -1;
@@ -1541,25 +1626,41 @@ bool isConvex(const vector<int> &polygons,int firstElement,int lastElement, int 
   return true;
 }
 
-/*
-//seed edge is an edge in the boundary of the original triangle that has the same orientation as the triangle
-//t0,t1,t2 are the vertices of the original triangle
-//We will remove from polygons the polygon representing the exterior of the triangle
-//this function can only be called if there is only one polygon with the boundary vertices of the triangle
-//(we may have two polygons (the exterior of triangle and the interior) if there is no intersection with the edges on the boundary of the triangle)
-//This function will reorient the polygons if they are not oriented according to the original triangle
-void removeExteriorPolygonAndReOrient(vector<int> &polygons,const pair<int,int> &seedEdge,int t0,int t1,int t2) {
+int doesPolygonContainAllEdges(const vector<int> &polygons,const int firstElementPolygon,const int lastElementPolygon,
+                                const set<pair<int,int> > & edgesFromTriangleBoundary) {
 
+  if(edgesFromTriangleBoundary.count(pair<int,int>(polygons[firstElementPolygon],polygons[firstElementPolygon+1]))) {
+    //check if all edges in same order are there...
+    for(int i=firstElementPolygon+1;i<lastElementPolygon;i++) {
+      if(edgesFromTriangleBoundary.count(pair<int,int>(polygons[i],polygons[i+1]))==0) return 0;
+    } 
+    return 1;
+  }
+  else 
+    if(edgesFromTriangleBoundary.count(pair<int,int>(polygons[firstElementPolygon+1],polygons[firstElementPolygon]))) {
+      //check if all edges in same order are there...
+      for(int i=firstElementPolygon+1;i<lastElementPolygon;i++) {
+        if(edgesFromTriangleBoundary.count(pair<int,int>(polygons[i+1],polygons[i]))==0) return 0;
+      } 
+      return -1;
+    }
+    else return 0;
 }
-*/
 
 //tempVars should have at least 8 slots
-void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, const int meshWhereTriangleIs, vector<TriangleNoBB> &newTrianglesGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
+//the new polygons generated from the retesselation will be added to the back of "newPolygonsGeneratedFromRetesselation"
+void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, const int meshWhereTriangleIs, vector<BoundaryPolygon> &newPolygonsGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
   //A triangle (except if it is degenerate to a single point) cannot be perpendicular to all 3 planes (x=0,y=0,z=0)
   //Thus, we chose one of these planes to project the triangle during computations...
   const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]],vertices[meshWhereTriangleIs][t.p[2]], tempVars);
 
-  
+  /*cerr << "Number of edges from intersection: " << edgesFromIntersection.size() << endl;
+  for(int e: edgesFromIntersection) {
+    Point &a = *getPointFromVertexId(edgesUsingVertexId[e].first,meshWhereTriangleIs);
+    Point &b = *getPointFromVertexId(edgesUsingVertexId[e].second,meshWhereTriangleIs);
+    cerr << edgesUsingVertexId[e].first << " ( " << a[0].get_d() << " , " << a[1].get_d() << " ) ";
+    cerr << edgesUsingVertexId[e].second << " ( " << b[0].get_d() << " , " << b[1].get_d() << " ) " << endl;
+  }*/
 
   /*
   //First we need to determine, for each vertex v, the edges incident in v
@@ -1661,6 +1762,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
  // cerr << "Vertices: " << numVTriangle << "\n";
   //cerr << "Constraint edges: " << edgesFromIntersection.size() << "\n\n";
 
+  set<pair<int,int> > edgesFromTriangleBoundary;
 
   bool allSimple = true;
   //no vertex intersect the edge t.p[0]-t.p[1] --> it will be in the triangulation!!!
@@ -1679,6 +1781,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
 
     assert(candidateEdge.first != candidateEdge.second);
     edgesUsedInThisTriangle.push_back(candidateEdge);
+    edgesFromTriangleBoundary.insert(candidateEdge);
   } else {
     if(verticesIncidentEdge==1) {
       int v1 = t.p[0];
@@ -1698,6 +1801,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
 
       assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
 
       candidateEdge.first = v; 
       candidateEdge.second = v2;
@@ -1709,6 +1813,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       #endif
       assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
     } else {
       allSimple= false;
     }
@@ -1730,6 +1835,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
 
     assert(candidateEdge.first != candidateEdge.second);
     edgesUsedInThisTriangle.push_back(candidateEdge);
+    edgesFromTriangleBoundary.insert(candidateEdge);
   } else {
     if(verticesIncidentEdge==1) {
       int v1 = t.p[1];
@@ -1747,6 +1853,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       #endif
       assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
 
       candidateEdge.first = v; 
       candidateEdge.second = v2;
@@ -1757,6 +1864,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       #endif
       assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
     } else {
       allSimple= false;
     }
@@ -1775,6 +1883,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     #endif
     assert(candidateEdge.first != candidateEdge.second);
     edgesUsedInThisTriangle.push_back(candidateEdge);
+    edgesFromTriangleBoundary.insert(candidateEdge);
   } else {
     if(verticesIncidentEdge==1) {
       int v1 = t.p[2];
@@ -1791,6 +1900,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       #endif
       assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
 
       candidateEdge.first = v; 
       candidateEdge.second = v2;
@@ -1801,6 +1911,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       #endif
       assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
     } else {
       allSimple= false;
     }
@@ -1855,6 +1966,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     //printVertexForDebugging(*getPointFromVertexId(candidateEdge.second,meshWhereTriangleIs));
 
     edgesUsedInThisTriangle.push_back(candidateEdge);
+    edgesFromTriangleBoundary.insert(candidateEdge);
 
     const int numVerticesToCreateEdges = verticesToCreateEdges.size();
     for(int i=0;i<numVerticesToCreateEdges-1;i++) {
@@ -1871,6 +1983,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       //printVertexForDebugging(*getPointFromVertexId(candidateEdge.first,meshWhereTriangleIs));
       //printVertexForDebugging(*getPointFromVertexId(candidateEdge.second,meshWhereTriangleIs));
       edgesUsedInThisTriangle.push_back(candidateEdge);
+      edgesFromTriangleBoundary.insert(candidateEdge);
     }
   }
 
@@ -1890,7 +2003,12 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
   vector<pair<int,int> > raggedArrayEdges;
   vector<bool> usedWedgesTemp;
   vector<pair<int,int> > edgesUsedInThisTriangleV(edgesUsedInThisTriangle.begin(),edgesUsedInThisTriangle.end());
-  bool arePolygonsConnected = extractPolygonsFromEdgeListUsingWedges(edgesUsedInThisTriangleV,edgesFromIntersection.size(),meshWhereTriangleIs,whatPlaneProjectTriangleTo, polygons, wedgesTemp, raggedArrayEdges, usedWedgesTemp, tempVars );
+  
+  sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(edgesUsedInThisTriangleV,edgesFromIntersection.size(),meshWhereTriangleIs,whatPlaneProjectTriangleTo, polygons, wedgesTemp, raggedArrayEdges, usedWedgesTemp, tempVars );
+  
+  //at the end of the previous function raggedArrayEdges will contain the directed edges sorted by their first vertex...
+  bool arePolygonsConnected = checkIfPolygonsAreConnected(raggedArrayEdges);
+
   //at the end of the previous function, raggedArrayEdges will be filled with the edges sorted by the first vertex of each edge
   //(if there is a tie the edges are sorted by the slope w.r.t. the plane we projected the triangle)
   int numConvexPolygonsFound=0;
@@ -1908,23 +2026,112 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
   #endif
 
   const int sizePolygonsVector = polygons.size();
+
+  int numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes = newPolygonsGeneratedFromRetesselation.size();
   
   if(arePolygonsConnected) {
+    //since the graph is connected, all polygons in "polygons" are oriented similarly
+    //we need to check if this orientation is equal to the orientation of the original triangle
+    //if it is not, all the polygons will have an orientation that is contrary to the triangle's orientation
+
+    //Let's copy the polygons (except the exterior polygon) to the newPolygonsGeneratedFromRetesselation vector 
+    //once we find the exterior polygon, we check if the orientation is correct
+
+    /*cerr << "Number of vertices in polygons in triangle (including exterior): " << sizePolygonsVector << endl;
+    cerr << "Triangle: " << t.p[0] << " " << t.p[1] << " " << t.p[2] << endl;
+    for(int v:polygons) {
+      Point &a = *getPointFromVertexId(v,meshWhereTriangleIs);
+      cerr << v << " ( " << a[0].get_d() << " , " << a[1].get_d() << " ) \n";
+    }
+    cout << endl;
+    */
+
+    bool isOrientationOfRetesselatedEqualToTriangle = true;
+    newPolygonsGeneratedFromRetesselation.reserve(numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes+sizePolygonsVector-1);
+
+    bool exteriorPolygonAlreadyFound = false; //have we already found the exterior polygon?
+
     //for each polygon p inside the triangle, we will triangulate p
     for(int firstElementPolygon=0;firstElementPolygon<sizePolygonsVector;) { 
       int lastElementPolygon = firstElementPolygon+1;
       while(polygons[lastElementPolygon]!= polygons[firstElementPolygon]) lastElementPolygon++;
 
-      //createNewTrianglesFromRetesselationAndOrient(edgesUsedInThisTriangle,t,newTrianglesGeneratedFromRetesselation,seedEdge,meshWhereTriangleIs, whatPlaneProjectTriangleTo);
-      bool isPolygonConvex = isConvex(polygons, firstElementPolygon, lastElementPolygon, whatPlaneProjectTriangleTo, meshWhereTriangleIs, tempVars);
-      if(isPolygonConvex) numConvexPolygonsFound++;
-      else numConcavePolygonsFound++;
+      //let's process the polygon defined by the vertices in polygons[firstElementPolygon..lastElementPolygon]
+
+      //First, let's check if this polygon is the exterior polygon (since all polygons are connected,
+      //it will be iff the three vertices of the original triangle are in the polygon)
+      if(!exteriorPolygonAlreadyFound) {
+        int numVerticesOriginalTriangleInThisPolygon = 0;
+        for(int i=firstElementPolygon;i<lastElementPolygon;i++) {
+          if(polygons[i]==t.p[0] || polygons[i]==t.p[1] || polygons[i]==t.p[2]) numVerticesOriginalTriangleInThisPolygon++;
+        }
+        if(numVerticesOriginalTriangleInThisPolygon>=3) {          
+          //this will be 0 if false, 1 if has all edges and in same orientation, -1 if has all edges but in reverse orientation..
+          int polygonContainAllEdges = doesPolygonContainAllEdges(polygons,firstElementPolygon,lastElementPolygon,edgesFromTriangleBoundary);
+          if(polygonContainAllEdges!=0) { //we found the boundary!
+            exteriorPolygonAlreadyFound = true;
+            isOrientationOfRetesselatedEqualToTriangle = polygonContainAllEdges==-1; //if the exterior triangle is oriented in the countrary way --> the polygons will be oriented similarly to the triangle
+            firstElementPolygon = lastElementPolygon+1;
+            continue; //we will not add the exterior polygon to the list of polygons in retesselation...
+          }     
+        }
+      }
+
+      //let's copy the polygon to the list of polygons from retesselation...
+      newPolygonsGeneratedFromRetesselation.push_back(BoundaryPolygon(whatPlaneProjectTriangleTo));
+      BoundaryPolygon &polygon = newPolygonsGeneratedFromRetesselation.back();
+      polygon.vertexSequence.assign(polygons.begin()+firstElementPolygon,polygons.begin()+lastElementPolygon+1);
+      polygon.whatPlaneProjectTriangleTo = whatPlaneProjectTriangleTo;
 
       firstElementPolygon = lastElementPolygon+1;
     }
+
+    int numberPolygonsFromRetesselationNow = newPolygonsGeneratedFromRetesselation.size();
+    //let's assign the polygon orientation...
+    assert(exteriorPolygonAlreadyFound);
+    if(isOrientationOfRetesselatedEqualToTriangle)
+      for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) { //the polygons we are adding are only in this interval (the vector may have other polygons before we added new ones...)
+        newPolygonsGeneratedFromRetesselation[i].above = t.above;
+        newPolygonsGeneratedFromRetesselation[i].below = t.below;
+      }
+    else 
+      for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) {
+        newPolygonsGeneratedFromRetesselation[i].above = t.below;
+        newPolygonsGeneratedFromRetesselation[i].below = t.above;
+      }
+
+    //if the cross product of the vectors: (vertex1-vertex0) and (vertex2-vertex0) is negative --> the triangle is oriented
+    //in clockwise orientation --> the seed is also in clockwise orientation...
+    bool isBoundaryOriginalTriangleClockwisedOriented = signCrossProduct2D(triangleVertex0,triangleVertex1,
+                                                            triangleVertex0,triangleVertex2,whatPlaneProjectTriangleTo,tempVars)<0;
+
+    bool areInteriorPolygonsClockwiseOriented = true;
+    if(isBoundaryOriginalTriangleClockwisedOriented && !isOrientationOfRetesselatedEqualToTriangle) areInteriorPolygonsClockwiseOriented = false;
+    if(!isBoundaryOriginalTriangleClockwisedOriented && isOrientationOfRetesselatedEqualToTriangle) areInteriorPolygonsClockwiseOriented = false;
+
+   // cerr << "Polygons before and after: " << numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes << " " << newPolygonsGeneratedFromRetesselation.size() << endl;
+    //cerr << "Orienting polygon.." << endl;
+    //Now, we will reorient the polygons such that all polygons will be oriented clockwise
+    //orientPolygonsClockwise(newPolygonsGeneratedFromRetesselation.begin()+numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes, 
+   //                        newPolygonsGeneratedFromRetesselation.end(),seedEdge,isSeedEdgeClockwisedOriented,
+    //                        isOrientationOfRetesselatedEqualToTriangle,meshWhereTriangleIs);
+
+    if(!areInteriorPolygonsClockwiseOriented) {
+      //we need to rever the orientation of all polygons...
+      for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) 
+        newPolygonsGeneratedFromRetesselation[i].reverseVerticesOrder();
+    }
+
+    for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) 
+      assert(newPolygonsGeneratedFromRetesselation[i].isInClockwiseDirection(vertices, meshWhereTriangleIs));
+   // cerr << "Oriented \n";
   } else {
+    //TODO
+    //TODO: remember to set whatPlaneProjectTriangleTo of the polygon...
+
     //let's print the triangles with disconnected polygons in its interior for debugging purposes...
     //edgesUsedInThisTriangle
+    cerr << "Disconnected triangle:::: this situation is not treated yet..." << endl << endl << endl;
     int numDisconnectedTrianglesNow = 0;
     numDisconnectedTrianglesNow = statistics.numDisconnectedPolygonSubdivisionOfTriangles;
     stringstream trianglesDisconnectedPath;
@@ -1938,20 +2145,15 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
   }
  // cerr << "Concave: " << numConcavePolygonsFound << endl;
   //cerr << "Convex: " << numConvexPolygonsFound << endl;
-  //#ifdef COLLECT_STATISTICS
+  #ifdef COLLECT_STATISTICS
     #pragma omp atomic
     statistics.ctConvexPolygonsInTriangleRetesselations += numConvexPolygonsFound;
     #pragma omp atomic
     statistics.ctConcavePolygonsInTriangleRetesselations += numConcavePolygonsFound;
-  //#endif
+  #endif
 
   return;
-  cerr << "Polygons extracted: " << endl;
-  for(int v:polygons) {
-    cerr << v << " ";
-    printVertexForDebugging(*getPointFromVertexId(v,meshWhereTriangleIs));
-  }
-  exit(0);
+  
 
 /*
   if(allSimple) {
@@ -2171,7 +2373,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   	{
   		//vector<pair<int,int> > myNewTriEdgesFromEachMap;
 
-  		vector<TriangleNoBB> myNewTrianglesFromRetesselation;
+  		vector<BoundaryPolygon> myNewPolygonsFromRetesselation;
   		VertCoord tempVars[8];
 
   		#pragma omp for
@@ -2204,18 +2406,26 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
         #endif
 
         //retesselateTriangle(edgesUsingVertexId, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
-		    retesselateTriangleUsingWedgeSorting(edgesUsingVertexId, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
+		    retesselateTriangleUsingWedgeSorting(edgesUsingVertexId, edgesFromIntersection,t, meshIdToProcess, myNewPolygonsFromRetesselation, tempVars, statisticsAboutRetesseation);
 
       }
 
 		  #pragma omp critical 
 		  {
 		  	//newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
-				trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
-			}
+				//trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
+			  polygonsFromRetesselation[meshIdToProcess].insert(polygonsFromRetesselation[meshIdToProcess].end(),myNewPolygonsFromRetesselation.begin(),myNewPolygonsFromRetesselation.end() );
+      }
 
 			//break;
 		}
+
+    
+    for(BoundaryPolygon p:polygonsFromRetesselation[meshIdToProcess]) {
+      //assert(p.isInClockwiseDirection(vertices,meshIdToProcess));
+
+
+    }
 	}
 
 	clock_gettime(CLOCK_REALTIME, &t1);
@@ -2229,6 +2439,9 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   
   cerr << "Number of triangles created from retesselation of tris from mesh 0: " << trianglesFromRetesselation[0].size() << "\n";
   cerr << "Number of triangles created from retesselation of tris from mesh 1: " << trianglesFromRetesselation[1].size() << "\n";
+
+
+
 
   /*
   for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
@@ -2406,13 +2619,14 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   //for debugging/visualization, let's store in a file for each triangle the original edges of that triangle and 
   //the edges formed by the intersection of other triangles...
 
-  vector<pair<Triangle *,Triangle *> > pairsIntersectingTriangles;
+  
+  /*vector<pair<Triangle *,Triangle *> > pairsIntersectingTriangles;
   for(int i=0;i<numPairsToTest;i++)  
   	if(pairsIntersect[i]) {
   		pairsIntersectingTriangles.push_back(vtPairsTrianglesToProcess[i]);
   	}
   storeTriangleIntersections(pairsIntersectingTriangles); // TODO: use the edges vector (we already have the edges from intersections!!!)
-
+  */
 
            
   return totalIntersections;
@@ -2420,967 +2634,6 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
 
 
 
-
-int labelConnectedComponentsEachVertex(const vector<list<int> > &adjList,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
-  int numComponentsSeenSoFar = 0;
-  queue< int >   vertexToLabel;
-  int numVertices = adjList.size();
-
-  vector<bool> shouldLabel(adjList.size(),true);
-  for(int i=0;i<numVertices;i++) 
-    if(shouldLabel[i]) {
-      vertexToLabel.push(i);
-      connectedComponentEachVertex[i] = numComponentsSeenSoFar;
-      shouldLabel[i] = false;
-      sampleVertexIdFromEachConnectedComponent.push_back(i);
-
-      while(!vertexToLabel.empty()) {
-        int v = vertexToLabel.front();
-        vertexToLabel.pop(); 
-        
-
-        for(int neighbor:adjList[v]) {
-          if(shouldLabel[neighbor]) {
-            shouldLabel[neighbor] = false;
-            connectedComponentEachVertex[neighbor] = numComponentsSeenSoFar;
-            vertexToLabel.push(neighbor);
-          }
-        }
-      }
-
-      numComponentsSeenSoFar++;
-    }
-  
-
-  
-  
-
-  return numComponentsSeenSoFar;
-}
-
-
-int labelConnectedComponentsEachVertex(const vector<vector<int> > &adjList,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
-  int numComponentsSeenSoFar = 0;
-  queue< int >   vertexToLabel;
-  int numVertices = adjList.size();
-
-  vector<bool> shouldLabel(adjList.size(),true);
-  for(int i=0;i<numVertices;i++) 
-    if(shouldLabel[i]) {
-      vertexToLabel.push(i);
-      connectedComponentEachVertex[i] = numComponentsSeenSoFar;
-      shouldLabel[i] = false;
-      sampleVertexIdFromEachConnectedComponent.push_back(i);
-
-      while(!vertexToLabel.empty()) {
-        int v = vertexToLabel.front();
-        vertexToLabel.pop(); 
-        
-
-        for(int neighbor:adjList[v]) {
-          if(shouldLabel[neighbor]) {
-            shouldLabel[neighbor] = false;
-            connectedComponentEachVertex[neighbor] = numComponentsSeenSoFar;
-            vertexToLabel.push(neighbor);
-          }
-        }
-      }
-
-      numComponentsSeenSoFar++;
-    }
-  
-
-  
-  
-
-  return numComponentsSeenSoFar;
-}
-
-
-void locateTrianglesInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
-                                            const unordered_set<const Triangle *> trianglesThatIntersect[2],
-                                            int thisMeshId,
-                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
-                                            vector<ObjectId> &locationOfTrianglesFromRetesselationInTheOtherMesh) {  
-    const int DONT_KNOW_FLAG = -999999999;
-    timespec t0,t1,t0Function;
-
-    
-    clock_gettime(CLOCK_REALTIME, &t0);
-    t0Function  = t0;
-
-    vector<Point *> verticesToLocateInOtherMesh;
-
-    clock_gettime(CLOCK_REALTIME, &t0);
-    
-    vector<ObjectId> locationEachVertex(vertices[thisMeshId].size(),DONT_KNOW_FLAG);
-    vector<int> connectedComponentEachVertex(vertices[thisMeshId].size(),DONT_KNOW_FLAG);
-    vector<int> sampleVertexIdFromEachConnectedComponent;
-    int numComponents;
-
-{
-    vector<vector<int> > adjList(vertices[thisMeshId].size());
-    for(const Triangle&t:triangles[thisMeshId]) {
-      if(trianglesThatIntersect[thisMeshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-        adjList[t.p[0]].push_back(t.p[1]);
-        adjList[t.p[1]].push_back(t.p[2]);
-        adjList[t.p[2]].push_back(t.p[0]);
-        
-        adjList[t.p[1]].push_back(t.p[0]);
-        adjList[t.p[2]].push_back(t.p[1]);
-        adjList[t.p[0]].push_back(t.p[2]);
-      } 
-    }
-
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to create adj. list: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    
-
-    cerr << "Labeling connected components\n";
-    
-    numComponents = labelConnectedComponentsEachVertex(adjList,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
-    assert(numComponents==sampleVertexIdFromEachConnectedComponent.size());
-
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to compute CCs: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    clock_gettime(CLOCK_REALTIME, &t0);
-}
-
-
-    cerr << "Num connected components to locate: " << numComponents << "\n";
-
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to free adj. list memory: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    vector<int> global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate;
-    for(int i=0;i<numComponents;i++) {      
-      int vertexToLocate = sampleVertexIdFromEachConnectedComponent[i];
-
-      verticesToLocateInOtherMesh.push_back(&(vertices[thisMeshId][vertexToLocate]));     
-      global_x_coord_vertex_to_locate.push_back(uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-      global_y_coord_vertex_to_locate.push_back(uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-      global_z_coord_vertex_to_locate.push_back(uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));         
-    }
-
-
-
-    int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
-    const int numIntersectingT = trianglesFromRetesselation[thisMeshId].size();
-    cerr << "Mesh " << thisMeshId << " Num tri from retesselation: " << numIntersectingT << endl;
-    
-    
-
- 
-    
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to select vertices to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    int numberIntersectingTrianglesWithNonSharedVertices =0;
-    int numberIntersectingTrianglesWithoutNonSharedVertices =0;
-
-
-    vector<int> triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices;
-    for(int tid=0;tid<numIntersectingT;tid++) {
-        const TriangleNoBB& t = trianglesFromRetesselation[thisMeshId][tid];
-        if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) 
-          numberIntersectingTrianglesWithNonSharedVertices++;
-        else {          
-          triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.push_back(tid);     
-          numberIntersectingTrianglesWithoutNonSharedVertices++;   
-        }
-    }
-
-    //Resize all vectors to fit the data related to the intersecting triangles...
-    global_x_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
-    global_y_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
-    global_z_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
-    verticesToLocateInOtherMesh.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberIntersectingTrianglesWithoutNonSharedVertices);
-    vector<Point> centerOfIntersectingTriangles(numberIntersectingTrianglesWithoutNonSharedVertices);
-
-    cerr << "Number of triangles from retesselation with all vertices shared: " << triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size() << "\n";
-    #pragma omp parallel 
-    {
-      VertCoord tempVar;
-      big_int tempVarsInt[3];
-
-      #pragma omp for 
-      for(int t =0;t<triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size();t++) {
-        int tid = triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices[t];
-        const TriangleNoBB& triangle = trianglesFromRetesselation[thisMeshId][tid];
-
-        /*if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) {
-          int vertexToLocate = -1;
-          if(!isVertexSharedBetweenMeshes(t.p[0]))
-            vertexToLocate = t.p[0];
-          else if(!isVertexSharedBetweenMeshes(t.p[1]))
-            vertexToLocate = t.p[1];
-          else if(!isVertexSharedBetweenMeshes(t.p[2]))
-            vertexToLocate = t.p[2];
-
-          verticesToLocateInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (&(vertices[thisMeshId][vertexToLocate]));     
-          global_x_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-          global_y_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-          global_z_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));     
-        } else {*/
-          Point *a = getPointFromVertexId(triangle.p[0], thisMeshId);
-          Point *b = getPointFromVertexId(triangle.p[1], thisMeshId);
-          Point *c = getPointFromVertexId(triangle.p[2], thisMeshId);
-          
-          //for(int i=0;i<3;i++) centerOfIntersectingTriangles[tid][i] = 0;
-          for(int i=0;i<3;i++) {
-            //centerOfIntersectingTriangles[tid][i] += (*a)[i];
-            //centerOfIntersectingTriangles[tid][i] += (*b)[i];
-            //centerOfIntersectingTriangles[tid][i] += (*c)[i];
-            //centerOfIntersectingTriangles[tid][i] /= 3;
-            tempVar = (*a)[i];
-            tempVar += (*b)[i];
-            tempVar += (*c)[i];
-            tempVar /= 3;
-            centerOfIntersectingTriangles[t][i] = tempVar;
-          }  
-          verticesToLocateInOtherMesh[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (&centerOfIntersectingTriangles[t]);
-          global_x_coord_vertex_to_locate[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[t][0], tempVar,tempVarsInt)); 
-          global_y_coord_vertex_to_locate[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[t][1], tempVar,tempVarsInt)); 
-          global_z_coord_vertex_to_locate[t +posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[t][2], tempVar,tempVarsInt));      
-                  
-      }
-    }
-    
-    //TODO: locate unique vertices???
-    vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
-    //vertices of mesh "meshId" will be located in mesh "1-meshId"
-
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to compute center and get grid cell of center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-
-    
-
-    
-    clock_gettime(CLOCK_REALTIME, &t0);
-    locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-thisMeshId);
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
-    clock_gettime(CLOCK_REALTIME, &t0);
-    
-    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(triangles[thisMeshId].size(),DONT_KNOW_FLAG);
-    locationOfTrianglesFromRetesselationInTheOtherMesh = vector<ObjectId>(numIntersectingT,DONT_KNOW_FLAG);
-
-
-    int ct =0;
-    for(int tid = 0; tid < triangles[thisMeshId].size();tid++) {
-      const Triangle &t = triangles[thisMeshId][tid];
-      if(trianglesThatIntersect[thisMeshId].count(&t)==0) {
-        int connectedComponentOfThisVertex = connectedComponentEachVertex[t.p[0]];
-        locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
-      }
-    }
-
-
-
-    #pragma omp parallel for 
-    for(int tid=0;tid<numIntersectingT;tid++) {
-      const TriangleNoBB& t = trianglesFromRetesselation[thisMeshId][tid];
-      if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) {
-        int vertexFromOriginalTriangle = -1;
-        if(!isVertexSharedBetweenMeshes(t.p[0]))
-          vertexFromOriginalTriangle = t.p[0];
-        else if(!isVertexSharedBetweenMeshes(t.p[1]))
-          vertexFromOriginalTriangle = t.p[1];
-        else if(!isVertexSharedBetweenMeshes(t.p[2]))
-          vertexFromOriginalTriangle = t.p[2];
-
-        int connectedComponentOfThisVertex = connectedComponentEachVertex[vertexFromOriginalTriangle];
-        locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
-      } /*else {
-        
-        locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[ctSetAllNew +posStartVerticesOfIntersectingTrianglesInThisMesh];
-        ctSetAllNew++;
-      }*/
-    }
-
-         // cerr << "Ct set: " << ctSet << " " << locationOfTrianglesFromRetesselationInTheOtherMesh.size() << "\n";
-         // cerr << "Ct all new: " << ctSetAllNew << "\n";
-        //  cerr << "Num triangles all new: " << triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size() << "\n";
-         // return;
-
-      #pragma omp parallel for 
-      for(int t =0;t<triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.size();t++) {
-        int tid = triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices[t];
-        
-        assert(locationOfTrianglesFromRetesselationInTheOtherMesh[tid] ==DONT_KNOW_FLAG);
-    
-          //triangleIdToProcessNonIntersectingTriangleWithoutSharedVertices.push_back(numberIntersectingTrianglesWithoutNonSharedVertices);     
-          //numberIntersectingTrianglesWithoutNonSharedVertices++;   
-        locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[t +posStartVerticesOfIntersectingTrianglesInThisMesh];
-      }
-     // cerr << "Ct set: " << ctSet << " " << locationOfTrianglesFromRetesselationInTheOtherMesh.size() << "\n";
-      /*
-      if(!isVertexSharedBetweenMeshes(t.p[0]) || !isVertexSharedBetweenMeshes(t.p[1]) || !isVertexSharedBetweenMeshes(t.p[2]) ) {
-          int vertexToLocate = -1;
-          if(!isVertexSharedBetweenMeshes(t.p[0]))
-            vertexToLocate = t.p[0];
-          else if(!isVertexSharedBetweenMeshes(t.p[1]))
-            vertexToLocate = t.p[1];
-          else if(!isVertexSharedBetweenMeshes(t.p[2]))
-            vertexToLocate = t.p[2];
-
-          verticesToLocateInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (&(vertices[thisMeshId][vertexToLocate]));     
-          global_x_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-          global_y_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-          global_z_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));     
-      } 
-
-      locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh];
-      */
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total copy triangle labels: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-
-    
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total entire location functions: " << convertTimeMsecs(diff(t0Function,t1))/1000 << endl;
-}
-
-void locateTrianglesInOtherMeshCC(const Nested3DGridWrapper *uniformGrid, 
-                                            const unordered_set<const Triangle *> trianglesThatIntersect[2],
-                                            int thisMeshId,
-                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
-                                            vector<ObjectId> &locationOfTrianglesFromRetesselationInTheOtherMesh) {  
-    const int DONT_KNOW_FLAG = -999999999;
-    timespec t0,t1;
-
-    vector<Point *> verticesToLocateInOtherMesh;
-
-    clock_gettime(CLOCK_REALTIME, &t0);
-    vector<list<int> > adjList(vertices[thisMeshId].size());
-    vector<ObjectId> locationEachVertex(vertices[thisMeshId].size(),DONT_KNOW_FLAG);
-    vector<int> connectedComponentEachVertex(vertices[thisMeshId].size(),DONT_KNOW_FLAG);
-    for(const Triangle&t:triangles[thisMeshId]) {
-      if(trianglesThatIntersect[thisMeshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-        adjList[t.p[0]].push_back(t.p[1]);
-        adjList[t.p[1]].push_back(t.p[2]);
-        adjList[t.p[2]].push_back(t.p[0]);
-        
-        adjList[t.p[1]].push_back(t.p[0]);
-        adjList[t.p[2]].push_back(t.p[1]);
-        adjList[t.p[0]].push_back(t.p[2]);
-      } 
-    }
-
-    cerr << "Labeling connected components\n";
-    vector<int> sampleVertexIdFromEachConnectedComponent;
-    int numComponents = labelConnectedComponentsEachVertex(adjList,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
-    assert(numComponents==sampleVertexIdFromEachConnectedComponent.size());
-
-
-
-    cerr << "Num connected components to locate: " << numComponents << "\n";
-
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to compute connected components of vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-
-    vector<int> global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate;
-    for(int i=0;i<numComponents;i++) {      
-      int vertexToLocate = sampleVertexIdFromEachConnectedComponent[i];
-
-      verticesToLocateInOtherMesh.push_back(&(vertices[thisMeshId][vertexToLocate]));     
-      global_x_coord_vertex_to_locate.push_back(uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-      global_y_coord_vertex_to_locate.push_back(uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,vertexToLocate));  
-      global_z_coord_vertex_to_locate.push_back(uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,vertexToLocate));         
-    }
-
-
-
-    int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
-    const int numIntersectingT = trianglesFromRetesselation[thisMeshId].size();
-    cerr << "Mesh " << thisMeshId << " Num tri from retesselation: " << numIntersectingT << endl;
-    vector<Point> centerOfIntersectingTriangles(numIntersectingT);
-    
-
- 
-    //Resize all vectors to fit the data related to the intersecting triangles...
-    global_x_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numIntersectingT);
-    global_y_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numIntersectingT);
-    global_z_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numIntersectingT);
-    verticesToLocateInOtherMesh.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numIntersectingT);
-
-
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    
-
-    #pragma omp parallel 
-    {
-      VertCoord tempVar;
-
-      #pragma omp for
-      for(int tid=0;tid<numIntersectingT;tid++) {
-        const TriangleNoBB& t = trianglesFromRetesselation[thisMeshId][tid];
-        Point *a = getPointFromVertexId(t.p[0], thisMeshId);
-        Point *b = getPointFromVertexId(t.p[1], thisMeshId);
-        Point *c = getPointFromVertexId(t.p[2], thisMeshId);
-        
-        //for(int i=0;i<3;i++) centerOfIntersectingTriangles[tid][i] = 0;
-        for(int i=0;i<3;i++) {
-          //centerOfIntersectingTriangles[tid][i] += (*a)[i];
-          //centerOfIntersectingTriangles[tid][i] += (*b)[i];
-          //centerOfIntersectingTriangles[tid][i] += (*c)[i];
-          //centerOfIntersectingTriangles[tid][i] /= 3;
-          tempVar = (*a)[i];
-          tempVar += (*b)[i];
-          tempVar += (*c)[i];
-          tempVar /= 3;
-          centerOfIntersectingTriangles[tid][i] = tempVar;
-        }       
-      }
-    }
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to compute center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    #pragma omp parallel 
-    {
-      VertCoord tempVar;
-      big_int tempVarsInt[3];
-
-      #pragma omp for
-      for(int tid=0;tid<numIntersectingT;tid++) {        
-        verticesToLocateInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (&centerOfIntersectingTriangles[tid]);
-        global_x_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[tid][0], tempVar,tempVarsInt)); 
-        global_y_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[tid][1], tempVar,tempVarsInt)); 
-        global_z_coord_vertex_to_locate[tid+posStartVerticesOfIntersectingTrianglesInThisMesh] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[tid][2], tempVar,tempVarsInt)); 
-      }
-    }
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to get grid cell of center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-
-    //TODO: locate unique vertices???
-    vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
-    //vertices of mesh "meshId" will be located in mesh "1-meshId"
-
-    
-    clock_gettime(CLOCK_REALTIME, &t0);
-    locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-thisMeshId);
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
-
-    
-    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(triangles[thisMeshId].size(),DONT_KNOW_FLAG);
-    locationOfTrianglesFromRetesselationInTheOtherMesh = vector<ObjectId>(numIntersectingT,DONT_KNOW_FLAG);
-
-
-    int ct =0;
-    for(int tid = 0; tid < triangles[thisMeshId].size();tid++) {
-      const Triangle &t = triangles[thisMeshId][tid];
-      if(trianglesThatIntersect[thisMeshId].count(&t)==0) {
-        int connectedComponentOfThisVertex = connectedComponentEachVertex[t.p[0]];
-        locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
-      }
-    }
-    for(int tid=0;tid<numIntersectingT;tid++) {
-      locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[tid+posStartVerticesOfIntersectingTrianglesInThisMesh];
-    }
-
-}
-
-void locateTrianglesInOtherMeshOrig(const Nested3DGridWrapper *uniformGrid, 
-                                            const unordered_set<const Triangle *> trianglesThatIntersect[2],
-                                            int thisMeshId,
-                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
-                                            vector<ObjectId> &locationOfTrianglesFromRetesselationInTheOtherMesh) {  
-    const int DONT_KNOW_FLAG = -999999999;
-    timespec t0,t1;
-
-    vector<Point *> verticesToLocateInOtherMesh;
-
-
-    vector<int> global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate;
-    for(const Triangle&t:triangles[thisMeshId]) {
-      if(trianglesThatIntersect[thisMeshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-        verticesToLocateInOtherMesh.push_back(&(vertices[thisMeshId][t.p[0]]));     
-        global_x_coord_vertex_to_locate.push_back(uniformGrid->get_global_x_coord_mesh_vertex(thisMeshId,t.p[0]));  
-        global_y_coord_vertex_to_locate.push_back(uniformGrid->get_global_y_coord_mesh_vertex(thisMeshId,t.p[0]));  
-        global_z_coord_vertex_to_locate.push_back(uniformGrid->get_global_z_coord_mesh_vertex(thisMeshId,t.p[0]));  
-      } 
-    }
-
-
-
-    int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
-    const int numIntersectingT = trianglesFromRetesselation[thisMeshId].size();
-    cerr << "Mesh " << thisMeshId << " Num tri from retesselation: " << numIntersectingT << endl;
-    vector<Point> centerOfIntersectingTriangles(numIntersectingT);
-    
-
-    const int numVerticesLocateFromNonIntersectingTriangles = verticesToLocateInOtherMesh.size();
-    //Resize all vectors to fit the data related to the intersecting triangles...
-    global_x_coord_vertex_to_locate.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
-    global_y_coord_vertex_to_locate.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
-    global_z_coord_vertex_to_locate.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
-    verticesToLocateInOtherMesh.resize(numVerticesLocateFromNonIntersectingTriangles+numIntersectingT);
-
-
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    
-
-    #pragma omp parallel 
-    {
-      VertCoord tempVar;
-
-      #pragma omp for
-      for(int tid=0;tid<numIntersectingT;tid++) {
-        const TriangleNoBB& t = trianglesFromRetesselation[thisMeshId][tid];
-        Point *a = getPointFromVertexId(t.p[0], thisMeshId);
-        Point *b = getPointFromVertexId(t.p[1], thisMeshId);
-        Point *c = getPointFromVertexId(t.p[2], thisMeshId);
-        
-        //for(int i=0;i<3;i++) centerOfIntersectingTriangles[tid][i] = 0;
-        for(int i=0;i<3;i++) {
-          //centerOfIntersectingTriangles[tid][i] += (*a)[i];
-          //centerOfIntersectingTriangles[tid][i] += (*b)[i];
-          //centerOfIntersectingTriangles[tid][i] += (*c)[i];
-          //centerOfIntersectingTriangles[tid][i] /= 3;
-          tempVar = (*a)[i];
-          tempVar += (*b)[i];
-          tempVar += (*c)[i];
-          tempVar /= 3;
-          centerOfIntersectingTriangles[tid][i] = tempVar;
-        }       
-      }
-    }
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to compute center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-    #pragma omp parallel 
-    {
-      VertCoord tempVar;
-      big_int tempVarsInt[3];
-
-      #pragma omp for
-      for(int tid=0;tid<numIntersectingT;tid++) {        
-        verticesToLocateInOtherMesh[tid+numVerticesLocateFromNonIntersectingTriangles] = (&centerOfIntersectingTriangles[tid]);
-        global_x_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->x_global_cell_from_coord(centerOfIntersectingTriangles[tid][0], tempVar,tempVarsInt)); 
-        global_y_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->y_global_cell_from_coord(centerOfIntersectingTriangles[tid][1], tempVar,tempVarsInt)); 
-        global_z_coord_vertex_to_locate[tid+numVerticesLocateFromNonIntersectingTriangles] = (uniformGrid->z_global_cell_from_coord(centerOfIntersectingTriangles[tid][2], tempVar,tempVarsInt)); 
-      }
-    }
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to get grid cell of center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-
-    //TODO: locate unique vertices???
-    vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
-    //vertices of mesh "meshId" will be located in mesh "1-meshId"
-
-    
-    clock_gettime(CLOCK_REALTIME, &t0);
-    locateVerticesInObject(uniformGrid,  verticesToLocateInOtherMesh,global_x_coord_vertex_to_locate,global_y_coord_vertex_to_locate,global_z_coord_vertex_to_locate,locationOfEachVertexInOtherMesh,1-thisMeshId);
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
-
-    
-    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(triangles[thisMeshId].size(),DONT_KNOW_FLAG);
-    locationOfTrianglesFromRetesselationInTheOtherMesh = vector<ObjectId>(numIntersectingT,DONT_KNOW_FLAG);
-
-
-    int ct =0;
-    for(int tid = 0; tid < triangles[thisMeshId].size();tid++) {
-      const Triangle &t = triangles[thisMeshId][tid];
-      if(trianglesThatIntersect[thisMeshId].count(&t)==0) {
-        locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[ct++];
-      }
-    }
-    for(int tid=0;tid<numIntersectingT;tid++) {
-      locationOfTrianglesFromRetesselationInTheOtherMesh[tid] = locationOfEachVertexInOtherMesh[ct++];
-    }
-
-}
-
-
-
-//TODO: if all the tree vertices of the original triangle are in the same grid cell --> the new triangles will also be!
-
-//----------------------------------------------------------------------------
-// TODO: not all vertices from the retesselated triangles will be in the output (?)... we do not need to store them!
-/*//Each vector represents the vertices of a layer
-vector<Point> vertices[2];
-
-//Each vector represents a set of objects in the same layer
-//The objects are represented by a set of triangles (defining their boundaries)
-vector<Triangle> triangles[2]; //
-*/
-void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, const unordered_set<const Triangle *> trianglesThatIntersect[2],ostream &outputStream) {
-	timespec t0,t0ThisFunction,t1;
-	clock_gettime(CLOCK_REALTIME, &t0);
-	t0ThisFunction = t0;
-
-	//int ctIntersectingTrianglesTotal =0;
-	vector<Triangle> outputTriangles[2]; //output triangles generated from triangles of each mesh
-	vector<TriangleNoBB> outputTrianglesFromRetesselation[2];
-	for(int meshId=0;meshId<2;meshId++){
-    timespec t0,t1;
-
-
-    vector<ObjectId> locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh;
-
-    clock_gettime(CLOCK_REALTIME, &t0);
-    locateTrianglesInOtherMesh(uniformGrid,trianglesThatIntersect,meshId,locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh);
-     clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "# Time to locate vertices in other mesh: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    clock_gettime(CLOCK_REALTIME, &t0);
-
-		int numTrianglesThisMesh = triangles[meshId].size();
-		int ctTrianglesProcessed = 0;
-
-
-		for(int i=0;i<numTrianglesThisMesh;i++) {
-			const Triangle &t=triangles[meshId][i];
-			if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-				//this will (probably) be an output triangle...
-				ObjectId objWhereTriangleIs = locationOfEachNonIntersectingTrianglesInOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];		
-				//cerr << "obj: " << objWhereTriangleIs << endl;		
-				if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
-					//if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
-					outputTriangles[meshId].push_back(t);
-				}				
-			}			
-		}
-
-
-		int numTrianglesFromIntersectionThisMesh = trianglesFromRetesselation[meshId].size();
-
-		
-		for(int i=0;i<numTrianglesFromIntersectionThisMesh;i++) {
-			const TriangleNoBB&t = trianglesFromRetesselation[meshId][i];
-			ObjectId objWhereTriangleIs = locationOfTrianglesFromRetesselationInTheOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];					
-			
-			if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
-				/*if(meshId==1) {
-				cerr << centerOfIntersectingTriangles[i][0].get_d() << " " << centerOfIntersectingTriangles[i][1].get_d() << " " <<  centerOfIntersectingTriangles[i][2].get_d() << endl;
-				cerr << "Obj: " << objWhereTriangleIs << endl << endl;
-				}*/
-
-					//if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
-					outputTrianglesFromRetesselation[meshId].push_back(t);
-			}								
-		}
-
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "# Time to classify triangles vertices in other mesh: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-    clock_gettime(CLOCK_REALTIME, &t0);
-	}
-	clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to locate vertices and classify triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-  Print_Current_Process_Memory_Used();	
-  clock_gettime(CLOCK_REALTIME, &t0); 
-  
-	vector<bool> verticesToWriteOutputMesh0(vertices[0].size(),false);
-	vector<int> newIdVerticesMesh0(vertices[0].size(),-1);
-	for(const Triangle &t : outputTriangles[0]) {
-		verticesToWriteOutputMesh0[t.p[0]] = verticesToWriteOutputMesh0[t.p[1]] = verticesToWriteOutputMesh0[t.p[2]] = true;
-	}
-	for(TriangleNoBB &t : outputTrianglesFromRetesselation[0]) {
-		//cerr << t.p[0] << " " << vertices[0].size() << endl;
-		assert(t.p[0] < (int)vertices[0].size());
-		assert(t.p[1] < (int)vertices[0].size());
-		assert(t.p[2] < (int)vertices[0].size());
-
-		if(t.p[0]>=0) verticesToWriteOutputMesh0[t.p[0]] = true;
-		if(t.p[1]>=0) verticesToWriteOutputMesh0[t.p[1]] = true;
-		if(t.p[2]>=0) verticesToWriteOutputMesh0[t.p[2]] = true;
-	}
-	int numVerticesMesh0InOutput = 0;
-	int sz = vertices[0].size();
-	for(int i=0;i<sz;i++) 
-		if(verticesToWriteOutputMesh0[i]) {			
-			newIdVerticesMesh0[i] = numVerticesMesh0InOutput;
-			numVerticesMesh0InOutput++;
-		}
-
-	vector<bool> verticesToWriteOutputMesh1(vertices[1].size(),false);
-	vector<int> newIdVerticesMesh1(vertices[1].size(),-1);
-	for(const Triangle &t : outputTriangles[1]) {
-		verticesToWriteOutputMesh1[t.p[0]] = verticesToWriteOutputMesh1[t.p[1]] = verticesToWriteOutputMesh1[t.p[2]] = true;
-	}
-	for(TriangleNoBB &t : outputTrianglesFromRetesselation[1]) {
-		assert(t.p[0] < (int)vertices[1].size());
-		assert(t.p[1] < (int)vertices[1].size());
-		assert(t.p[2] < (int)vertices[1].size());
-		if(t.p[0]>=0) verticesToWriteOutputMesh1[t.p[0]] = true;
-		if(t.p[1]>=0) verticesToWriteOutputMesh1[t.p[1]] = true;
-		if(t.p[2]>=0) verticesToWriteOutputMesh1[t.p[2]] = true;
-	}
-
-	int numVerticesMesh1InOutput = 0;
-	sz = vertices[1].size();
-	for(int i=0;i<sz;i++) 
-		if(verticesToWriteOutputMesh1[i]) {			
-			newIdVerticesMesh1[i] = numVerticesMesh0InOutput + numVerticesMesh1InOutput;
-			numVerticesMesh1InOutput++;
-		}
-
-	//compute the new ids of the shared vertices...
-
-	for(Triangle &t : outputTriangles[0]) {
-		t.p[0] = newIdVerticesMesh0[t.p[0]];
-		t.p[1] = newIdVerticesMesh0[t.p[1]];
-		t.p[2] = newIdVerticesMesh0[t.p[2]];
-	}
-	for(Triangle &t : outputTriangles[1]) {
-		t.p[0] = newIdVerticesMesh1[t.p[0]];
-		t.p[1] = newIdVerticesMesh1[t.p[1]];
-		t.p[2] = newIdVerticesMesh1[t.p[2]];
-	}
-
-	
-	//the new ids of the shared vertices will be i+numVerticesMesh0InOutput + numVerticesMesh1InOutput, for i = 0...num shared vertices-1.
-	const int baseIdsSharedVertices = numVerticesMesh0InOutput + numVerticesMesh1InOutput -1;
-
-	//cerr << baseIdsSharedVertices << endl;
-	//cerr << newIdVerticesMesh0.size() << endl;
-	//cerr << outputTrianglesFromRetesselation[0][351].p[2] << endl;
-	for(TriangleNoBB &t : outputTrianglesFromRetesselation[0]) {
-		t.p[0] = (t.p[0]<0)?baseIdsSharedVertices-t.p[0]:newIdVerticesMesh0[t.p[0]];
-		t.p[1] = (t.p[1]<0)?baseIdsSharedVertices-t.p[1]:newIdVerticesMesh0[t.p[1]];
-		t.p[2] = (t.p[2]<0)?baseIdsSharedVertices-t.p[2]:newIdVerticesMesh0[t.p[2]];
-	}
-	//cerr << outputTrianglesFromRetesselation[0][351].p[2] << endl;
-	//
-	for(TriangleNoBB &t : outputTrianglesFromRetesselation[1]) {
-		t.p[0] = (t.p[0]<0)?baseIdsSharedVertices-t.p[0]:newIdVerticesMesh1[t.p[0]];
-		t.p[1] = (t.p[1]<0)?baseIdsSharedVertices-t.p[1]:newIdVerticesMesh1[t.p[1]];
-		t.p[2] = (t.p[2]<0)?baseIdsSharedVertices-t.p[2]:newIdVerticesMesh1[t.p[2]];
-	}
-	
-
-	clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to update ids of new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-  Print_Current_Process_Memory_Used();	
-  clock_gettime(CLOCK_REALTIME, &t0); 
-
-  int totalNumberOutputVertices = numVerticesMesh0InOutput+numVerticesMesh1InOutput + vertices[2].size();
-  int totalNumberOutputVerticesFromNonIntersectingTriangles = numVerticesMesh0InOutput+numVerticesMesh1InOutput;
-  int totalNumberOutputTriangles = outputTriangles[0].size() + outputTriangles[1].size() + outputTrianglesFromRetesselation[0].size() + outputTrianglesFromRetesselation[1].size();
-
-  
-  unordered_map<pair<int,int>,int> edgesIds; //maybe use unordered_map for performance (if necessary...)
-  vector<pair<int,int> > outputEdges;
- 
-	//vector<pair<int,int> > outputEdgesWithRepetition[2];
-
-	for(int meshId=0;meshId<2;meshId++) {
-		int numNewEdgesToAdd =0;
-		#pragma omp parallel
-		{			
-			const int sz = 	outputTriangles[meshId].size();
-			vector<pair<int,int> > myEdgesFound;	
-			
-
-			#pragma omp for
-		  for(int i=0;i<sz;i++) {
-		  	const Triangle &t = outputTriangles[meshId][i];
-				int a = t.p[0];
-				int b = t.p[1];
-				int c = t.p[2];
-
-				pair<int,int> e;
-				if (a<b) {e.first = a; e.second = b;}
-				else     {e.first = b; e.second = a;}
-				myEdgesFound.push_back(e);
-
-				if (b<c) {e.first = b; e.second = c;}
-				else     {e.first = c; e.second = b;}
-				myEdgesFound.push_back(e);
-
-				if (c<a) {e.first = c; e.second = a;}
-				else     {e.first = a; e.second = c;}
-				myEdgesFound.push_back(e);
-			}
-
-			const int szOutputTrianglesFromIntersection = outputTrianglesFromRetesselation[meshId].size();
-			#pragma omp for
-		  for(int i=0;i<szOutputTrianglesFromIntersection;i++) {
-		  	const TriangleNoBB &t = outputTrianglesFromRetesselation[meshId][i];
-				int a = t.p[0];
-				int b = t.p[1];
-				int c = t.p[2];
-			//	cerr << meshId << " " << i << " "  << szOutputTrianglesFromIntersection << " " << a << " " << b << " " << c << endl;
-				assert(a>=0);
-				assert(b>=0);
-				assert(c>=0);
-				
-				pair<int,int> e;
-				if (a<b) {e.first = a; e.second = b;}
-				else     {e.first = b; e.second = a;}
-				myEdgesFound.push_back(e);
-
-				if (b<c) {e.first = b; e.second = c;}
-				else     {e.first = c; e.second = b;}
-				myEdgesFound.push_back(e);
-
-				if (c<a) {e.first = c; e.second = a;}
-				else     {e.first = a; e.second = c;}
-				myEdgesFound.push_back(e);
-			}
-
-
-			sort(myEdgesFound.begin(),myEdgesFound.end());
-			auto newEndItr = unique(myEdgesFound.begin(),myEdgesFound.end());
-			myEdgesFound.resize(newEndItr- myEdgesFound.begin());
-
-			
-
-			#pragma omp critical
-			{
-				outputEdges.insert(outputEdges.end(),myEdgesFound.begin(),myEdgesFound.end());			
-			}
-		}
-	}
-	sort(outputEdges.begin(),outputEdges.end());
-	auto newEndItr = unique(outputEdges.begin(),outputEdges.end());
-	outputEdges.resize(newEndItr- outputEdges.begin());
-
-	clock_gettime(CLOCK_REALTIME, &t1);
-	cerr << "T so far: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-
-	
-	int totalNumberOutputEdges = outputEdges.size();
-	vector<map<int,int> > mapEdgesIds2(totalNumberOutputVertices); //maps each edge (pair of vertices) to ids id
-	for (int i=0;i<totalNumberOutputEdges;i++) {
-		const pair<int,int> &e = outputEdges[i];
-		//edgesIds[e] = i;
-
-		assert(e.first>=0 );
-		assert(e.second>=0);
-		assert(e.first<totalNumberOutputVertices);
-		//cerr << e.first << " " << e.second << " " << totalNumberOutputEdges << endl;
-		assert(e.second<totalNumberOutputVertices);		
-		mapEdgesIds2[e.first][e.second] = i;
-	}
-
-	clock_gettime(CLOCK_REALTIME, &t1);
-	timeClassifyTriangles = convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
-
-  cerr << "Time to create edges: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-  cerr << "Total time (excluding I/O) so far: " << convertTimeMsecs(diff(t0AfterDatasetRead,t1))/1000 << endl;
-  Print_Current_Process_Memory_Used();	
-  clock_gettime(CLOCK_REALTIME, &t0); 
-
-  
-
-  
- 
-
-  //now, let's write everything in the output!
-  outputStream << totalNumberOutputVertices << " " << totalNumberOutputEdges << " " << totalNumberOutputTriangles << '\n';
-
-  //print the coordinates of the vertices...
-  sz = verticesToWriteOutputMesh0.size();
-  for(int i=0;i<sz;i++) 
-		if(verticesToWriteOutputMesh0[i]) 
-			outputStream << vertices[0][i][0].get_d() << " " << vertices[0][i][1].get_d() << " " << vertices[0][i][2].get_d() << "\n";
-	sz = verticesToWriteOutputMesh1.size();
-  for(int i=0;i<sz;i++) 
-		if(verticesToWriteOutputMesh1[i]) 
-			outputStream << vertices[1][i][0].get_d() << " " << vertices[1][i][1].get_d() << " " << vertices[1][i][2].get_d() << "\n";
-	sz = vertices[2].size();
-  for(int i=0;i<sz;i++) 
-			outputStream << vertices[2][i][0].get_d() << " " << vertices[2][i][1].get_d() << " " << vertices[2][i][2].get_d() << "\n";		
-
-	//print edges...
-	for(const pair<int,int> &p:outputEdges) {
-		outputStream << p.first+1 << " " << p.second+1 << "\n"; //in a GTS file we start counting from 1...
-	}
-
-	//print triangles...
-	for(int meshId=0;meshId<2;meshId++) 
-		for(Triangle &t : outputTriangles[meshId]) {
-			int a = t.p[0];
-			int b = t.p[1];
-			int c = t.p[2];
-
-
-			if(t.above != OUTSIDE_OBJECT) {
-				//according to the right hand rule, the ordering of the vertices should be (c,b,a)
-				swap(a,c);
-			} 
-			pair<int,int> e;
-			if (a<b) {e.first = a; e.second = b;}
-			else     {e.first = b; e.second = a;}
-			//outputStream << edgesIds[e]+1 << " "; //we start counting from 1 in GTS files...
-			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
-
-			if (b<c) {e.first = b; e.second = c;}
-			else     {e.first = c; e.second = b;}
-			//outputStream << edgesIds[e]+1 << " ";
-			outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
-
-			if (c<a) {e.first = c; e.second = a;}
-			else     {e.first = a; e.second = c;}
-			//outputStream << edgesIds[e]+1 << "\n";
-			outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";
-		}
-
-		for(int meshId=0;meshId<2;meshId++) 
-			for(TriangleNoBB &t : outputTrianglesFromRetesselation[meshId]) {
-				int a = t.p[0];
-				int b = t.p[1];
-				int c = t.p[2];
-
-				//cerr << a << " " << b << " " << c << endl;
-				if(a<0) { //if the vertex refers to a shared vertex (created from the intersection)
-					a = -a -1 + totalNumberOutputVerticesFromNonIntersectingTriangles;
-				}
-				if(b<0) {
-					b = -b -1 + totalNumberOutputVerticesFromNonIntersectingTriangles;
-				}
-				if(c<0) {
-					c = -c -1 + totalNumberOutputVerticesFromNonIntersectingTriangles;
-				}
-
-				if(t.above != OUTSIDE_OBJECT) {
-					//according to the right hand rule, the ordering of the vertices should be (c,b,a)
-					swap(a,c);
-				} 
-				pair<int,int> e;
-				if (a<b) {e.first = a; e.second = b;}
-				else     {e.first = b; e.second = a;}
-				//outputStream << edgesIds[e]+1 << " "; //we start counting from 1 in GTS files...
-				outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
-
-				if (b<c) {e.first = b; e.second = c;}
-				else     {e.first = c; e.second = b;}
-				//outputStream << edgesIds[e]+1 << " ";
-				outputStream << mapEdgesIds2[e.first][e.second]+1 << " ";
-
-				if (c<a) {e.first = c; e.second = a;}
-				else     {e.first = a; e.second = c;}
-				//outputStream << edgesIds[e]+1 << "\n";
-				outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";
-			}
-	
-		cerr << "Output vertices         : " << totalNumberOutputVertices << endl;
-		cerr << "Output edges            : " << totalNumberOutputEdges << endl;
-		cerr << "Output triangles non int: " << totalNumberOutputTriangles << endl;
-		//cerr << "Intersecting triangles  : " << ctIntersectingTrianglesTotal << endl;
-
-}
 
 
 void readInputMesh(int meshId, string path) {
@@ -3492,11 +2745,19 @@ int main(int argc, char **argv) {
 
   ofstream outputStream(argv[6]);
   assert(outputStream);
-  classifyTrianglesAndGenerateOutput(&uniformGrid,trianglesThatIntersect,outputStream);
+
+  classifyTrianglesAndGenerateOutput(&uniformGrid, 
+                                        trianglesThatIntersect,
+                                        polygonsFromRetesselation,
+                                        vertices,
+                                        triangles,
+                                        outputStream);
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Total time to classify triangles and generate output: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  timeClassifyTriangles = convertTimeMsecs(diff(t0,t1))/1000;
+  cerr << "Total time to classify triangles and generate output: " << timeClassifyTriangles << endl;
   Print_Current_Process_Memory_Used();
+
 
   cerr << "----------------------------------------------------" << endl;
   cerr << "Summary of ACTUAL times (excluding the times to compute statistics, to write edges for debugging, etc): " << endl;
