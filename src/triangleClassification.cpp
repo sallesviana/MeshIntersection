@@ -381,9 +381,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 	for(int meshId=0;meshId<2;meshId++){
     timespec t0,t1;
 
-    //before locating the polygons from retesselation we need to triangulate them...
-    triangulatePolygonsFromRetesselation(polygonsFromRetesselation[0], vertices,0);
-    triangulatePolygonsFromRetesselation(polygonsFromRetesselation[1], vertices,1);
+   
 
 
     vector<ObjectId> locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh;

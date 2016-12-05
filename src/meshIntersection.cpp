@@ -2047,7 +2047,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     */
 
     bool isOrientationOfRetesselatedEqualToTriangle = true;
-    newPolygonsGeneratedFromRetesselation.reserve(numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes+sizePolygonsVector-1);
+    //newPolygonsGeneratedFromRetesselation.reserve(numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes+sizePolygonsVector-1);
 
     bool exteriorPolygonAlreadyFound = false; //have we already found the exterior polygon?
 
@@ -2117,7 +2117,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     //                        isOrientationOfRetesselatedEqualToTriangle,meshWhereTriangleIs);
 
     if(!areInteriorPolygonsClockwiseOriented) {
-      //we need to rever the orientation of all polygons...
+      //we need to reverse the orientation of all polygons...
       for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) 
         newPolygonsGeneratedFromRetesselation[i].reverseVerticesOrder();
     }
@@ -2140,11 +2140,8 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     saveEdgesAsGTS(edgesUsedInThisTriangle, meshWhereTriangleIs,  path);
 
 
-    //let's use the simpler algorithm... 
-    //assert(false); //TODO...
   }
- // cerr << "Concave: " << numConcavePolygonsFound << endl;
-  //cerr << "Convex: " << numConvexPolygonsFound << endl;
+
   #ifdef COLLECT_STATISTICS
     #pragma omp atomic
     statistics.ctConvexPolygonsInTriangleRetesselations += numConvexPolygonsFound;
@@ -2152,139 +2149,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     statistics.ctConcavePolygonsInTriangleRetesselations += numConcavePolygonsFound;
   #endif
 
-  return;
   
-
-/*
-  if(allSimple) {
-    //vertices should connect: internal - boundary , two boundary iff from intersection...
-
-    set<pair<int,int> > internalEdgesThisTriangle;
-    for(int edgeId:edgesFromIntersection) {   
-      internalEdgesThisTriangle.insert(edgesUsingVertexId[edgeId]);       
-    }
-    
-    
-
-    for(int i=0;i<numVTriangle;i++) {
-      int v1 = verticesToTesselate[i];
-      bool v1Original = (v1==t.p[0])||(v1==t.p[1])||(v1==t.p[2]); 
-     // bool v1Original = verticesOriginalTriangle.count(v1)!=0; 
-      for(int j=i+1;j<numVTriangle;j++) {
-        
-        int v2 = verticesToTesselate[j];
-         
-        bool v2Original = (v2==t.p[0])||(v2==t.p[1])||(v2==t.p[2]); 
-        if(v1Original && v2Original) continue; //v1 is a boundary vertex...
-
-        pair<int,int> candidateEdge;
-        if(v1<v2) {candidateEdge.first = v1; candidateEdge.second = v2;}
-        else {candidateEdge.first = v2; candidateEdge.second = v1;}
-
-        if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; 
-        assert(candidateEdge.first != candidateEdge.second);
-
-        #ifdef COLLECT_STATISTICS   
-          #pragma omp atomic
-          statistics.ctEdgesTestedToInsertInRetesselation++;
-        #endif
-        
-        //we do not need to test the candidate edges for intersection with the edges in the boundary of the triangle
-        if(!intersects(candidateEdge,internalEdgesThisTriangle,meshWhereTriangleIs,whatPlaneProjectTriangleTo,tempVars)) {        
-
-          #ifdef COLLECT_STATISTICS   
-            #pragma omp atomic
-            statistics.ctEdgesActuallyInsertedInRetesselation++;
-          #endif
-          edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
-          internalEdgesThisTriangle.insert(candidateEdge); 
-          //cerr << "Dont intersect\n";
-        }
-
-      }
-    }
-
-  } else { 
-    //for each pair of vertices (forming an edge), let's try to add this edge e to the triangulation
-    //
-
-    
-
-    for(int i=0;i<numVTriangle;i++) {
-      int v1 = verticesToTesselate[i];
-
-     // bool v1Original = verticesOriginalTriangle.count(v1)!=0; 
-      for(int j=i+1;j<numVTriangle;j++) {
-        
-        int v2 = verticesToTesselate[j];
-
-
-              
-        assert(v1<v2); //the vector was previously sorted! also, all elements should be unique!
-        //let's try to insert edge (v1,v2)...
-
-        //bool v2Original = verticesOriginalTriangle.count(v2)!=0;
-
-
-        pair<int,int> candidateEdge(v1,v2);
-        if(edgesUsedInThisTriangle.count(candidateEdge)!=0) continue; //the edge was already used...
-
-
-       
-        #ifdef COLLECT_STATISTICS   
-          #pragma omp atomic
-          statistics.ctEdgesTestedToInsertInRetesselation++;
-        #endif
-
-        //if edge e=(v1,v2) does not intersect other edges already inserted in this triangle,
-        //we will add e to the new triangulation...
-        //any triangulation is fine as soon as the edges from the intersection of the meshes are there...
-        if(!intersects(candidateEdge,edgesUsedInThisTriangle,meshWhereTriangleIs,whatPlaneProjectTriangleTo,tempVars)) {        
-
-          #ifdef COLLECT_STATISTICS   
-            #pragma omp atomic
-            statistics.ctEdgesActuallyInsertedInRetesselation++;
-          #endif
-          edgesUsedInThisTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
-        
-          //cerr << "Dont intersect\n";
-        } else {
-          //cerr << "Intersects\n";
-        }
-      }
-    }
-  }
-
-
-  if(seedEdge.first == -1) { //the edge t.p[0] - t.p[1] is not in the output because other edges intersects it...
-    for(const pair<int,int> &e:edgesUsedInThisTriangle) 
-      if(e.first == t.p[0] ) { //let's try to find an edge (t.p[0],x) (or (x,t.p[0])) collinear with (t.p[0], t.p[1])
-        //is e.second on line (t.p[0]-t.p[1]) ??
-        //TODO: this is computed with the projected triangle... we should consider vertical triangles...
-        if (orientation(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]], *getPointFromVertexId(e.second, meshWhereTriangleIs),whatPlaneProjectTriangleTo, tempVars)==0) {
-          seedEdge.first = t.p[0];
-          seedEdge.second = e.second;
-          //cerr << "Aqui" << endl;
-          break;
-        }
-      } else if (e.second == t.p[0]) {
-        if (orientation(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]], *getPointFromVertexId(e.first, meshWhereTriangleIs),whatPlaneProjectTriangleTo,tempVars)==0) {
-          seedEdge.first = e.first;
-          seedEdge.second = t.p[0];
-          //cerr << "Ali" << endl;
-          break;
-        }
-      }         
-  }
-
-
-
-  createNewTrianglesFromRetesselationAndOrient(edgesUsedInThisTriangle,t,newTrianglesGeneratedFromRetesselation,seedEdge,meshWhereTriangleIs, whatPlaneProjectTriangleTo);
-          */
-
-  //cerr << meshWhereTriangleIs << " " << i << " " << myNewTrianglesFromRetesselation.size() << endl;
- // for(auto &elem:edgesUsedInThisTriangle)
-   // myNewTriEdgesFromEachMap.push_back(elem); ;//newTriEdgesFromEachMap[meshWhereTriangleIs].push_back(elem);   
 }
 
 
@@ -2374,6 +2239,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   		//vector<pair<int,int> > myNewTriEdgesFromEachMap;
 
   		vector<BoundaryPolygon> myNewPolygonsFromRetesselation;
+      //myNewPolygonsFromRetesselation.reserve(numTrianglesToProcess);
+
   		VertCoord tempVars[8];
 
   		#pragma omp for
@@ -2412,6 +2279,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
 		  #pragma omp critical 
 		  {
+        cerr << "Number of polygons in vector of retesselated: " << myNewPolygonsFromRetesselation.size() << endl;
+        cerr << "Capacity: " << myNewPolygonsFromRetesselation.capacity() << endl;
 		  	//newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
 				//trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
 			  polygonsFromRetesselation[meshIdToProcess].insert(polygonsFromRetesselation[meshIdToProcess].end(),myNewPolygonsFromRetesselation.begin(),myNewPolygonsFromRetesselation.end() );
@@ -2428,8 +2297,29 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
     }
 	}
 
-	clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to retesselate creating new tri edges: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to retesselate creating new polygons: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
+
+  clock_gettime(CLOCK_REALTIME, &t0);
+  cerr << "Triangulating polygons from retesselation...\n";
+  for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
+    int numPolygons = polygonsFromRetesselation[meshIdToProcess].size();
+
+    const int percentShowLog = 10;
+    int onePercentNumPolygons = numPolygons/percentShowLog;
+    if(onePercentNumPolygons==0) onePercentNumPolygons = 1;
+
+    #pragma omp parallel for
+    for(int i=0;i<numPolygons;i++) {
+      //cerr << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*100/numPolygons << endl;
+      if((i%onePercentNumPolygons)==0) clog << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*percentShowLog/numPolygons << "\n";
+      polygonsFromRetesselation[meshIdToProcess][i].triangulatePolygon(vertices,meshIdToProcess);
+    }
+  }
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to triangulate polygons: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
   
   cerr << "Counts computed during retesselation: " << "\n";
