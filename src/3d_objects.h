@@ -148,7 +148,7 @@ public:
 
 	BoundaryPolygon(const int whatPlaneProjectTrianglesTo_): whatPlaneProjectTrianglesTo(whatPlaneProjectTrianglesTo_) {}
 
-	void triangulatePolygon(const vector<Point> vertices[3],const int meshIdWherePolygonIs);
+	void triangulatePolygon(const vector<Point> vertices[3],const int meshIdWherePolygonIs, VertCoord tempCoords[]);
 
 	void reverseVerticesOrder(); //reverse the order of the vertices in the vertex sequence (as a consequence, above and below are swapped)
 	
@@ -175,13 +175,15 @@ private:
 	void initializeLinkedList(TriangulationVertex listVerticesToProcess[],int numVerticesPolygon,const vector<Point> vertices[3], 
 																						const int meshIdWherePolygonIs, int &eBegin,int &eEnd,
 																						int &cBegin,int &cEnd,
-																						int &rBegin,int &rEnd);
+																						int &rBegin,int &rEnd, VertCoord tempCoords[]);
 	void updateStatusVertex(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],const int meshIdWherePolygonIs,
-													int &rBegin,int &rEnd, int &eBegin);
+													int &rBegin,int &rEnd, int &eBegin, VertCoord tempCoords[]);
 
 	//vertexId is the position of the vertex in the "listVerticesToProcess" arrat...
 	bool isEar(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],const int meshIdWherePolygonIs, const int rBegin);
-	bool isConvex(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],const int meshIdWherePolygonIs);
+	
+	//TempCoords should have at least 2 coordinates
+	bool isConvex(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],const int meshIdWherePolygonIs, VertCoord tempCoords[]);
 };
 
 

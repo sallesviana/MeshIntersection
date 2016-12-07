@@ -51,6 +51,8 @@ using namespace std;
 #define COLLECT_STATISTICS
 //#define COLLECT_STATISTICS_PRINT_TRIANGLES_INTERSECTIONS
 
+#define SANITY_CHECKS
+
 //===============================================================
 
 
@@ -322,8 +324,8 @@ int orientation(const Point &p, const Point &q, const Point &r, int whatPlanePro
     //...............................x=0 --> we have to use y and z
     int coord1=0,coord2=1;
     if(whatPlaneProjectTo==PLANE_Y0) {
-      coord1=0;
-      coord2=2;
+      coord1=2;
+      coord2=0;
     } else if(whatPlaneProjectTo==PLANE_X0) {
       coord1=1;
       coord2=2;
@@ -366,8 +368,8 @@ bool onSegment(const Point & p, const Point & q, const Point & r, int whatPlaneP
     //...............................x=0 --> we have to use y and z
     int coord1=0,coord2=1;
     if(whatPlaneProjectTo==PLANE_Y0) {
-      coord1=0;
-      coord2=2;
+      coord1=2;
+      coord2=0;
     } else if(whatPlaneProjectTo==PLANE_X0) {
       coord1=1;
       coord2=2;
@@ -477,8 +479,8 @@ bool isInTriangleProj(const Point &p, const Point &p0,const Point &p1,const Poin
   //...............................x=0 --> we have to use y and z
   int coord1=0,coord2=1;
   if(whatPlaneProjectTriangleTo==PLANE_Y0) {
-    coord1=0;
-    coord2=2;
+    coord1=2;
+    coord2=0;
   } else if(whatPlaneProjectTriangleTo==PLANE_X0) {
     coord1=1;
     coord2=2;
@@ -1122,6 +1124,7 @@ int binarySearch(vector<array<int,3> > &v,const pair<int,int> &key) {
   return -1;
 }
 
+
 void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vector<pair<int,int> > &edgesToSort) {
   auto edgesComparisonFunctionProjectZ = [&](const pair<int,int> &e1, const pair<int,int> &e2) { 
       if(e1.first!=e2.first) return e1.first<e2.first; //sort first by the first vertex..
@@ -1133,9 +1136,25 @@ void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vecto
       const Point &e20 = *getPointFromVertexId(e2.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
       const Point &e21 = *getPointFromVertexId(e2.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
 
+      const int xCoord = 0;
+      const int yCoord = 1;
+      const VertCoord v1x = (e11[xCoord]-e10[xCoord]);
+      const VertCoord v1y = (e11[yCoord]-e10[yCoord]);
+      const VertCoord v2x = (e21[xCoord]-e20[xCoord]);
+      const VertCoord v2y = (e21[yCoord]-e20[yCoord]);
+
+
+      if(sgn(v1y)>=0 && sgn(v2y)<0) return true; //check if the two vectors are in different sides of the x axis...
+      if(sgn(v1y)<0 && sgn(v2y)>=0) return false;
+      if(sgn(v1y) ==0 && sgn(v2y)==0) { //both are on the x axis... 
+        if(sgn(v1x)>=0) return true; //they both cannot have the same sign simultaneously (otherwise they would coincide..)
+        else return false;
+      }
+
+
       //is the cross product positive?
-      VertCoord component1 = (e11[0]-e10[0])*(e21[1]-e20[1]); //v1.x * v2.y 
-      VertCoord component2 = (e21[0]-e20[0])*(e11[1]-e10[1]); //v2.x*v1.y
+      const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
+      const VertCoord component2 = v2x*v1y; //v2.x*v1.y
 
       //the cross product is = component1-component2
       //is it positive?
@@ -1152,13 +1171,33 @@ void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vecto
       const Point &e20 = *getPointFromVertexId(e2.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
       const Point &e21 = *getPointFromVertexId(e2.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
 
+
+
+      const int xCoord = 2; //z->x , x->y (since we are projecting to the y=0 plane...)
+      const int yCoord = 0;
+      const VertCoord v1x = (e11[xCoord]-e10[xCoord]);
+      const VertCoord v1y = (e11[yCoord]-e10[yCoord]);
+      const VertCoord v2x = (e21[xCoord]-e20[xCoord]);
+      const VertCoord v2y = (e21[yCoord]-e20[yCoord]);
+
+
+      if(sgn(v1y)>=0 && sgn(v2y)<0) return true; //check if the two vectors are in different sides of the x axis...
+      if(sgn(v1y)<0 && sgn(v2y)>=0) return false;
+      if(sgn(v1y) ==0 && sgn(v2y)==0) { //both are on the x axis... 
+        if(sgn(v1x)>=0) return true; //they both cannot have the same sign simultaneously (otherwise they would coincide..)
+        else return false;
+      }
+
+
       //is the cross product positive?
-      VertCoord component1 = (e11[0]-e10[0])*(e21[2]-e20[2]); //v1.x * v2.z 
-      VertCoord component2 = (e21[0]-e20[0])*(e11[2]-e10[2]); //v2.x * v1.z
+      const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
+      const VertCoord component2 = v2x*v1y; //v2.x*v1.y
 
       //the cross product is = component1-component2
       //is it positive?
       return (component1 > component2);
+
+
   };
 
   auto edgesComparisonFunctionProjectX = [&](const pair<int,int> &e1, const pair<int,int> &e2) { 
@@ -1171,17 +1210,42 @@ void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vecto
       const Point &e20 = *getPointFromVertexId(e2.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
       const Point &e21 = *getPointFromVertexId(e2.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
 
+      const int xCoord = 1; //y->x , z->y (since we are projecting to the y=0 plane...)
+      const int yCoord = 2;
+      const VertCoord v1x = (e11[xCoord]-e10[xCoord]);
+      const VertCoord v1y = (e11[yCoord]-e10[yCoord]);
+      const VertCoord v2x = (e21[xCoord]-e20[xCoord]);
+      const VertCoord v2y = (e21[yCoord]-e20[yCoord]);
+
+
+      if(sgn(v1y)>=0 && sgn(v2y)<0) return true; //check if the two vectors are in different sides of the x axis...
+      if(sgn(v1y)<0 && sgn(v2y)>=0) return false;
+      if(sgn(v1y) ==0 && sgn(v2y)==0) { //both are on the x axis... 
+        if(sgn(v1x)>=0) return true; //they both cannot have the same sign simultaneously (otherwise they would coincide..)
+        else return false;
+      }
+
+
       //is the cross product positive?
-      VertCoord component1 = (e11[1]-e10[1])*(e21[2]-e20[2]); //v1.y * v2.z 
-      VertCoord component2 = (e21[1]-e20[1])*(e11[2]-e10[2]); //v2.y*v1.z
+      const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
+      const VertCoord component2 = v2x*v1y; //v2.x*v1.y
 
       //the cross product is = component1-component2
       //is it positive?
       return (component1 > component2);
   };
 
-  if(whatPlaneProjectTo == PLANE_Z0)
+  if(whatPlaneProjectTo == PLANE_Z0) {
     sort(edgesToSort.begin(),edgesToSort.end(), edgesComparisonFunctionProjectZ );
+
+    for(int i=0;i<edgesToSort.size();i++) if(edgesToSort[i].first ==0) cout << edgesToSort[i].second << endl;
+
+    for(int i=0;i<edgesToSort.size();i++) {
+      for(int j=0;j<edgesToSort.size();j++)
+        if(edgesToSort[i].first ==0 && edgesToSort[j].first ==0) 
+          cout << edgesToSort[i].second << " "  << edgesToSort[j].second << " " << edgesComparisonFunctionProjectZ(edgesToSort[i],edgesToSort[j]) << endl;
+    }
+  }
   else if(whatPlaneProjectTo == PLANE_Y0)
     sort(edgesToSort.begin(),edgesToSort.end(), edgesComparisonFunctionProjectY );
   else 
@@ -2122,8 +2186,41 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
         newPolygonsGeneratedFromRetesselation[i].reverseVerticesOrder();
     }
 
-    for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) 
-      assert(newPolygonsGeneratedFromRetesselation[i].isInClockwiseDirection(vertices, meshWhereTriangleIs));
+    #ifdef SANITY_CHECKS
+
+    #pragma omp critical
+    for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) {
+      bool isOrientedCorrectly = newPolygonsGeneratedFromRetesselation[i].isInClockwiseDirection(vertices, meshWhereTriangleIs);
+      if(!isOrientedCorrectly) {
+        cerr << "Error... polygon " << i << " generated from triangle "  << " is not oriented correctly..\n";
+        cerr << numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes << " " << numberPolygonsFromRetesselationNow << endl;
+        cerr << "isBoundaryOrigintalTriOrientedClockwise " << isBoundaryOriginalTriangleClockwisedOriented << endl;
+        cerr << "isOrientationOfRetesselatedEqualToTriangle " << isOrientationOfRetesselatedEqualToTriangle << endl;
+        cerr << "Original triangle: " << endl;
+        cerr << t.p[0] << " " << t.p[1] << " " << t.p[2] << endl;
+        printVertexForDebugging(getPointFromVertexId(t.p[0],meshWhereTriangleIs)->data());
+        printVertexForDebugging(getPointFromVertexId(t.p[1],meshWhereTriangleIs)->data());
+        printVertexForDebugging(getPointFromVertexId(t.p[2],meshWhereTriangleIs)->data());
+        cerr << "Polygon: " << endl;
+        for(int v:newPolygonsGeneratedFromRetesselation[i].vertexSequence) cerr << v << " "; cerr << endl;
+        for(int v:newPolygonsGeneratedFromRetesselation[i].vertexSequence) printVertexForDebugging(getPointFromVertexId(v,meshWhereTriangleIs)->data());
+        cerr << "What plane: " << whatPlaneProjectTriangleTo << endl;
+        cerr << "Edges from planar graph " << endl;
+        for(auto a:edgesUsedInThisTriangleV) {
+          cerr << a.first << " " << a.second << endl;
+          printVertexForDebugging(getPointFromVertexId(a.first,meshWhereTriangleIs)->data());
+          printVertexForDebugging(getPointFromVertexId(a.second,meshWhereTriangleIs)->data());
+          cerr << endl;
+        }
+        cerr << "Polygons extracted " << endl;
+        for(int j=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;j<numberPolygonsFromRetesselationNow;j++) {
+          for(int v:newPolygonsGeneratedFromRetesselation[j].vertexSequence) cerr << v << " "; cerr << endl;
+          for(int v:newPolygonsGeneratedFromRetesselation[j].vertexSequence) printVertexForDebugging(getPointFromVertexId(v,meshWhereTriangleIs)->data());
+        }
+      }
+      assert(isOrientedCorrectly);
+    }
+    #endif
    // cerr << "Oriented \n";
   } else {
     //TODO
@@ -2243,8 +2340,13 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
   		VertCoord tempVars[8];
 
+      const int percentShowLog = 1;
+      int onePercentNumTriangles = (percentShowLog*numTrianglesToProcess)/100;
+      if(onePercentNumTriangles==0) onePercentNumTriangles = 1;
+
   		#pragma omp for
-		  for(int i=0;i<numTrianglesToProcess;i++) {  		  		
+		  for(int i=0;i<numTrianglesToProcess;i++) {  		
+        if((i%onePercentNumTriangles)==0) clog << "Retesselating " << i << " of " << numTrianglesToProcess << " Percent= " << (i*100)/numTrianglesToProcess << "\n";  		
         //for each triangle ts, let's process the triangles intersecting t and the edges
         //formed by the intersection of ts and these triangles
 
@@ -2292,8 +2394,6 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
     
     for(BoundaryPolygon p:polygonsFromRetesselation[meshIdToProcess]) {
       //assert(p.isInClockwiseDirection(vertices,meshIdToProcess));
-
-
     }
 	}
 
@@ -2307,14 +2407,18 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
     int numPolygons = polygonsFromRetesselation[meshIdToProcess].size();
 
     const int percentShowLog = 10;
-    int onePercentNumPolygons = numPolygons/percentShowLog;
+    int onePercentNumPolygons = (numPolygons*percentShowLog)/100;
     if(onePercentNumPolygons==0) onePercentNumPolygons = 1;
 
-    #pragma omp parallel for
-    for(int i=0;i<numPolygons;i++) {
-      //cerr << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*100/numPolygons << endl;
-      if((i%onePercentNumPolygons)==0) clog << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*percentShowLog/numPolygons << "\n";
-      polygonsFromRetesselation[meshIdToProcess][i].triangulatePolygon(vertices,meshIdToProcess);
+    #pragma omp parallel
+    {
+      VertCoord tempCoords[2];
+      #pragma omp for
+      for(int i=0;i<numPolygons;i++) {
+        //cerr << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*100/numPolygons << endl;
+        if((i%onePercentNumPolygons)==0) clog << "Triangulating " << i << " of " << numPolygons << " Percent= " << (i*100)/numPolygons << "\n";
+        polygonsFromRetesselation[meshIdToProcess][i].triangulatePolygon(vertices,meshIdToProcess,tempCoords);
+      }
     }
   }
 

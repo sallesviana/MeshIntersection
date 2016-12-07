@@ -170,6 +170,10 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     const int numPolygonsFromRetesselation = polygonsFromRetesselation[thisMeshId].size();
     cerr << "Mesh " << thisMeshId << " Num polygons from retesselation: " << numPolygonsFromRetesselation << endl;
     
+    int numTriFromRetesselation = 0;
+    for(const BoundaryPolygon &b:polygonsFromRetesselation[thisMeshId])
+      numTriFromRetesselation += b.triangulatedPolygon.size();
+    cerr << "Mesh " << thisMeshId << " Num tri from retesselation: " << numTriFromRetesselation << endl;
     
 
  
@@ -341,7 +345,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 }
 
 
-
+/*
 void triangulatePolygonsFromRetesselation(vector<BoundaryPolygon> &polygonsFromRetesselation, const vector<Point> vertices[3],int meshIdWherePolygonIs) {
   int numPolygons = polygonsFromRetesselation.size();
 
@@ -356,6 +360,7 @@ void triangulatePolygonsFromRetesselation(vector<BoundaryPolygon> &polygonsFromR
   }
   //cerr << "End of triangulations..." << endl;
 }
+*/
 
 
 

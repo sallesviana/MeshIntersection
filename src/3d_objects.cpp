@@ -295,8 +295,8 @@ bool BoundaryPolygon::isEar(int vertexId,TriangulationVertex listVerticesToProce
 	return listVerticesToProcess[vertexId].ear;
 }
 
-
-bool BoundaryPolygon::isConvex(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],const int meshIdWherePolygonIs) {
+//TempCoords should have at least 2 coordinates
+bool BoundaryPolygon::isConvex(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],const int meshIdWherePolygonIs, VertCoord tempCoords[]) {
 	const int v1 = listVerticesToProcess[listVerticesToProcess[vertexId].pPrev].index;
 	const int v2 = listVerticesToProcess[vertexId].index;
 	const int v3 = listVerticesToProcess[listVerticesToProcess[vertexId].pNext].index;
@@ -316,23 +316,37 @@ bool BoundaryPolygon::isConvex(int vertexId,TriangulationVertex listVerticesToPr
   	coordY = 0;
   }
 
+  /*
  	VertCoord twoArea = vertex1[coordX]*(vertex2[coordY]-vertex3[coordY]) +
  									    vertex2[coordX]*(vertex3[coordY]-vertex1[coordY]) +
  									    vertex3[coordX]*(vertex1[coordY]-vertex2[coordY]) ;
 
- 	/*cerr << "Checking if convex... area: " << twoArea << endl;
- 	cerr << v1 << " " << listVerticesToProcess[vertexId].pPrev << " " << vertex1[0].get_d() << " " << vertex1[1].get_d() << endl;
- 	cerr << v2 << " " << vertexId << " " << vertex2[0].get_d() << " " << vertex2[1].get_d() << endl;
- 	cerr << v3 << " " << listVerticesToProcess[vertexId].pNext << " " << vertex3[0].get_d() << " " << vertex3[1].get_d() << endl;
+ 	listVerticesToProcess[vertexId].convex = twoArea<0;
+	return listVerticesToProcess[vertexId].convex;
 	*/
-	listVerticesToProcess[vertexId].convex = twoArea<0;
+	tempCoords[0] = vertex2[coordY]; //VertCoord twoArea = vertex1[coordX]*(vertex2[coordY]-vertex3[coordY]);
+	tempCoords[0] -= vertex3[coordY];
+	tempCoords[0] *= vertex1[coordX];
+
+	tempCoords[1] = vertex3[coordY];
+	tempCoords[1] -= vertex1[coordY];
+	tempCoords[1] *= vertex2[coordX]; 
+	tempCoords[0] += tempCoords[1]; //twoArea += vertex2[coordX]*(vertex3[coordY]-vertex1[coordY]);
+ 	
+ 	tempCoords[1] = vertex1[coordY];
+	tempCoords[1] -= vertex2[coordY];
+	tempCoords[1] *= vertex3[coordX]; 
+	tempCoords[0] += tempCoords[1]; //twoArea += vertex3[coordX]*(vertex1[coordY]-vertex2[coordY]);
+ 	
+
+ 	listVerticesToProcess[vertexId].convex = sgn(tempCoords[0])<0;
 	return listVerticesToProcess[vertexId].convex;
 }
 
 void BoundaryPolygon::initializeLinkedList(TriangulationVertex listVerticesToProcess[],int numVerticesPolygon,const vector<Point> vertices[3], 
 																						const int meshIdWherePolygonIs, int &eBegin,int &eEnd,
 																						int &cBegin,int &cEnd,
-																						int &rBegin,int &rEnd) {
+																						int &rBegin,int &rEnd, VertCoord tempCoords[]) {
 	//if all vertices are convex --> no need to look for ears (all vertices are ear...)
 	eBegin = eEnd = cBegin = cEnd = rBegin = rEnd = -1;
 	for(int i = 0;i<numVerticesPolygon;i++) {
@@ -349,7 +363,7 @@ void BoundaryPolygon::initializeLinkedList(TriangulationVertex listVerticesToPro
 	//now,let's update the list fo convex and reflex edges...
 	cBegin = cEnd = rBegin = rEnd = -1;
 	for(int i=0;i<numVerticesPolygon;i++) {
-		if(isConvex(i,listVerticesToProcess, vertices, meshIdWherePolygonIs)) {
+		if(isConvex(i,listVerticesToProcess, vertices, meshIdWherePolygonIs,tempCoords)) {
 			if(cBegin==-1) {
 				cBegin = cEnd = i;
 				listVerticesToProcess[i].crNext = -1;
@@ -377,7 +391,7 @@ void BoundaryPolygon::initializeLinkedList(TriangulationVertex listVerticesToPro
 //updates the status of vertices after one ear is removed
 //the vertexId must be a neighbor of the removed ear...
 void BoundaryPolygon::updateStatusVertex(int vertexId,TriangulationVertex listVerticesToProcess[], const vector<Point> vertices[3],
-																					const int meshIdWherePolygonIs,int &rBegin,int &rEnd, int &eBegin) {
+																					const int meshIdWherePolygonIs,int &rBegin,int &rEnd, int &eBegin, VertCoord tempCoords[]) {
 	int wasEar = listVerticesToProcess[vertexId].ear;
 	if(wasEar) { //if the vertex was an ear... it may not be an ear now...
 		if(!isEar(vertexId,listVerticesToProcess, vertices, meshIdWherePolygonIs,rBegin)) {
@@ -392,7 +406,7 @@ void BoundaryPolygon::updateStatusVertex(int vertexId,TriangulationVertex listVe
 		//if it was convex --> still convex...
 		//So, what matters now is: is it convex now? if it is, it may be a new ear 
 		int wasConvex = listVerticesToProcess[vertexId].convex;
-		if(isConvex(vertexId,listVerticesToProcess, vertices, meshIdWherePolygonIs)) {
+		if(isConvex(vertexId,listVerticesToProcess, vertices, meshIdWherePolygonIs,tempCoords)) {
 			if(!wasConvex) { //the reflex vertex became convex --> remove from reflex list (this accelerates the ear tests...)
 				//we need to keep track of reflex vertices list --> we need to update the rBegin, rEnd if necessary...
 				if(vertexId ==rBegin) {
@@ -433,7 +447,7 @@ void BoundaryPolygon::updateStatusVertex(int vertexId,TriangulationVertex listVe
 	}
 }
 
-void BoundaryPolygon::triangulatePolygon(const vector<Point> vertices[3],const int meshIdWherePolygonIs) {
+void BoundaryPolygon::triangulatePolygon(const vector<Point> vertices[3],const int meshIdWherePolygonIs, VertCoord tempCoords[]) {
 	int numVerticesPolygon = vertexSequence.size()-1; //the vertices always end with the first vertex...
 	TriangulationVertex listVerticesToProcess[numVerticesPolygon]; //we will store here the linked lists
 
@@ -441,7 +455,7 @@ void BoundaryPolygon::triangulatePolygon(const vector<Point> vertices[3],const i
 	int cBegin,cEnd;
 	int rBegin,rEnd;
 	//initialize the linked list
-	initializeLinkedList(listVerticesToProcess,numVerticesPolygon,vertices,meshIdWherePolygonIs,eBegin,eEnd,cBegin,cEnd,rBegin,rEnd);
+	initializeLinkedList(listVerticesToProcess,numVerticesPolygon,vertices,meshIdWherePolygonIs,eBegin,eEnd,cBegin,cEnd,rBegin,rEnd,tempCoords);
 
 	/*cerr << "Triangulating: " << endl;
 	for(int i=0;i<vertexSequence.size();i++) {
@@ -541,8 +555,8 @@ void BoundaryPolygon::triangulatePolygon(const vector<Point> vertices[3],const i
 		}
 
 		//update status of prevVertexEar and nextVertexEar
-		updateStatusVertex(prevVertexEar,listVerticesToProcess,vertices,meshIdWherePolygonIs,rBegin,rEnd, eBegin);
-		updateStatusVertex(nextVertexEar,listVerticesToProcess,vertices,meshIdWherePolygonIs,rBegin,rEnd, eBegin);
+		updateStatusVertex(prevVertexEar,listVerticesToProcess,vertices,meshIdWherePolygonIs,rBegin,rEnd, eBegin,tempCoords);
+		updateStatusVertex(nextVertexEar,listVerticesToProcess,vertices,meshIdWherePolygonIs,rBegin,rEnd, eBegin,tempCoords);
 
 		//remove the ear, and set the first ear as the next one...
 		{
