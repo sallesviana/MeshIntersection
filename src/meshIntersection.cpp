@@ -51,7 +51,7 @@ using namespace std;
 #define COLLECT_STATISTICS
 //#define COLLECT_STATISTICS_PRINT_TRIANGLES_INTERSECTIONS
 
-#define SANITY_CHECKS
+//#define SANITY_CHECKS
 
 //===============================================================
 
@@ -2188,34 +2188,37 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
 
     #ifdef SANITY_CHECKS
 
-    #pragma omp critical
+    
     for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) {
       bool isOrientedCorrectly = newPolygonsGeneratedFromRetesselation[i].isInClockwiseDirection(vertices, meshWhereTriangleIs);
       if(!isOrientedCorrectly) {
-        cerr << "Error... polygon " << i << " generated from triangle "  << " is not oriented correctly..\n";
-        cerr << numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes << " " << numberPolygonsFromRetesselationNow << endl;
-        cerr << "isBoundaryOrigintalTriOrientedClockwise " << isBoundaryOriginalTriangleClockwisedOriented << endl;
-        cerr << "isOrientationOfRetesselatedEqualToTriangle " << isOrientationOfRetesselatedEqualToTriangle << endl;
-        cerr << "Original triangle: " << endl;
-        cerr << t.p[0] << " " << t.p[1] << " " << t.p[2] << endl;
-        printVertexForDebugging(getPointFromVertexId(t.p[0],meshWhereTriangleIs)->data());
-        printVertexForDebugging(getPointFromVertexId(t.p[1],meshWhereTriangleIs)->data());
-        printVertexForDebugging(getPointFromVertexId(t.p[2],meshWhereTriangleIs)->data());
-        cerr << "Polygon: " << endl;
-        for(int v:newPolygonsGeneratedFromRetesselation[i].vertexSequence) cerr << v << " "; cerr << endl;
-        for(int v:newPolygonsGeneratedFromRetesselation[i].vertexSequence) printVertexForDebugging(getPointFromVertexId(v,meshWhereTriangleIs)->data());
-        cerr << "What plane: " << whatPlaneProjectTriangleTo << endl;
-        cerr << "Edges from planar graph " << endl;
-        for(auto a:edgesUsedInThisTriangleV) {
-          cerr << a.first << " " << a.second << endl;
-          printVertexForDebugging(getPointFromVertexId(a.first,meshWhereTriangleIs)->data());
-          printVertexForDebugging(getPointFromVertexId(a.second,meshWhereTriangleIs)->data());
-          cerr << endl;
-        }
-        cerr << "Polygons extracted " << endl;
-        for(int j=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;j<numberPolygonsFromRetesselationNow;j++) {
-          for(int v:newPolygonsGeneratedFromRetesselation[j].vertexSequence) cerr << v << " "; cerr << endl;
-          for(int v:newPolygonsGeneratedFromRetesselation[j].vertexSequence) printVertexForDebugging(getPointFromVertexId(v,meshWhereTriangleIs)->data());
+        #pragma omp critical
+          {
+          cerr << "Error... polygon " << i << " generated from triangle "  << " is not oriented correctly..\n";
+          cerr << numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes << " " << numberPolygonsFromRetesselationNow << endl;
+          cerr << "isBoundaryOrigintalTriOrientedClockwise " << isBoundaryOriginalTriangleClockwisedOriented << endl;
+          cerr << "isOrientationOfRetesselatedEqualToTriangle " << isOrientationOfRetesselatedEqualToTriangle << endl;
+          cerr << "Original triangle: " << endl;
+          cerr << t.p[0] << " " << t.p[1] << " " << t.p[2] << endl;
+          printVertexForDebugging(getPointFromVertexId(t.p[0],meshWhereTriangleIs)->data());
+          printVertexForDebugging(getPointFromVertexId(t.p[1],meshWhereTriangleIs)->data());
+          printVertexForDebugging(getPointFromVertexId(t.p[2],meshWhereTriangleIs)->data());
+          cerr << "Polygon: " << endl;
+          for(int v:newPolygonsGeneratedFromRetesselation[i].vertexSequence) cerr << v << " "; cerr << endl;
+          for(int v:newPolygonsGeneratedFromRetesselation[i].vertexSequence) printVertexForDebugging(getPointFromVertexId(v,meshWhereTriangleIs)->data());
+          cerr << "What plane: " << whatPlaneProjectTriangleTo << endl;
+          cerr << "Edges from planar graph " << endl;
+          for(auto a:edgesUsedInThisTriangleV) {
+            cerr << a.first << " " << a.second << endl;
+            printVertexForDebugging(getPointFromVertexId(a.first,meshWhereTriangleIs)->data());
+            printVertexForDebugging(getPointFromVertexId(a.second,meshWhereTriangleIs)->data());
+            cerr << endl;
+          }
+          cerr << "Polygons extracted " << endl;
+          for(int j=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;j<numberPolygonsFromRetesselationNow;j++) {
+            for(int v:newPolygonsGeneratedFromRetesselation[j].vertexSequence) cerr << v << " "; cerr << endl;
+            for(int v:newPolygonsGeneratedFromRetesselation[j].vertexSequence) printVertexForDebugging(getPointFromVertexId(v,meshWhereTriangleIs)->data());
+          }
         }
       }
       assert(isOrientedCorrectly);
