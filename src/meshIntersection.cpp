@@ -705,6 +705,15 @@ struct StatisticsAboutRetesseation {
 };
 
 
+//temporary variables... we avoid reallocating them every time this function is calles
+struct TempVarsRetesselateTriangleFunction {
+  vector<int> polygons;
+  vector<array<int,3> > wedgesTemp;
+  vector<pair<int,int> > raggedArraySortedEdges;
+  vector<bool> usedWedgesTemp;
+  VertCoord tempVertCoords[8];
+};
+
 //given a triangle t, this function will split t at the intersection edges (intersection with other triangles)
 //and retesselate t, creating more triangles.
 void retesselateTriangle(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, const int meshWhereTriangleIs, vector<TriangleNoBB> &newTrianglesGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
@@ -1125,8 +1134,19 @@ int binarySearch(vector<array<int,3> > &v,const pair<int,int> &key) {
 }
 
 
-void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vector<pair<int,int> > &edgesToSort) {
-  auto edgesComparisonFunctionProjectZ = [&](const pair<int,int> &e1, const pair<int,int> &e2) { 
+//tempVars should have at least size 4
+void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vector<pair<int,int> > &edgesToSort,VertCoord tempVars[]) {
+  int xCoord = 0;
+  int yCoord = 1;
+  if(whatPlaneProjectTo==PLANE_Y0) {
+    xCoord= 2;
+    yCoord= 0;
+  } else if(whatPlaneProjectTo==PLANE_X0) {
+    xCoord= 1;
+    yCoord= 2;    
+  } 
+
+  auto edgesComparisonFunctionProject = [&](const pair<int,int> &e1, const pair<int,int> &e2) { 
       if(e1.first!=e2.first) return e1.first<e2.first; //sort first by the first vertex..
       //if the first vertex is equal, we need to sort basing on the angle...
       //let's check if the cross product between e1 and e2 is positive... cross = v1.x * v2.y - v2.x * v1.y;
@@ -1136,8 +1156,7 @@ void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vecto
       const Point &e20 = *getPointFromVertexId(e2.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
       const Point &e21 = *getPointFromVertexId(e2.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
 
-      const int xCoord = 0;
-      const int yCoord = 1;
+      /*
       const VertCoord v1x = (e11[xCoord]-e10[xCoord]);
       const VertCoord v1y = (e11[yCoord]-e10[yCoord]);
       const VertCoord v2x = (e21[xCoord]-e20[xCoord]);
@@ -1158,99 +1177,45 @@ void sortTriangleEdgesByAngle(int meshIdToProcess, int whatPlaneProjectTo, vecto
 
       //the cross product is = component1-component2
       //is it positive?
-      return (component1 > component2);
-  };
+      return (component1 > component2);*/
+      VertCoord &v1x = tempVars[0];
+      VertCoord &v1y = tempVars[1];
+      VertCoord &v2x = tempVars[2];
+      VertCoord &v2y = tempVars[3];
+      v1x = e11[xCoord];
+      v1x -= e10[xCoord];
 
-  auto edgesComparisonFunctionProjectY = [&](const pair<int,int> &e1, const pair<int,int> &e2) { 
-      if(e1.first!=e2.first) return e1.first<e2.first; //sort first by the first vertex..
-      //if the first vertex is equal, we need to sort basing on the angle...
-      //let's check if the cross product between e1 and e2 is positive... cross = v1.x * v2.y - v2.x * v1.y;
-      const Point &e10 = *getPointFromVertexId(e1.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
-      const Point &e11 = *getPointFromVertexId(e1.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
+      v1y = e11[yCoord];
+      v1y -= e10[yCoord];
 
-      const Point &e20 = *getPointFromVertexId(e2.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
-      const Point &e21 = *getPointFromVertexId(e2.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
+      v2x = e21[xCoord];
+      v2x -= e20[xCoord];
 
+      v2y = e21[yCoord];
+      v2y -= e20[yCoord];
 
+      const int sgnV1y = sgn(v1y);
+      const int sgnV2y = sgn(v2y);
 
-      const int xCoord = 2; //z->x , x->y (since we are projecting to the y=0 plane...)
-      const int yCoord = 0;
-      const VertCoord v1x = (e11[xCoord]-e10[xCoord]);
-      const VertCoord v1y = (e11[yCoord]-e10[yCoord]);
-      const VertCoord v2x = (e21[xCoord]-e20[xCoord]);
-      const VertCoord v2y = (e21[yCoord]-e20[yCoord]);
-
-
-      if(sgn(v1y)>=0 && sgn(v2y)<0) return true; //check if the two vectors are in different sides of the x axis...
-      if(sgn(v1y)<0 && sgn(v2y)>=0) return false;
-      if(sgn(v1y) ==0 && sgn(v2y)==0) { //both are on the x axis... 
+      if(sgnV1y>=0 && sgnV2y<0) return true; //check if the two vectors are in different sides of the x axis...
+      if(sgnV1y<0 && sgnV2y>=0) return false;
+      if(sgnV1y==0 && sgnV2y==0) { //both are on the x axis... 
         if(sgn(v1x)>=0) return true; //they both cannot have the same sign simultaneously (otherwise they would coincide..)
         else return false;
       }
 
-
       //is the cross product positive?
-      const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
-      const VertCoord component2 = v2x*v1y; //v2.x*v1.y
+      v1x *= v2y; //const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
+      v2x *= v1y; //const VertCoord component2 = v2x*v1y; //v2.x*v1.y
 
       //the cross product is = component1-component2
       //is it positive?
-      return (component1 > component2);
-
-
+      return v1x > v2x;//return (component1 > component2);
   };
 
-  auto edgesComparisonFunctionProjectX = [&](const pair<int,int> &e1, const pair<int,int> &e2) { 
-      if(e1.first!=e2.first) return e1.first<e2.first; //sort first by the first vertex..
-      //if the first vertex is equal, we need to sort basing on the angle...
-      //let's check if the cross product between e1 and e2 is positive... cross = v1.x * v2.y - v2.x * v1.y;
-      const Point &e10 = *getPointFromVertexId(e1.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
-      const Point &e11 = *getPointFromVertexId(e1.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
-
-      const Point &e20 = *getPointFromVertexId(e2.first, meshIdToProcess); //if the vertex is shared (that is, it does not belong only to meshIdToProcess) its id will be negative (the function 
-      const Point &e21 = *getPointFromVertexId(e2.second, meshIdToProcess); // getPointFromVertexId treats this automatically).
-
-      const int xCoord = 1; //y->x , z->y (since we are projecting to the y=0 plane...)
-      const int yCoord = 2;
-      const VertCoord v1x = (e11[xCoord]-e10[xCoord]);
-      const VertCoord v1y = (e11[yCoord]-e10[yCoord]);
-      const VertCoord v2x = (e21[xCoord]-e20[xCoord]);
-      const VertCoord v2y = (e21[yCoord]-e20[yCoord]);
-
-
-      if(sgn(v1y)>=0 && sgn(v2y)<0) return true; //check if the two vectors are in different sides of the x axis...
-      if(sgn(v1y)<0 && sgn(v2y)>=0) return false;
-      if(sgn(v1y) ==0 && sgn(v2y)==0) { //both are on the x axis... 
-        if(sgn(v1x)>=0) return true; //they both cannot have the same sign simultaneously (otherwise they would coincide..)
-        else return false;
-      }
-
-
-      //is the cross product positive?
-      const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
-      const VertCoord component2 = v2x*v1y; //v2.x*v1.y
-
-      //the cross product is = component1-component2
-      //is it positive?
-      return (component1 > component2);
-  };
-
-  if(whatPlaneProjectTo == PLANE_Z0) {
-    sort(edgesToSort.begin(),edgesToSort.end(), edgesComparisonFunctionProjectZ );
-
-    for(int i=0;i<edgesToSort.size();i++) if(edgesToSort[i].first ==0) cout << edgesToSort[i].second << endl;
-
-    for(int i=0;i<edgesToSort.size();i++) {
-      for(int j=0;j<edgesToSort.size();j++)
-        if(edgesToSort[i].first ==0 && edgesToSort[j].first ==0) 
-          cout << edgesToSort[i].second << " "  << edgesToSort[j].second << " " << edgesComparisonFunctionProjectZ(edgesToSort[i],edgesToSort[j]) << endl;
-    }
-  }
-  else if(whatPlaneProjectTo == PLANE_Y0)
-    sort(edgesToSort.begin(),edgesToSort.end(), edgesComparisonFunctionProjectY );
-  else 
-    sort(edgesToSort.begin(),edgesToSort.end(), edgesComparisonFunctionProjectX );
+  sort(edgesToSort.begin(),edgesToSort.end(), edgesComparisonFunctionProject );
 }
+
 
 
 
@@ -1335,9 +1300,15 @@ bool checkIfPolygonsAreConnected(const vector<pair<int,int> > &raggedArraySorted
 //at the end of the function the edges in raggedArraySortedEdges will be sorted by the first vertex and, if there is a tie, by the slope of the edge (w.r.t. the projection to whatPlaneProjectTo)
 //at the end of this function raggedArraySortedEdges will contain the edges (two directed edges for each edge) sorted
 //by the first vertex and by the angle of the edge 
-void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesUsingVertexId,const int numEdgesFromIntersection, const int meshIdToProcess, const int whatPlaneProjectTo, vector<int> &polygons,vector<array<int,3> > &wedgesTemp, vector<pair<int,int> > &raggedArraySortedEdges, vector<bool> &usedWedgesTemp, VertCoord tempCoords[2] ) {
+void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const vector<pair<int,int> > &edgesUsingVertexId,const int numEdgesFromIntersection, const int meshIdToProcess, const int whatPlaneProjectTo,  TempVarsRetesselateTriangleFunction &tempVars ) {
   //Algorithm: http://ac.els-cdn.com/016786559390104L/1-s2.0-016786559390104L-main.pdf?_tid=7586b72e-a059-11e6-afdd-00000aacb35d&acdnat=1478021856_7213cc56dd2148587a06891102f5d518
    
+  
+  vector<array<int,3> > &wedgesTemp = tempVars.wedgesTemp;
+  vector<pair<int,int> > &raggedArraySortedEdges = tempVars.raggedArraySortedEdges;
+  vector<bool> &usedWedgesTemp = tempVars.usedWedgesTemp;
+  vector<int> &polygons = tempVars.polygons;
+
   //First, we need to find all the wedges:
 
   //Duplicate each undirected edge such that we will have two directed edges (u,v) and (v,u)
@@ -1364,7 +1335,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const vector<pair<int,in
   int x = 0;
   //now we need to sort the edges basing on the first vertex and, then, on the angle with horizon (considering whatPlaneProjectTo)
   
-  sortTriangleEdgesByAngle(meshIdToProcess, whatPlaneProjectTo, raggedArraySortedEdges);  
+  sortTriangleEdgesByAngle(meshIdToProcess, whatPlaneProjectTo, raggedArraySortedEdges,tempVars.tempVertCoords);  
   
 
   wedgesTemp.resize(0);
@@ -1451,8 +1422,10 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const vector<pair<int,in
 
 //sort the vertices from meshIdToProcess (or created from intersection) basing on the distance to vertex orig
 //tempVars should have at least 4 slots..
-void sortVerticesBasingOnDistance(vector<int> &vertices,int origId,int meshIdToProcess,VertCoord tempVars[]) {
+void sortVerticesBasingOnDistance(vector<int> &vertices,int origId,int meshIdToProcess,TempVarsRetesselateTriangleFunction &tempVars) {
   const Point &orig = *getPointFromVertexId(origId, meshIdToProcess);
+
+  VertCoord *tempVertCoords = tempVars.tempVertCoords;
 
   sort(vertices.begin(),vertices.end(),
     [&](const int &v1Id, const int &v2Id) { //is v1 closer to orig than v2?
@@ -1460,29 +1433,29 @@ void sortVerticesBasingOnDistance(vector<int> &vertices,int origId,int meshIdToP
       const Point &v2 = *getPointFromVertexId(v2Id, meshIdToProcess);
 
       //tempVars[2] will be the distance^2 between v1 and orig..
-      tempVars[2] =  0;
+      tempVertCoords[2] =  0;
       for(int i=0;i<3;i++) {
-        tempVars[0] = v1[i];
-        tempVars[0] -= orig[i];
+        tempVertCoords[0] = v1[i];
+        tempVertCoords[0] -= orig[i];
 
-        tempVars[1]= tempVars[0];
-        tempVars[1]*=tempVars[0];
+        tempVertCoords[1]= tempVertCoords[0];
+        tempVertCoords[1]*=tempVertCoords[0];
 
-        tempVars[2]+= tempVars[1];
+        tempVertCoords[2]+= tempVertCoords[1];
       }
 
       //tempVars[3] will be the distance^2 between v2 and orig..
-      tempVars[3] =  0;
+      tempVertCoords[3] =  0;
       for(int i=0;i<3;i++) {
-        tempVars[0] = v2[i];
-        tempVars[0] -= orig[i];
+        tempVertCoords[0] = v2[i];
+        tempVertCoords[0] -= orig[i];
 
-        tempVars[1] = tempVars[0];
-        tempVars[1]*=tempVars[0];
+        tempVertCoords[1] = tempVertCoords[0];
+        tempVertCoords[1]*= tempVertCoords[0];
 
-        tempVars[3]+= tempVars[1];
+        tempVertCoords[3]+= tempVertCoords[1];
       }
-      return tempVars[2]<tempVars[3];
+      return tempVertCoords[2]<tempVertCoords[3];
 
     });
 
@@ -1711,12 +1684,15 @@ int doesPolygonContainAllEdges(const vector<int> &polygons,const int firstElemen
     else return 0;
 }
 
+
+
+
 //tempVars should have at least 8 slots
 //the new polygons generated from the retesselation will be added to the back of "newPolygonsGeneratedFromRetesselation"
-void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, const int meshWhereTriangleIs, vector<BoundaryPolygon> &newPolygonsGeneratedFromRetesselation,VertCoord tempVars[], StatisticsAboutRetesseation &statistics) {
+void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsingVertexId, const vector<int> &edgesFromIntersection,const Triangle &t, const int meshWhereTriangleIs, vector<BoundaryPolygon> &newPolygonsGeneratedFromRetesselation,TempVarsRetesselateTriangleFunction &tempVars, StatisticsAboutRetesseation &statistics) {
   //A triangle (except if it is degenerate to a single point) cannot be perpendicular to all 3 planes (x=0,y=0,z=0)
   //Thus, we chose one of these planes to project the triangle during computations...
-  const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]],vertices[meshWhereTriangleIs][t.p[2]], tempVars);
+  const int whatPlaneProjectTriangleTo = getPlaneTriangleIsNotPerpendicular(vertices[meshWhereTriangleIs][t.p[0]], vertices[meshWhereTriangleIs][t.p[1]],vertices[meshWhereTriangleIs][t.p[2]], tempVars.tempVertCoords);
 
   /*cerr << "Number of edges from intersection: " << edgesFromIntersection.size() << endl;
   for(int e: edgesFromIntersection) {
@@ -1801,7 +1777,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
 
     const Point &vertex = *getPointFromVertexId(v, meshWhereTriangleIs);
     //cerr << "V: " << vertex[0].get_d( ) << " " << vertex[1].get_d() << " " << vertex[2].get_d() << endl;;
-    int o1 = orientation(triangleVertex0, triangleVertex1,  vertex,whatPlaneProjectTriangleTo,tempVars);
+    int o1 = orientation(triangleVertex0, triangleVertex1,  vertex,whatPlaneProjectTriangleTo,tempVars.tempVertCoords);
     
     
     //cerr << o1 << o2 << o3 << endl;
@@ -1809,13 +1785,13 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
       verticesIncidentEachEdgeOriginalTriangle[0].push_back(v);
       continue;
     }
-    int o2 = orientation(triangleVertex1, triangleVertex2,  vertex,whatPlaneProjectTriangleTo,tempVars);
+    int o2 = orientation(triangleVertex1, triangleVertex2,  vertex,whatPlaneProjectTriangleTo,tempVars.tempVertCoords);
     if(o2==0) {
       //cerr << "12" << endl;
       verticesIncidentEachEdgeOriginalTriangle[1].push_back(v);
       continue;
     }
-    int o3 = orientation(triangleVertex2, triangleVertex0,  vertex,whatPlaneProjectTriangleTo,tempVars);
+    int o3 = orientation(triangleVertex2, triangleVertex0,  vertex,whatPlaneProjectTriangleTo,tempVars.tempVertCoords);
     if(o3==0) {
      // cerr << 20 << endl;
       verticesIncidentEachEdgeOriginalTriangle[2].push_back(v);
@@ -2062,16 +2038,15 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
   //created because of intersections with other triangles. Thus, edgesUsedInThisTriangle will define a planar partitioning..
 
  // cerr << "End..." << allSimple << endl;
-  vector<int> polygons;
-  vector<array<int,3> > wedgesTemp;
-  vector<pair<int,int> > raggedArrayEdges;
-  vector<bool> usedWedgesTemp;
+  
   vector<pair<int,int> > edgesUsedInThisTriangleV(edgesUsedInThisTriangle.begin(),edgesUsedInThisTriangle.end());
   
-  sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(edgesUsedInThisTriangleV,edgesFromIntersection.size(),meshWhereTriangleIs,whatPlaneProjectTriangleTo, polygons, wedgesTemp, raggedArrayEdges, usedWedgesTemp, tempVars );
-  
+  sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(edgesUsedInThisTriangleV,edgesFromIntersection.size(),meshWhereTriangleIs,whatPlaneProjectTriangleTo,   tempVars );
+  vector<int> &polygons = tempVars.polygons; 
+
+
   //at the end of the previous function raggedArrayEdges will contain the directed edges sorted by their first vertex...
-  bool arePolygonsConnected = checkIfPolygonsAreConnected(raggedArrayEdges);
+  bool arePolygonsConnected = checkIfPolygonsAreConnected(tempVars.raggedArraySortedEdges);
 
   //at the end of the previous function, raggedArrayEdges will be filled with the edges sorted by the first vertex of each edge
   //(if there is a tie the edges are sorted by the slope w.r.t. the plane we projected the triangle)
@@ -2167,7 +2142,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
     //if the cross product of the vectors: (vertex1-vertex0) and (vertex2-vertex0) is negative --> the triangle is oriented
     //in clockwise orientation --> the seed is also in clockwise orientation...
     bool isBoundaryOriginalTriangleClockwisedOriented = signCrossProduct2D(triangleVertex0,triangleVertex1,
-                                                            triangleVertex0,triangleVertex2,whatPlaneProjectTriangleTo,tempVars)<0;
+                                                            triangleVertex0,triangleVertex2,whatPlaneProjectTriangleTo,tempVars.tempVertCoords)<0;
 
     bool areInteriorPolygonsClockwiseOriented = true;
     if(isBoundaryOriginalTriangleClockwisedOriented && !isOrientationOfRetesselatedEqualToTriangle) areInteriorPolygonsClockwiseOriented = false;
@@ -2280,6 +2255,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   map< Point, int > vertexIdPlusOne; //lets add 1 to the ids (this will simplify the creation of new entries...)
   
   int numEdges = edges.size();
+
+  clog << "Number of edges: " << numEdges << "\n";
   vector<pair<int,int> > edgesUsingVertexId(numEdges); //if we have an edge (a,b)  --> a<b
   for(int i=0;i<numEdges;i++) {
   	//cerr << "i " << i << " " << numEdges << endl;
@@ -2307,7 +2284,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   	intersectingEdgesInEachTriangle[0][tA].push_back(i);
   	intersectingEdgesInEachTriangle[1][tB].push_back(i);
   }
-
+  cerr << "Number of edges pushed back: " << vertices[2].size() << endl;
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to extract the edges intersecting each triangle and create the new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
  
@@ -2341,7 +2318,7 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   		vector<BoundaryPolygon> myNewPolygonsFromRetesselation;
       //myNewPolygonsFromRetesselation.reserve(numTrianglesToProcess);
 
-  		VertCoord tempVars[8];
+  		TempVarsRetesselateTriangleFunction tempVars;
 
       const int percentShowLog = 1;
       int onePercentNumTriangles = (percentShowLog*numTrianglesToProcess)/100;
