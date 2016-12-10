@@ -1,6 +1,28 @@
-all: meshIntersection
+flags = -lgmp -lgmpxx -std=c++11 -O3 -pg -fopenmp -ltcmalloc
 
-meshIntersection: src/PinMesh.cpp src/meshIntersection.cpp src/3d_objects.cpp src/floodFillScanline.cpp src/rationals.h  src/common2.h  src/nested3DGrid.cpp src/tritri_isectline.c
-	g++ src/meshIntersection.cpp -lgmp -lgmpxx -std=c++11 -O3  -fopenmp  -o meshIntersection
+all: meshIntersectionNoLTC meshIntersectionWithLTC meshIntersectionWithLTCParallel
+
+meshIntersectionNoLTC: meshIntersection.o triangleClassification.o nested3DGrid.o 3d_objects.o utils.o
+		g++ meshIntersection.o triangleClassification.o nested3DGrid.o 3d_objects.o utils.o $(flags) -o  meshIntersectionNoLTC
+
+meshIntersectionWithLTC: meshIntersection.o triangleClassification.o nested3DGrid.o 3d_objects.o utils.o
+		g++ meshIntersection.o triangleClassification.o nested3DGrid.o 3d_objects.o utils.o $(flags) -ltcmalloc -o  meshIntersectionWithLTC
+
+meshIntersectionWithLTCParallel: meshIntersection.o triangleClassification.o nested3DGrid.o 3d_objects.o utils.o
+		g++ meshIntersection.o triangleClassification.o nested3DGrid.o 3d_objects.o utils.o $(flags) -ltcmalloc -fopenmp -o  meshIntersectionWithLTCParallel		
+
+meshIntersection.o: src/meshIntersection.cpp
+	g++ src/meshIntersection.cpp  $(flags) -c  -o meshIntersection.o
+
+3d_objects.o: src/3d_objects.cpp src/3d_objects.h
+	g++ src/3d_objects.cpp  $(flags) -c  -o 3d_objects.o
+
+triangleClassification.o: src/triangleClassification.h src/triangleClassification.cpp
+		g++ src/triangleClassification.cpp $(flags) -c -o triangleClassification.o
 
 
+nested3DGrid.o: src/nested3DGrid.h src/nested3DGrid.cpp
+		g++ src/nested3DGrid.cpp $(flags) -c -o nested3DGrid.o
+
+utils.o: src/utils.h src/utils.cpp
+		g++ src/utils.cpp $(flags) -c -o utils.o
