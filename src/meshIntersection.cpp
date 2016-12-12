@@ -35,7 +35,7 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include "triangleClassification.h"
 #include "common2.h"
 #include <omp.h>
-
+#include <parallel/algorithm>
 
 
 using namespace std;
@@ -2230,6 +2230,126 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
 
 
 
+//read the edges from intersection and add the vertices to the third position of vector "vertices"
+void processEdgesFromIntersection(vector<pair<int,int> > &edgesUsingVertexId,const vector< pair< array<VertCoord,3>,array<VertCoord,3> > > &edges) {
+  timespec t0,t1;
+  clock_gettime(CLOCK_REALTIME, &t0);
+  
+
+  map< Point, int > vertexIdPlusOne; //lets add 1 to the ids (this will simplify the creation of new entries...)
+  int numEdges = edges.size();
+  clog << "Number of edges: " << numEdges << "\n";
+
+  //get pointers to the vertices in edges...
+  vector< const array<VertCoord,3> *> vertPtrs(numEdges*2);
+
+  #pragma omp parallel for 
+  for(int i=0;i<numEdges;i++) {
+    vertPtrs[2*i] = &(edges[i].first);
+    vertPtrs[2*i+1] = &(edges[i].second);
+  }
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Vertices pointersinitialized..." <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+  //sort the pointers basing on the vertices (indirect sorting)
+  auto VertPtrCompare = [&](const array<VertCoord,3> *a, const array<VertCoord,3> *b) {
+    if( (*a)[0] != (*b)[0] ) return (*a)[0] < (*b)[0];
+    if( (*a)[1] != (*b)[1] ) return (*a)[1] < (*b)[1];
+    return (*a)[2] < (*b)[2];
+  };
+  __gnu_parallel::sort(vertPtrs.begin(),vertPtrs.end(),VertPtrCompare);
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Sort vertices: " << vertPtrs.size() << " time: "  << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+  //get unique vertices (indirect)
+  auto VertPtrEqCompare = [&](const array<VertCoord,3> *a, const array<VertCoord,3> *b) {
+    if( (*a)[0] != (*b)[0] ) return false;
+    if( (*a)[1] != (*b)[1] ) return false;
+    if( (*a)[2] != (*b)[2] ) return false;
+    return true;
+  };
+  auto it = unique (vertPtrs.begin(), vertPtrs.end(), VertPtrEqCompare);                                              
+  vertPtrs.resize( distance(vertPtrs.begin(),it) );
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Unique vertices: " << vertPtrs.size() << " time: "  << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
+  //copy unique vertices to vertices[2]
+
+  const int numUniqueVerts = vertPtrs.size();
+  vertices[2].resize(numUniqueVerts);
+  #pragma omp parallel for
+  for(int i=0;i<numUniqueVerts;i++)
+    vertices[2][i] = *vertPtrs[i];
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Vertices copied" << endl;
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+  //use binary search to find ids? or hash? or map?
+  auto getVertexId = [&](const array<VertCoord,3> *elem) {
+    auto it = lower_bound(vertPtrs.begin(),vertPtrs.end(),elem,VertPtrCompare);
+    #ifdef SANITY_CHECKS
+      assert(it!=vertPtrs.end());
+      assert(VertPtrEqCompare(*it,elem)); //it should point to the same vertex as elem points...
+    #endif
+    return 1+it-vertPtrs.begin(); //the element should be in the vector...
+  };
+
+  edgesUsingVertexId.resize(numEdges);
+
+  #pragma omp parallel for
+  for(int i=0;i<numEdges;i++) {
+    //cerr << "i " << i << " " << numEdges << endl;
+    const auto &e = edges[i];
+    int idA = getVertexId(&e.first);    
+    int idB = getVertexId(&e.second);
+    
+    idA = -idA;
+    idB = -idB;
+    if(idA > idB) swap(idA,idB); 
+
+    edgesUsingVertexId[i] = make_pair(idA,idB);     
+  }
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "End!" <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
+}
+
+/*
+void processEdgesFromIntersection(vector<pair<int,int> > &edgesUsingVertexId,const vector< pair< array<VertCoord,3>,array<VertCoord,3> > > &edges) {
+  map< Point, int > vertexIdPlusOne; //lets add 1 to the ids (this will simplify the creation of new entries...)
+  int numEdges = edges.size();
+  clog << "Number of edges: " << numEdges << "\n";
+
+  edgesUsingVertexId.resize(numEdges);
+  for(int i=0;i<numEdges;i++) {
+    //cerr << "i " << i << " " << numEdges << endl;
+    const auto &e = edges[i];
+    int idA = vertexIdPlusOne[e.first];
+    if(idA==0) {
+      idA = vertexIdPlusOne[e.first] = vertices[2].size()+1; //when we create a new vertex we start counting from 1 (only here!!!)
+      vertices[2].push_back(e.first);
+    }
+    int idB = vertexIdPlusOne[e.second];
+    if(idB==0) {
+      idB = vertexIdPlusOne[e.second] = vertices[2].size()+1;  //when we create a new vertex we start counting from 1 (only here!!!)
+      vertices[2].push_back(e.second);
+    }
+    idA = -idA; //for simplicity, let's use a negative id to referrence a "shared" vertex (from layer 2)
+    idB = -idB;
+    if(idA > idB) swap(idA,idB); 
+
+    edgesUsingVertexId[i] = make_pair(idA,idB);     
+  }
+  cerr << "Vertices inserted: " << vertices[2].size() << endl;
+}
+*/
 
 //edges represent the edges generated from the intersection of the intersecting triangles.
 //intersectingTrianglesThatGeneratedEdges[i] contains the pair of triangles whose intersection generated edges[i]
@@ -2248,46 +2368,34 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
   StatisticsAboutRetesseation statisticsAboutRetesseation;
 
-	unordered_map<const Triangle *, vector<int> > intersectingEdgesInEachTriangle[2];
+	
+ 
+  vector<pair<int,int> > edgesUsingVertexId; //if we have an edge (a,b)  --> a<b
+  
+  processEdgesFromIntersection(edgesUsingVertexId,edges);
+
+
+  cerr << "Number of edges pushed back: " << vertices[2].size() << endl;
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to create the new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+
+
+  unordered_map<const Triangle *, vector<int> > intersectingEdgesInEachTriangle[2];
   //trianglesIntersectingEachTriangle[0] --> for each triangle t from map 0 (that intersects other triangles), 
   //trianglesIntersectingEachTriangle[0][t] is a vector of triangles from mesh 1 intersecting t...
 
-  map< Point, int > vertexIdPlusOne; //lets add 1 to the ids (this will simplify the creation of new entries...)
-  
-  int numEdges = edges.size();
+  const int numEdges = edges.size();
+  for(int i=0;i<numEdges;i++) { 
+    //the intersection of tA (from mesh 0) with tB generated the i-th edge...
+    const Triangle *tA = intersectingTrianglesThatGeneratedEdges[i].first;
+    const Triangle *tB = intersectingTrianglesThatGeneratedEdges[i].second;
 
-  clog << "Number of edges: " << numEdges << "\n";
-  vector<pair<int,int> > edgesUsingVertexId(numEdges); //if we have an edge (a,b)  --> a<b
-  for(int i=0;i<numEdges;i++) {
-  	//cerr << "i " << i << " " << numEdges << endl;
-  	const auto &e = edges[i];
-  	int idA = vertexIdPlusOne[e.first];
-  	if(idA==0) {
-  		idA = vertexIdPlusOne[e.first] = vertices[2].size()+1; //when we create a new vertex we start counting from 1 (only here!!!)
-  		vertices[2].push_back(e.first);
-  	}
-  	int idB = vertexIdPlusOne[e.second];
-  	if(idB==0) {
-  		idB = vertexIdPlusOne[e.second] = vertices[2].size()+1;  //when we create a new vertex we start counting from 1 (only here!!!)
-  		vertices[2].push_back(e.second);
-  	}
-  	idA = -idA; //for simplicity, let's use a negative id to referrence a "shared" vertex (from layer 2)
-  	idB = -idB;
-  	if(idA > idB) swap(idA,idB); 
-
-  	edgesUsingVertexId[i] = make_pair(idA,idB); 
-
-  	//the intersection of tA (from mesh 0) with tB generated the i-th edge...
-  	const Triangle *tA = intersectingTrianglesThatGeneratedEdges[i].first;
-  	const Triangle *tB = intersectingTrianglesThatGeneratedEdges[i].second;
-
-  	intersectingEdgesInEachTriangle[0][tA].push_back(i);
-  	intersectingEdgesInEachTriangle[1][tB].push_back(i);
+    intersectingEdgesInEachTriangle[0][tA].push_back(i);
+    intersectingEdgesInEachTriangle[1][tB].push_back(i);
   }
-  cerr << "Number of edges pushed back: " << vertices[2].size() << endl;
+ 
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to extract the edges intersecting each triangle and create the new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
- 
 
   //edgesUsingVertexId : each edge contains the ids of its two vertices (idA,idB)
   //idA,idB start with 0 and they represent the position of the vertex in vertices[2].
@@ -2361,8 +2469,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
 
 		  #pragma omp critical 
 		  {
-        cerr << "Number of polygons in vector of retesselated: " << myNewPolygonsFromRetesselation.size() << endl;
-        cerr << "Capacity: " << myNewPolygonsFromRetesselation.capacity() << endl;
+        //cerr << "Number of polygons in vector of retesselated: " << myNewPolygonsFromRetesselation.size() << endl;
+        //cerr << "Capacity: " << myNewPolygonsFromRetesselation.capacity() << endl;
 		  	//newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
 				//trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
 			  polygonsFromRetesselation[meshIdToProcess].insert(polygonsFromRetesselation[meshIdToProcess].end(),myNewPolygonsFromRetesselation.begin(),myNewPolygonsFromRetesselation.end() );
