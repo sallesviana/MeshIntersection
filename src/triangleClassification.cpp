@@ -6,6 +6,9 @@
 bool isVertexSharedBetweenMeshes(int vertexId);
 Point * getPointFromVertexId(int vertexId, int meshId);
 
+
+const int DONT_KNOW_FLAG = -999999999;
+
 int labelConnectedComponentsEachVertex(const vector<list<int> > &adjList,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
   int numComponentsSeenSoFar = 0;
   queue< int >   vertexToLabel;
@@ -100,7 +103,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
                                             vector<ObjectId> &locationOfPolygonsFromRetesselationInOtherMesh,
                                             const vector<Point> vertices[3],
                                             const vector<Triangle> triangles[2]) {  
-    const int DONT_KNOW_FLAG = -999999999;
+    
     timespec t0,t1,t0Function;
 
     
@@ -285,6 +288,17 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
       }
     }
 
+    for(int pid =0;pid<numPolygonsFromRetesselation;pid++) {
+      const BoundaryPolygon& polygon = polygonsFromRetesselation[thisMeshId][pid];
+      const int *vertexId = getNonSharedVertextFromPolygon(&(*polygon.vertexSequence.begin()),&(*polygon.vertexSequence.end()));
+      if(vertexId!=NULL) {
+        int connectedComponentOfThisVertex = connectedComponentEachVertex[*vertexId];
+        locationOfPolygonsFromRetesselationInOtherMesh[pid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
+      } else {
+        //TODO: triangle with all vertices shared...
+      }
+    }
+
     /*
 
     #pragma omp parallel for 
@@ -410,15 +424,15 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 				if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
 					//if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
 					outputTriangles[meshId].push_back(t);
-				}				
+				}		
+        
 			}			
 		}
 
 
-    //TODO
-    /*
-		int numTrianglesFromIntersectionThisMesh = trianglesFromRetesselation[meshId].size();
-		
+    //TODO    
+		/*int numTrianglesFromIntersectionThisMesh = polygonsFromRetesselation[meshId].size();
+
 		for(int i=0;i<numTrianglesFromIntersectionThisMesh;i++) {
 			const TriangleNoBB&t = trianglesFromRetesselation[meshId][i];
 			ObjectId objWhereTriangleIs = locationOfTrianglesFromRetesselationInTheOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];					
@@ -428,10 +442,34 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 					//if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
 					outputTrianglesFromRetesselation[meshId].push_back(t);
 			}								
-  	}*/  
+  	}*/
 
     //for each polygon   
+    bool hadTriangleDontKnow = false;
+    int numPolygonsIntersectingInThisMesh = polygonsFromRetesselation[meshId].size();    
+    for(int i=0;i<numPolygonsIntersectingInThisMesh;i++) {
+      const BoundaryPolygon&p = polygonsFromRetesselation[meshId][i];
+      ObjectId objWhereTriangleIs = locationOfTrianglesFromRetesselationInTheOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];          
+      
+      if (objWhereTriangleIs!=OUTSIDE_OBJECT) {   
+        TriangleNoBB newTri;
+        newTri.above = p.above;   
+        newTri.below = p.below; 
+        for(const array<VertexId,3> tris:p.triangulatedPolygon) {
+          newTri.p[0] = tris[0];
+          newTri.p[1] = tris[1];
+          newTri.p[2] = tris[2];
+          outputTrianglesFromRetesselation[meshId].push_back(newTri);
+        }
+      } 
+      if(objWhereTriangleIs==DONT_KNOW_FLAG) {
+        hadTriangleDontKnow = true;
+      }              
+    }
 
+    if(hadTriangleDontKnow) {
+      cerr << "TODO: triangle with all vertices shared\n";
+    }
 
     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "# Time to classify triangles vertices in other mesh: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;

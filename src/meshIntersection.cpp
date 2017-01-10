@@ -75,7 +75,7 @@ vector<Point> vertices[3];
 //The objects are represented by a set of triangles (defining their boundaries)
 vector<Triangle> triangles[2]; 
 //we don't need bounding-boxes for the output triangles...
-vector<TriangleNoBB> trianglesFromRetesselation[2]; //triangles formed by retesselating triangles from each mesh...
+//vector<TriangleNoBB> trianglesFromRetesselation[2]; //triangles formed by retesselating triangles from each mesh...
 
 vector<BoundaryPolygon> polygonsFromRetesselation[2]; //polygons generated after retesselation of triangles from each mesh..
 
@@ -1765,7 +1765,7 @@ void retesselateTriangleUsingWedgeSorting(const vector<pair<int,int> > &edgesUsi
   //cerr << "Project to: " << whatPlaneProjectTriangleTo << endl;
 
 
-  //Computes the vertices incidnt to each edge of the original triangle...
+  //Computes the vertices incident to each edge of the original triangle...
   //verticesIncidentEachEdgeOriginalTriangle[0] is for vertex t.p[0]-t.p[1]
   //verticesIncidentEachEdgeOriginalTriangle[1] is for vertex t.p[1]-t.p[2]
   //verticesIncidentEachEdgeOriginalTriangle[2] is for vertex t.p[2]-t.p[0]
@@ -2519,8 +2519,8 @@ void retesselateIntersectingTriangles(const vector< pair< array<VertCoord,3>,arr
   cerr << "Number of inters. tests (for insertin tris.)that are true    : " << ctEdgeIntersect << "\n";
   cerr << "Number of inters. tests (for insertin tris.)that are false    : " << ctEdgeDoNotIntersect << "\n";
   
-  cerr << "Number of triangles created from retesselation of tris from mesh 0: " << trianglesFromRetesselation[0].size() << "\n";
-  cerr << "Number of triangles created from retesselation of tris from mesh 1: " << trianglesFromRetesselation[1].size() << "\n";
+  //cerr << "Number of triangles created from retesselation of tris from mesh 0: " << trianglesFromRetesselation[0].size() << "\n";
+  //cerr << "Number of triangles created from retesselation of tris from mesh 1: " << trianglesFromRetesselation[1].size() << "\n";
 
 
 

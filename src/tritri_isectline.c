@@ -425,7 +425,7 @@ inline int compute_intervals_isectline(VertCoord VERT0[3],VertCoord VERT1[3],Ver
     /* here we know that d0d1<=0.0 */             
     isect2(VERT1,VERT0,VERT2,VV1,VV0,VV2,D1,D0,D2,isect0,isect1,isectpoint0,isectpoint1,tmpVars);
   }                                                  
-  else if(D1*D2>0.0f || D0!=0.0f)   
+  else if(D1*D2>0.0f || D0!=0.0f)  //TODO: use signal here instead of multiplication... 
   {                                   
     /* here we know that d0d1<=0.0 or that D0!=0.0 */
     isect2(VERT0,VERT1,VERT2,VV0,VV1,VV2,D0,D1,D2,isect0,isect1,isectpoint0,isectpoint1,tmpVars);   
@@ -570,7 +570,7 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   if(fabs(du2)<EPSILON) du2=0.0;
 #endif*/
   //du0du1=du0*du1;
-  du0du1=du0;
+  du0du1=du0; //TODO: remove this multiplication! we only need the sign!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   du0du1*=du1;
   //du0du2=du0*du2;
   du0du2=du0;
@@ -616,10 +616,14 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   if(dv0dv1>0 && dv0dv2>0) /* same sign on all of them + not equal 0 ? */
     return 0;                    /* no intersection occurs */
 
+
+
   /* compute direction of intersection line */
+  // L = tD + O , for some point O on the line...
+  // D = N1 x N2 (cross)
   CROSS(D,N1,N2,tmp);
 
-  /* compute and index to the largest component of D */
+  /* compute an index to the largest component of D */
   //max=fabs(D[0]);
   fabs(max,D[0]);
   index=0;
@@ -631,6 +635,8 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   if(c>max) max=c,index=2;
 
   /* this is the simplified projection onto L*/
+
+  //TODO: no need to copy here: use reference...
   vp0=V0[index];
   vp1=V1[index];
   vp2=V2[index];
