@@ -409,6 +409,8 @@ inline void isect2(VertCoord VTX0[3],VertCoord VTX1[3],VertCoord VTX2[3],const V
 /*              ADD(isectpoint1,VTX0,diff);           */
 #endif
 
+
+// VV0, VV1 and VV2 are the coordinates of Vert0,Vert1,... considering the largest coordinate (projected..)
 inline int compute_intervals_isectline(VertCoord VERT0[3],VertCoord VERT1[3],VertCoord VERT2[3],
 				       const VertCoord &VV0,const VertCoord &VV1,const VertCoord &VV2,const VertCoord &D0,const VertCoord &D1,const VertCoord &D2,
 				       const VertCoord &D0D1,const VertCoord &D0D2,VertCoord *isect0,VertCoord *isect1,
@@ -570,6 +572,8 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   if(fabs(du2)<EPSILON) du2=0.0;
 #endif*/
   //du0du1=du0*du1;
+
+  //TODO: SoS here...
   du0du1=du0; //TODO: remove this multiplication! we only need the sign!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   du0du1*=du1;
   //du0du2=du0*du2;
@@ -605,6 +609,9 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   if(fabs(dv1)<EPSILON) dv1=0.0;
   if(fabs(dv2)<EPSILON) dv2=0.0;
 #endif*/
+
+  //dv0,dv1,dv2 are the distances from v0 to the plane 2..
+  //du0,du1,du2 are the distances from u0, ... to plane 1 
 
   //dv0dv1=dv0*dv1;
   dv0dv1=dv0;
@@ -648,6 +655,8 @@ int tri_tri_intersect_with_isectline(VertCoord V0[3],VertCoord V1[3],VertCoord V
   /* compute interval for triangle 1 */
   *coplanar=compute_intervals_isectline(V0,V1,V2,vp0,vp1,vp2,dv0,dv1,dv2,
 				       dv0dv1,dv0dv2,&isect1[0],&isect1[1],isectpointA1,isectpointA2,tempRationals+54);
+
+  //SoS: will never happen...
   if(*coplanar) return coplanar_tri_tri(N1,V0,V1,V2,U0,U1,U2,tempRationals+60);     
 
 

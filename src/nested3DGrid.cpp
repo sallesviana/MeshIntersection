@@ -67,7 +67,7 @@ void Nested3DGrid::deleteMemory(int gridSizeLevel1) {
 
 
 
-void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
+void Nested3DGridWrapper::initGridCells() {
   int xCellmin;
   int yCellmin;
   int zCellmin;
@@ -79,6 +79,8 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
   int grid3 = gridSizeLevel1*gridSizeLevel1*gridSizeLevel1;
   int gridSize = gridSizeLevel1;
   vector<int> countTrianglesInEachGridTemp(grid3);
+
+  MeshIntersectionGeometry &meshGeometry = *meshGeometryPtr;
 
   
   grid.childGrids = new Nested3DGrid ***[gridSizeLevel1];
@@ -96,9 +98,9 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
   timespec t0,t1;
 
   for(int imap=0;imap<2;imap++) { // for each map...
-    const size_t sz = trianglesInsert[imap].size();
+    const size_t sz = meshGeometry.inputTriangles[imap].size();
 
-    grid.startPositionRaggedArray[imap] = new Triangle **[grid3+1];
+    grid.startPositionRaggedArray[imap] = new InputTriangle**[grid3+1];
 		for(int i=0;i<=grid3;i++) grid.startPositionRaggedArray[imap][i] = 0;
 
     for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] = 0;
@@ -106,14 +108,28 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
 
     clock_gettime(CLOCK_REALTIME, &t0);
     for(size_t i = 0;i<sz;i++) { 
-      Triangle *t = trianglesInsert[imap][i];
+      InputTriangle*t = &meshGeometry.inputTriangles[imap][i];
+      
+
+      /*
       xCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][0] ][0]  ;
       yCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][1] ][1]  ;
       zCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][2] ][2]  ;
 
       xCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][0] ][0]  ;
       yCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][1] ][1]  ;
-      zCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][2] ][2]  ;
+      zCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][2] ][2]  ;*/
+
+      //getVertexIdInputTriangleWithMinCoord(int meshId, int triangleId, int coord)
+      xCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 0) ][0]  ;
+      yCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 1) ][1]  ;
+      zCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 2) ][2]  ;
+
+      xCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 0) ][0]  ;
+      yCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 1) ][1]  ;
+      zCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 2) ][2]  ;
+
+      
 
       assert(xCellmin>=0);
       assert(yCellmin>=0);
@@ -139,7 +155,7 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
 		for(int i=0;i<grid3;i++) {
 			totalNumberTriangles += countTrianglesInEachGridTemp[i];
 		}
-		grid.triangles[imap] = new Triangle *[totalNumberTriangles];
+		grid.triangles[imap] = new InputTriangle*[totalNumberTriangles];
 
 
 		
@@ -151,17 +167,19 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
 				acccumTotalTriangles += countTrianglesInEachGridTemp[i];
 		}
 
+
+
 		clock_gettime(CLOCK_REALTIME, &t0);
 		for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] = 0; //we will reuse this array to count the amount of triangles we've already inserted...
 		for(size_t i = 0;i<sz;i++) { 
-      Triangle *t = trianglesInsert[imap][i];
-      xCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][0] ][0]  ;
-      yCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][1] ][1]  ;
-      zCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][2] ][2]  ;
+      InputTriangle*t = &(meshGeometry.inputTriangles[imap][i]);
+      xCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 0)  ][0]  ;
+      yCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 1) ][1]  ;
+      zCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 2) ][2]  ;
 
-      xCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][0] ][0]  ;
-      yCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][1] ][1]  ;
-      zCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][2] ][2]  ;
+      xCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 0)  ][0]  ;
+      yCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 1)  ][1]  ;
+      zCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 2)  ][2]  ;
 
       assert(xCellmin>=0);
       assert(yCellmin>=0);
@@ -175,7 +193,7 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
 		    for(int y = yCellmin;y<=yCellmax;y++) {
 		    	const int yBase = y*gridSize;
 		      for(int z = zCellmin;z<=zCellmax;z++) {
-		      	Triangle ** startPositionCell = grid.startPositionRaggedArray[imap][xBase+yBase+z];
+		      	InputTriangle** startPositionCell = grid.startPositionRaggedArray[imap][xBase+yBase+z];
 		      	*(startPositionCell+countTrianglesInEachGridTemp[xBase+yBase+z]) = t;
       			countTrianglesInEachGridTemp[xBase+yBase+z]++;
 		      }
@@ -188,7 +206,7 @@ void Nested3DGridWrapper::initGridCells(vector<Triangle *> trianglesInsert[2]) {
   }
 }
 
-void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int numTrianglesInsert[2], Nested3DGrid &nestedGrid,int ig,int jg, int kg) {
+void Nested3DGridWrapper::initNestedGridCells(InputTriangle** trianglesInsert[2],int numTrianglesInsert[2], Nested3DGrid &nestedGrid,int ig,int jg, int kg) {
   int xCellmin;
   int yCellmin;
   int zCellmin;
@@ -197,15 +215,16 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
   int yCellmax;
   int zCellmax; 
 
-  //cerr << "initing.." << endl;
   int grid3 = gridSizeLevel2*gridSizeLevel2*gridSizeLevel2;
   int gridSize = gridSizeLevel2;
   vector<int> countTrianglesInEachGridTemp(grid3);
 
+
+
   //cerr << "Here..." << endl;
   nestedGrid.childGrids =  NULL; //we will use only up to two levels of the grid...
 
-  //cerr << "initing.." << endl;
+  const MeshIntersectionGeometry &meshGeometry = *meshGeometryPtr;
 
   //cerr << "Inserting triangles..." << endl;
   for(int imap=0;imap<2;imap++) { // for each map...
@@ -213,7 +232,7 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
 
     //cerr << "Map, triangles: " << imap << " " << sz << endl;
 
-    nestedGrid.startPositionRaggedArray[imap] = new Triangle **[grid3+1];
+    nestedGrid.startPositionRaggedArray[imap] = new InputTriangle**[grid3+1];
 		for(int i=0;i<=grid3;i++) nestedGrid.startPositionRaggedArray[imap][i] = 0;
 
     for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] = 0;
@@ -221,32 +240,49 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
 
    //cerr << "First pass.." << endl;
     //we will performa first pass just to count the number of triangles we will insert in each grid cell...
-    for(size_t i = 0;i<sz;i++) { //for(const Chain &c : chains[imap]) {  // Iterate over edges in this map...
-      Triangle *t = trianglesInsert[imap][i];
-      xCellmin =  gridCellEachPointLevel2[imap][ t->boundingBox[0][0] ][0]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[0][0] ][0] != ig ) //if this point is outside the grid
-        xCellmin = 0;
+    for(size_t triangle = 0;triangle<sz;triangle++) { //for(const Chain &c : chains[imap]) {  // Iterate over edges in this map...
+      InputTriangle*t = trianglesInsert[imap][triangle];
 
-      yCellmin =  gridCellEachPointLevel2[imap][ t->boundingBox[0][1] ][1]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[0][1] ][1] != jg ) //if this point is outside the grid
+      int idInputTriangle = t- &meshGeometry.inputTriangles[imap][0];
+
+      int vertexWithXMin = meshGeometry.getVertexIdInputTriangleWithMinCoord(imap,idInputTriangle,0);//t->boundingBox[0][0];
+      int vertexWithYMin = meshGeometry.getVertexIdInputTriangleWithMinCoord(imap,idInputTriangle,1);//t->boundingBox[0][1];
+      int vertexWithZMin = meshGeometry.getVertexIdInputTriangleWithMinCoord(imap,idInputTriangle,2);//t->boundingBox[0][2];
+
+      int vertexWithXMax = meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap,idInputTriangle,0);//t->boundingBox[1][0];
+      int vertexWithYMax = meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap,idInputTriangle,1);//t->boundingBox[1][1];
+      int vertexWithZMax = meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap,idInputTriangle,2);//t->boundingBox[1][2];      
+
+      xCellmin =  gridCellEachPointLevel2[imap][ vertexWithXMin ][0]  ;
+      
+      if ( gridCellEachPointLevel1[imap][ vertexWithXMin ][0] != ig ) //if this point is outside the grid
+        xCellmin = 0;   
+
+      
+      yCellmin =  gridCellEachPointLevel2[imap][ vertexWithYMin ][1]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithYMin ][1] != jg ) //if this point is outside the grid
         yCellmin = 0;
-
-      zCellmin =  gridCellEachPointLevel2[imap][ t->boundingBox[0][2] ][2]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[0][2] ][2] != kg ) //if this point is outside the grid
+      
+      zCellmin =  gridCellEachPointLevel2[imap][ vertexWithZMin ][2]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithZMin ][2] != kg ) //if this point is outside the grid
         zCellmin = 0;
 
 
-      xCellmax =  gridCellEachPointLevel2[imap][ t->boundingBox[1][0] ][0]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[1][0] ][0] != ig ) //if this point is outside the grid
+      xCellmax =  gridCellEachPointLevel2[imap][ vertexWithXMax ][0]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithXMax ][0] != ig ) //if this point is outside the grid
         xCellmax = gridSizeLevel2-1;
 
-      yCellmax =  gridCellEachPointLevel2[imap][ t->boundingBox[1][1] ][1]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[1][1] ][1] != jg ) //if this point is outside the grid
+      yCellmax =  gridCellEachPointLevel2[imap][ vertexWithYMax ][1]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithYMax ][1] != jg ) //if this point is outside the grid
         yCellmax = gridSizeLevel2-1;
 
-      zCellmax =  gridCellEachPointLevel2[imap][ t->boundingBox[1][2] ][2]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[1][2] ][2] != kg ) //if this point is outside the grid
+      zCellmax =  gridCellEachPointLevel2[imap][ vertexWithZMax ][2]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithZMax ][2] != kg ) //if this point is outside the grid
         zCellmax = gridSizeLevel2-1;
+
+
+      
+
 
       assert(xCellmin>=0);
       assert(yCellmin>=0);
@@ -273,7 +309,8 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
 		for(int i=0;i<grid3;i++) {
 			totalNumberTriangles += countTrianglesInEachGridTemp[i];
 		}
-		nestedGrid.triangles[imap] = new Triangle *[totalNumberTriangles];
+		nestedGrid.triangles[imap] = new InputTriangle*[totalNumberTriangles];
+
 		
 		//make the start pointers point to the correct positions....
 		int acccumTotalTriangles =0;
@@ -286,31 +323,42 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
 		for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] = 0; //we will reuse this array to count the amount of triangles we've already inserted...
 		
 		//cerr << "Writting to memory.. " << endl;
-		for(size_t i = 0;i<sz;i++) { 
-      Triangle *t = trianglesInsert[imap][i];
-      xCellmin =  gridCellEachPointLevel2[imap][ t->boundingBox[0][0] ][0]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[0][0] ][0] != ig ) //if this point is outside the grid
+		for(size_t triangle = 0;triangle<sz;triangle++) { 
+      InputTriangle*t = trianglesInsert[imap][triangle];
+
+      int idInputTriangle = t- &meshGeometry.inputTriangles[imap][0];
+
+      int vertexWithXMin = meshGeometry.getVertexIdInputTriangleWithMinCoord(imap,idInputTriangle,0);//t->boundingBox[0][0];
+      int vertexWithYMin = meshGeometry.getVertexIdInputTriangleWithMinCoord(imap,idInputTriangle,1);//t->boundingBox[0][1];
+      int vertexWithZMin = meshGeometry.getVertexIdInputTriangleWithMinCoord(imap,idInputTriangle,2);//t->boundingBox[0][2];
+
+      int vertexWithXMax = meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap,idInputTriangle,0);//t->boundingBox[1][0];
+      int vertexWithYMax = meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap,idInputTriangle,1);//t->boundingBox[1][1];
+      int vertexWithZMax = meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap,idInputTriangle,2);//t->boundingBox[1][2];      
+
+      xCellmin =  gridCellEachPointLevel2[imap][ vertexWithXMin ][0]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithXMin ][0] != ig ) //if this point is outside the grid
         xCellmin = 0;
-
-      yCellmin =  gridCellEachPointLevel2[imap][ t->boundingBox[0][1] ][1]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[0][1] ][1] != jg ) //if this point is outside the grid
+      
+      yCellmin =  gridCellEachPointLevel2[imap][ vertexWithYMin ][1]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithYMin ][1] != jg ) //if this point is outside the grid
         yCellmin = 0;
-
-      zCellmin =  gridCellEachPointLevel2[imap][ t->boundingBox[0][2] ][2]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[0][2] ][2] != kg ) //if this point is outside the grid
+      
+      zCellmin =  gridCellEachPointLevel2[imap][ vertexWithZMin ][2]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithZMin ][2] != kg ) //if this point is outside the grid
         zCellmin = 0;
 
 
-      xCellmax =  gridCellEachPointLevel2[imap][ t->boundingBox[1][0] ][0]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[1][0] ][0] != ig ) //if this point is outside the grid
+      xCellmax =  gridCellEachPointLevel2[imap][ vertexWithXMax ][0]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithXMax ][0] != ig ) //if this point is outside the grid
         xCellmax = gridSizeLevel2-1;
 
-      yCellmax =  gridCellEachPointLevel2[imap][ t->boundingBox[1][1] ][1]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[1][1] ][1] != jg ) //if this point is outside the grid
+      yCellmax =  gridCellEachPointLevel2[imap][ vertexWithYMax ][1]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithYMax ][1] != jg ) //if this point is outside the grid
         yCellmax = gridSizeLevel2-1;
 
-      zCellmax =  gridCellEachPointLevel2[imap][ t->boundingBox[1][2] ][2]  ;
-      if ( gridCellEachPointLevel1[imap][ t->boundingBox[1][2] ][2] != kg ) //if this point is outside the grid
+      zCellmax =  gridCellEachPointLevel2[imap][ vertexWithZMax ][2]  ;
+      if ( gridCellEachPointLevel1[imap][ vertexWithZMax ][2] != kg ) //if this point is outside the grid
         zCellmax = gridSizeLevel2-1;
 
       assert(xCellmin>=0);
@@ -325,7 +373,7 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
 		    for(int y = yCellmin;y<=yCellmax;y++) {
 		    	const int yBase = y*gridSize;
 		      for(int z = zCellmin;z<=zCellmax;z++) {
-		      	Triangle ** startPositionCell = nestedGrid.startPositionRaggedArray[imap][xBase+yBase+z];
+		      	InputTriangle** startPositionCell = nestedGrid.startPositionRaggedArray[imap][xBase+yBase+z];
 		      	*(startPositionCell+countTrianglesInEachGridTemp[xBase+yBase+z]) = t;
       			countTrianglesInEachGridTemp[xBase+yBase+z]++;
 		      }
@@ -334,16 +382,18 @@ void Nested3DGridWrapper::initNestedGridCells(Triangle ** trianglesInsert[2],int
 		}
   }
 
+
 }
 
 
 void Nested3DGridWrapper::refineChildGrid(int ig,int jg,int kg) {
 	int sizeNestedGrids[2];
-	Triangle **trianglesInsert[2];
+	InputTriangle**trianglesInsert[2];
 	sizeNestedGrids[0] = grid.numTrianglesInGridCell(0, gridSizeLevel1,ig,jg,kg);
 	sizeNestedGrids[1] = grid.numTrianglesInGridCell(1, gridSizeLevel1,ig,jg,kg);
 	trianglesInsert[0] = grid.getPointerStartListTriangles(0,gridSizeLevel1,ig,jg,kg);
 	trianglesInsert[1] = grid.getPointerStartListTriangles(1,gridSizeLevel1,ig,jg,kg);
+
 
 
 	//cerr << "Refining child grid.. " << ig << " " << jg << " " << kg << endl;
@@ -351,167 +401,25 @@ void Nested3DGridWrapper::refineChildGrid(int ig,int jg,int kg) {
 	grid.childGrids[ig][jg][kg] = new Nested3DGrid();
   initNestedGridCells(trianglesInsert,sizeNestedGrids, *grid.childGrids[ig][jg][kg] ,ig,jg,kg);
 }
-/*
-void Nested3DGrid::refineChildGrids(const vector<Point> vertices[2], const long long prodThreshold, int sizeNested3DGrid,int maxRefineDepth) {
-  if(maxRefineDepth<=0) return; //we will not refine further if the limit has veen achieved
-
-	vector< array<int,3> > childToRefine;
-
-
-  for(int xcell=0;xcell<gridSize;xcell++)
-    for(int ycell=0;ycell<gridSize;ycell++)
-      for(int zcell=0;zcell<gridSize;zcell++) {
-        Nested3DGridCell &c = gridCells[xcell][ycell][zcell];
-  			//sumSizes += c.e[0].size();
-  			if (c.triangles[0].size() >= prodThreshold || c.triangles[1].size() >= prodThreshold) {
-          array<int,3> cell{{xcell, ycell, zcell}};
-  				childToRefine.push_back( cell );
-  			}
-      }
-
-
-
-	//cerr << "Size child grid cells to refine: " << childToRefine.size() << endl;
-
-	const int sz = childToRefine.size();
-
-  cerr << "Number of cells to refine: " << sz << endl;
-  
-  
-  #pragma omp parallel
-  {
-    Point p0;
-
-    #pragma omp for schedule(dynamic,1)
-  	for(int i=0;i<sz;i++) {
-  		int xg = childToRefine[i][0];
-  		int yg = childToRefine[i][1];
-      int zg = childToRefine[i][2];
-
-  		//cerr << i << endl;
-
-  		Nested3DGridCell &c = gridCells[xg][yg][zg];
-  		c.childGrid = new Nested3DGrid();
-  		p0 = box[0];
-  		p0[0] += cellWidth*xg;
-  		p0[1] += cellWidth*yg;
-      p0[2] += cellWidth*zg;
-  		Point p1 = p0;
-  		p1[0] += cellWidth;
-  		p1[1] += cellWidth;
-      p1[2] += cellWidth;
-  		c.childGrid->initSeq(c.triangles, vertices,  sizeNested3DGrid,p0,p1,false );
-      c.childGrid->refineChildGrids(vertices, prodThreshold, sizeNested3DGrid,maxRefineDepth-1);
-  	}
-
-  }
-}
-
-
-
-void Nested3DGrid::make_grid() {
-  ASSERTC(gridSize>0, "Grid size must be positive.");
-
-  // Prevent any points exactly at the right edge of the grid.
-  VertCoord rangec = max(max(box[1][0]-box[0][0], box[1][1]-box[0][1]),box[1][2]-box[0][2])
-                     * slightlyMoreThanOne;
-
-  cellScale =  gridSize/rangec;
-  cellWidth = rangec/gridSize;
-
-  assert(cellScale>0);
-  assert(cellWidth>0);
-
-  gridCells.resize(gridSize);
-
-
-
-  for (int ig=0; ig<gridSize; ig++) {
-     gridCells[ig].resize(gridSize);
-     for(int jg=0;jg<gridSize;jg++)
-      gridCells[ig][jg].resize(gridSize);
-  }
-
-}
 
 
 
 
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void Nested3DGridWrapper::computeGridCellWhereEachPointIs() {
-  for(int imap=0;imap<2;imap++) {
-    const vector<Point> &points = *vertices[imap];
-
-    int numPointsImap = points.size();
-    gridCellEachPointLevel1[imap].resize(numPointsImap);
-    gridCellEachPointLevel2[imap].resize(numPointsImap);
-
-  
-    #pragma omp parallel
-    {
-
-        VertCoord tempVar;
-        big_int tempVarsInt[3];
-
-          #pragma omp for schedule(dynamic,1000)
-          for(int i=0;i<numPointsImap;i++) {
-            tempVar = points[i][0];
-            tempVar -= box[0][0];
-            tempVar *= cellScale2Levels;
-            const int x = convertToInt(tempVar,tempVarsInt);
-
-            tempVar = points[i][1];
-            tempVar -= box[0][1];
-            tempVar *= cellScale2Levels;
-            const int y = convertToInt(tempVar,tempVarsInt);
-
-            tempVar = points[i][2];
-            tempVar -= box[0][2];
-            tempVar *= cellScale2Levels;
-            const int z  = convertToInt(tempVar,tempVarsInt);
-
-            gridCellEachPointLevel1[imap][i][0] = x/gridSizeLevel2;
-            gridCellEachPointLevel1[imap][i][1] = y/gridSizeLevel2;
-            gridCellEachPointLevel1[imap][i][2] = z/gridSizeLevel2;
-
-            gridCellEachPointLevel2[imap][i][0] = x%gridSizeLevel2;
-            gridCellEachPointLevel2[imap][i][1] = y%gridSizeLevel2;
-            gridCellEachPointLevel2[imap][i][2] = z%gridSizeLevel2;
-          }
-    }    
-  }
-}
-
-void Nested3DGridWrapper::init(vector<Triangle *> trianglesInsert[2], const vector<Point> vertices[2], const int gridSizeLevel1, const int gridSizeLevel2, const Point &p0, const Point &p1,const long long prodThreshold) {
+void Nested3DGridWrapper::init(MeshIntersectionGeometry &meshGeometry, const int gridSizeLevel1, const int gridSizeLevel2, const long long prodThreshold) {
   timespec t0,t1,t2;
+
+  meshGeometryPtr = &meshGeometry;
 
   this->gridSizeLevel1 = gridSizeLevel1;
   this->gridSizeLevel2 = gridSizeLevel2;
   this->gridSize2Levels = gridSizeLevel1*gridSizeLevel2;
 
-  box[0] = p0;
-  box[1] = p1;
+
+  array<VertCoord,3> coordRange = meshGeometry.coordRangeMeshes();
 
 
-    // Prevent any points exactly at the right edge of the grid.
-  VertCoord rangec = max(max(box[1][0]-box[0][0], box[1][1]-box[0][1]),box[1][2]-box[0][2])
+  // Prevent any points exactly at the right edge of the grid.
+  VertCoord rangec = max(max(coordRange[0], coordRange[1]),coordRange[2])
                      * slightlyMoreThanOne;
 
   cellScale2Levels = gridSize2Levels/rangec;
@@ -533,11 +441,14 @@ void Nested3DGridWrapper::init(vector<Triangle *> trianglesInsert[2], const vect
   assert(cellScaleLevel2>0);
   assert(cellWidthLevel2>0);
 
+  this->trianglesInGrid[0].resize(meshGeometryPtr->inputTriangles[0].size());
+  const int numTriMesh0 = trianglesInGrid[0].size();
+  for(int i=0;i<numTriMesh0;i++) trianglesInGrid[0][i] = &(meshGeometryPtr->inputTriangles[0][i]);
 
-  this->vertices[0] = &(vertices[0]);
-  this->vertices[1] = &(vertices[1]);
-  this->trianglesInGrid[0] = &(trianglesInsert[0]);
-  this->trianglesInGrid[1] = &(trianglesInsert[1]);
+  this->trianglesInGrid[1].resize(meshGeometryPtr->inputTriangles[1].size());
+  const int numTriMesh1 = trianglesInGrid[1].size();
+  for(int i=0;i<numTriMesh1;i++) trianglesInGrid[1][i] = &(meshGeometryPtr->inputTriangles[1][i]);
+
 
   //Computing in what grid cell each point is...
   clock_gettime(CLOCK_REALTIME, &t0);
@@ -548,7 +459,7 @@ void Nested3DGridWrapper::init(vector<Triangle *> trianglesInsert[2], const vect
 
  
   clock_gettime(CLOCK_REALTIME, &t0);
-  initGridCells(trianglesInsert);
+  initGridCells();
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to insert triangles into grid: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";
 
@@ -619,4 +530,40 @@ void Nested3DGridWrapper::init(vector<Triangle *> trianglesInsert[2], const vect
   cerr << "Triangles in level 2: " << ctLevel2 << endl;
   cerr << "Triangles level 2 hash: " << triangles2hash << endl;*/
 
+}
+
+
+
+
+
+void Nested3DGridWrapper::computeGridCellWhereEachPointIs() {
+  for(int meshId=0;meshId<2;meshId++) { 
+
+    int numPointsImap = meshGeometryPtr->getNumVertices(meshId);
+    gridCellEachPointLevel1[meshId].resize(numPointsImap);
+    gridCellEachPointLevel2[meshId].resize(numPointsImap);
+  
+    #pragma omp parallel
+    {
+
+        MeshIntersectionGeometry::TempVarsGetGridCellContainingVertex tempVars;
+
+        int threadId = omp_get_thread_num();
+
+          #pragma omp for schedule(dynamic,1000)
+          for(int i=0;i<numPointsImap;i++) {
+            const array<int,3> gridCell = meshGeometryPtr->getGridCellContainingVertex(meshId,i,cellScale2Levels,tempVars);
+
+            gridCellEachPointLevel1[meshId][i][0] = gridCell[0]/gridSizeLevel2;
+            gridCellEachPointLevel1[meshId][i][1] = gridCell[1]/gridSizeLevel2;
+            gridCellEachPointLevel1[meshId][i][2] = gridCell[2]/gridSizeLevel2;
+
+            gridCellEachPointLevel2[meshId][i][0] = gridCell[0]%gridSizeLevel2;
+            gridCellEachPointLevel2[meshId][i][1] = gridCell[1]%gridSizeLevel2;
+            gridCellEachPointLevel2[meshId][i][2] = gridCell[2]%gridSizeLevel2;
+
+            
+          }
+    }    
+  }
 }

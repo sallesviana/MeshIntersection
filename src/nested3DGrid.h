@@ -34,7 +34,7 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include <unordered_set>
 #include <unordered_map>
 #include "rationals.h"
-#include "3d_objects.h"
+#include "3dGeometry.h"
 #include <list>
 
 
@@ -92,10 +92,10 @@ class Nested3DGrid;
 
 class Nested3DGrid {
 public:
-	Triangle * *triangles[2]; //ragged array of triangles...
+	InputTriangle* *triangles[2]; //ragged array of triangles...
 
 	//startPositionRaggedArray[i] points to the position of the triangles arrray where the linearized cell i starts (if i = gridSize^3 --> this position is one position after the end of the array)
-	Triangle * **startPositionRaggedArray[2]; 
+	InputTriangle* **startPositionRaggedArray[2]; 
 
   Nested3DGrid ****childGrids;
   
@@ -107,7 +107,7 @@ public:
   	return childGrids[ig][jg][kg];
   }
 
-  Triangle ** getPointerStartListTriangles(const int imap,const int gridSize,int x,int y, int z) const {
+  InputTriangle** getPointerStartListTriangles(const int imap,const int gridSize,int x,int y, int z) const {
 		return startPositionRaggedArray[imap][gridSize*gridSize*x + y*gridSize + z];
 	}
 
@@ -128,17 +128,19 @@ public:
 
 
 struct Nested3DGridWrapper {
-  void init(vector<Triangle *> trianglesInsert[2], const vector<Point> vertices[2], const int gridSizeLevel1, const int gridSizeLevel2, const Point &p0, const Point &p1,const long long prodThreshold);
+  void init(MeshIntersectionGeometry &meshGeometry, const int gridSizeLevel1, const int gridSizeLevel2,const long long prodThreshold);
+  
+  MeshIntersectionGeometry *meshGeometryPtr;
+
   int gridSizeLevel1,gridSizeLevel2,gridSize2Levels; //gridSize2Levels is the product of the two grid sizes...
-  Point box[2]; //3d box representing this uniform grid...
   VertCoord cellWidthLevel1,cellWidthLevel2,cellWidth2Levels;
   VertCoord cellScaleLevel1,cellScaleLevel2,cellScale2Levels;
 
   vector< array<int,3> > gridCellEachPointLevel1[2],gridCellEachPointLevel2[2];
-  const vector<Point> *vertices[2];
-  vector<Triangle *> *trianglesInGrid[2];
+  
+  vector<InputTriangle*> trianglesInGrid[2];
 
-  void initGridCells(vector<Triangle *> trianglesInsert[2]);
+ 
   void initGridCells();
   Nested3DGrid grid;
   
@@ -146,14 +148,14 @@ struct Nested3DGridWrapper {
   void computeGridCellWhereEachPointIs();
 
   void refineChildGrid(int ig,int jg,int kg);
-	void initNestedGridCells(Triangle ** trianglesInsert[2],int numTrianglesInsert[2], Nested3DGrid &nestedGrid,int ig,int jg, int kg);
+	void initNestedGridCells(InputTriangle** trianglesInsert[2],int numTrianglesInsert[2], Nested3DGrid &nestedGrid,int ig,int jg, int kg);
 
 	~Nested3DGridWrapper() {
 		grid.deleteMemory(gridSizeLevel1);
 	}
-  /*Triangle ** getPointerStartListTriangles(int ig, int jg, int kg,int idTriangle);
+  /*InputTriangle** getPointerStartListTriangles(int ig, int jg, int kg,int idTriangle);
   int getNumTrianglesFirstLevelCell(int ig, int jg, int kg);
-  Triangle *&getTriangleSecondLevelCell(Nested3DGrid &firstLevelGrid,int ig, int jg, int kg,int idTriangle);
+  InputTriangle*&getTriangleSecondLevelCell(Nested3DGrid &firstLevelGrid,int ig, int jg, int kg,int idTriangle);
   int getNumTriangleSecondLevelCell(Nested3DGrid &firstLevelGrid,int ig, int jg, int kg);
 	*/
 
@@ -167,62 +169,41 @@ struct Nested3DGridWrapper {
     return gridCellEachPointLevel1[iMesh][vertexId][2]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][2];
   }
 
+  
+  typedef MeshIntersectionGeometry::TempVarsGetGridCellContainingVertex CellFromCoordTempVars;
   //Returns the "global" cell where a point with a given coordinate is...
   //We call a global grid coordinate the coordinate supposing the grid has  resolution (gridSizeLevel1*gridSizeLevel2)^3
   //Thus, if the x global coordinate ix xg --> the coordinate of the point in the first level will be (xg/gridSizeLevel2) and in the second level it will be (xg%gridSizeLevel2)
-  int x_global_cell_from_coord(const VertCoord &x, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    tempVar = x;
-    tempVar -= box[0][0];
-    tempVar *= cellScale2Levels;
-    const int c  = convertToInt(tempVar,tempVarsInt);
-    //const int c = rat2int2((x-box[0][0])*cellScale);
-    //Removed this assertion because this will happen legally in the nested grids...
-    //ASSERTT(c>=0&&c<gridSize,"Illegal c computed in x_cell_from_coord",cerr << PRINTC(x) << PRINTC(c)<< PRINTC(box) << PRINTN(cellScale));
-    return c;
+  int x_global_cell_from_coord(int meshId,const VertCoord &x,CellFromCoordTempVars &tempVars) const {
+    return meshGeometryPtr->getGridCellXContainingVertex(meshId, x, cellScale2Levels,tempVars);
   }
-  int x_cell_from_coord_level1(const VertCoord &x, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    return x_global_cell_from_coord(x, tempVar,tempVarsInt)/gridSizeLevel2;
+  int x_cell_from_coord_level1(int meshId,const VertCoord &x, CellFromCoordTempVars &tempVars)  const{
+    return x_global_cell_from_coord(meshId, x, tempVars)/gridSizeLevel2;
   }
-  int x_cell_from_coord_level2(const VertCoord &x, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    return x_global_cell_from_coord(x, tempVar,tempVarsInt)%gridSizeLevel2;
+  int x_cell_from_coord_level2(int meshId,const VertCoord &x, CellFromCoordTempVars &tempVars) const {
+    return x_global_cell_from_coord(meshId, x, tempVars)%gridSizeLevel2;
   }
 
 
 
-  int y_global_cell_from_coord(const VertCoord &y, VertCoord &tempVar,big_int tempVarsInt[]) const{
-    tempVar = y;
-    tempVar -= box[0][1];
-    tempVar *= cellScale2Levels;
-    const int c  = convertToInt(tempVar,tempVarsInt);
-
-    //const int c = rat2int2((y-box[0][1])*cellScale);
-    // This can happen legally.
-    //  ASSERTT(c>=0&&c<gridSize,"Illegal c computed in y_cell_from_coord",cerr << PRINTC(y) << PRINTC(c)<< PRINTC(box) << PRINTN(cellScale));
-    return c;
+  int y_global_cell_from_coord(int meshId,const VertCoord &y, CellFromCoordTempVars &tempVars) const {
+    return meshGeometryPtr->getGridCellYContainingVertex(meshId, y,cellScale2Levels, tempVars);
   }
-  int y_cell_from_coord_level1(const VertCoord &y, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    return y_global_cell_from_coord(y, tempVar,tempVarsInt)/gridSizeLevel2;
+  int y_cell_from_coord_level1(int meshId,const VertCoord &y, CellFromCoordTempVars &tempVars) const {
+    return y_global_cell_from_coord(meshId, y, tempVars)/gridSizeLevel2;
   }
-  int y_cell_from_coord_level2(const VertCoord &y, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    return y_global_cell_from_coord(y, tempVar,tempVarsInt)%gridSizeLevel2;
+  int y_cell_from_coord_level2(int meshId,const VertCoord &y, CellFromCoordTempVars &tempVars) const {
+    return y_global_cell_from_coord(meshId, y, tempVars)%gridSizeLevel2;
   }
 
-  int z_global_cell_from_coord(const VertCoord &z, VertCoord &tempVar,big_int tempVarsInt[]) const{
-    tempVar = z;
-    tempVar -= box[0][2];
-    tempVar *= cellScale2Levels;
-    const int c  = convertToInt(tempVar,tempVarsInt);
-
-    //const int c = rat2int2((y-box[0][1])*cellScale);
-    // This can happen legally.
-    //  ASSERTT(c>=0&&c<gridSize,"Illegal c computed in y_cell_from_coord",cerr << PRINTC(y) << PRINTC(c)<< PRINTC(box) << PRINTN(cellScale));
-    return c;
+  int z_global_cell_from_coord(int meshId,const VertCoord &z, CellFromCoordTempVars &tempVars) const {
+    return meshGeometryPtr->getGridCellZContainingVertex(meshId, z,cellScale2Levels, tempVars);
   }
-  int z_cell_from_coord_level1(const VertCoord &z, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    return z_global_cell_from_coord(z, tempVar,tempVarsInt)/gridSizeLevel2;
+  int z_cell_from_coord_level1(int meshId,const VertCoord &z, CellFromCoordTempVars &tempVars) const {
+    return z_global_cell_from_coord(meshId, z, tempVars)/gridSizeLevel2;
   }
-  int z_cell_from_coord_level2(const VertCoord &z, VertCoord &tempVar,big_int tempVarsInt[]) const {
-    return z_global_cell_from_coord(z, tempVar,tempVarsInt)%gridSizeLevel2;
+  int z_cell_from_coord_level2(int meshId,const VertCoord &z, CellFromCoordTempVars &tempVars) const {
+    return z_global_cell_from_coord(meshId, z, tempVars)%gridSizeLevel2;
   }
 
    
