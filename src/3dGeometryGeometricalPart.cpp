@@ -60,3 +60,7 @@ int MeshIntersectionGeometry::getGridCellZContainingVertex(int meshId,const Vert
 
   return z;
 }
+
+
+
+

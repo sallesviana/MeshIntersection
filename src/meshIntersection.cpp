@@ -170,7 +170,7 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
-unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid, unordered_set<const InputTriangle *> trianglesThatIntersect[2]) {
+unsigned long long  computeIntersections(MeshIntersectionGeometry &meshIntersectionGeometry, const Nested3DGridWrapper *uniformGrid, unordered_set<const InputTriangle *> trianglesThatIntersect[2]) {
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
    
@@ -184,94 +184,51 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time creating list of pairs of triangles to process (intersection): " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
   //pairsTrianglesToProcess.reserve(1804900);
-  
-/*
-  //vector<pair<Triangle *,Triangle *> > vtPairsTrianglesToProcess(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
+
+
+
 
   int numPairsToTest = vtPairsTrianglesToProcess.size();
   cerr << "Num pairs to test: " << numPairsToTest << endl;
-  vector<bool> pairsIntersect(numPairsToTest,false); //true if the corresponding pair intersects..
 
   unsigned long long totalTests = 0;
 
   //TODO: try to reduce amount of computation here...
 
-  vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edges;
-  vector< pair<Triangle *,Triangle *> >  intersectingTrianglesThatGeneratedEdges;
-  #pragma omp parallel
-  {
-    VertCoord p0InterLine[3],p1InterLine[3];
-    VertCoord tempRationals[100];
 
-    vector< pair< array<VertCoord,3>,array<VertCoord,3> > > edgesTemp;
-    vector< pair<Triangle *,Triangle *> >  intersectingTrianglesTemp;
-    //edgesTemp.reserve(numPairsToTest/10);
+  vector< pair<InputTriangle *,InputTriangle *> >  intersectingTrianglesThatGeneratedEdges;
+  vector< pair<VertexFromIntersection, VertexFromIntersection> >  edgesFromIntersection;  
+
+  meshIntersectionGeometry.computeIntersections(vtPairsTrianglesToProcess, intersectingTrianglesThatGeneratedEdges, edgesFromIntersection,totalTests );
+
     
-    unsigned long long totalIntersectionsTemp = 0;
-    unsigned long long totalTestsTemp = 0;
-
-    #pragma omp for
-    for(int i=0;i<numPairsToTest;i++) {   
-      pair<Triangle *,Triangle *> &pairTriangles = vtPairsTrianglesToProcess[i];
-      int coplanar;
-      Triangle &a = *pairTriangles.first;
-      Triangle &b = *pairTriangles.second;
-
-      
-      int ans = tri_tri_intersect_with_isectline(vertices[0][a.p[0]].data(),vertices[0][a.p[1]].data(),vertices[0][a.p[2]].data()     ,     
-                                                  vertices[1][b.p[0]].data(),vertices[1][b.p[1]].data(),vertices[1][b.p[2]].data(),
-                                                  &coplanar, p0InterLine ,p1InterLine,tempRationals);
-
-      totalTestsTemp++;
-      if (ans && !coplanar) {
-        edgesTemp.push_back( pair<array<VertCoord,3>,array<VertCoord,3>>( {p0InterLine[0],p0InterLine[1],p0InterLine[2]} , {p1InterLine[0],p1InterLine[1],p1InterLine[2]}   ) );
-                
-        intersectingTrianglesTemp.push_back(pairTriangles);
-      }
-
-      if(ans) {
-        totalIntersectionsTemp++;        
-        pairsIntersect[i] = true;
-      } 
-    }
-
-    #pragma omp critical
-    {
-      totalIntersections += totalIntersectionsTemp;
-      totalTests += totalTestsTemp;
-      edges.insert(edges.end(), edgesTemp.begin(), edgesTemp.end());
-      intersectingTrianglesThatGeneratedEdges.insert(intersectingTrianglesThatGeneratedEdges.end(), intersectingTrianglesTemp.begin(), intersectingTrianglesTemp.end());
-    }
-  }
-  
   clock_gettime(CLOCK_REALTIME, &t1);
   timeDetectIntersections = convertTimeMsecs(diff(t0,t1))/1000; 
 
+  totalIntersections = intersectingTrianglesThatGeneratedEdges.size();
 
-
-
+  /*
   clock_gettime(CLOCK_REALTIME, &t0);
   retesselateIntersectingTriangles(edges,intersectingTrianglesThatGeneratedEdges);
   clock_gettime(CLOCK_REALTIME, &t1);
   timeRetesselate = convertTimeMsecs(diff(t0,t1))/1000; 
-
+  */
 
 
   //Some statistics...
-  for(int i=0;i<numPairsToTest;i++)  
-    if(pairsIntersect[i]) {
-      trianglesThatIntersect[0].insert(vtPairsTrianglesToProcess[i].first);
-      trianglesThatIntersect[1].insert(vtPairsTrianglesToProcess[i].second);
-    }
+  for (auto &pairIntersectingTriangles:intersectingTrianglesThatGeneratedEdges) {
+      trianglesThatIntersect[0].insert(pairIntersectingTriangles.first);
+      trianglesThatIntersect[1].insert(pairIntersectingTriangles.second);
+  }
 
 
   //TODO: remove this from timing data (this is just a statistic)
   map<const Triangle *,int> ctIntersectionsEachTriangleFromMap[2];
-  for(int i=0;i<numPairsToTest;i++)  
-    if(pairsIntersect[i]) {
-      ctIntersectionsEachTriangleFromMap[0][vtPairsTrianglesToProcess[i].first]++;
-      ctIntersectionsEachTriangleFromMap[1][vtPairsTrianglesToProcess[i].second]++;
-    }  
+  for (auto &pairIntersectingTriangles:intersectingTrianglesThatGeneratedEdges) {
+      ctIntersectionsEachTriangleFromMap[0][pairIntersectingTriangles.first]++;
+      ctIntersectionsEachTriangleFromMap[1][pairIntersectingTriangles.second]++;
+  }
+
 
   int ctTrianglesIntersect[2]  = {0,0}; 
   int sumIntersections[2] = {0,0};  
@@ -299,7 +256,7 @@ unsigned long long  computeIntersections(const Nested3DGridWrapper *uniformGrid,
   //the edges formed by the intersection of other triangles...
 
             
-  return totalIntersections;*/
+  return totalIntersections;
 }
 
 
@@ -364,7 +321,7 @@ int main(int argc, char **argv) {
   cerr << "Detecting intersections..." << endl;
   clock_gettime(CLOCK_REALTIME, &t0); 
   unordered_set<const InputTriangle *> trianglesThatIntersect[2];
-  unsigned long long numIntersectionsDetected = computeIntersections(&uniformGrid,trianglesThatIntersect);
+  unsigned long long numIntersectionsDetected = computeIntersections(meshIntersectionGeometry,&uniformGrid,trianglesThatIntersect);
 
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to detect intersections (includes time for computing statistics and for saving intersections for debugging): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;

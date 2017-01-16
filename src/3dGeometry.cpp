@@ -13,6 +13,75 @@
 
 
 
+
+
+
+
+#include "tritri_isectline.c"
+void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTriangle *,InputTriangle *> > &inputTrianglesToConsider, 
+                          vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges, 
+                          vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection, 
+                          unsigned long long &numIntersectionTests){ 
+
+  const long long numPairsTrianglesToProcess = inputTrianglesToConsider.size();
+  numIntersectionTests = numPairsTrianglesToProcess;
+
+
+  vector<Point> coordsVerticesOfEdges[2];
+  vector<VertexFromIntersection> verticesOfEdges[2];
+  #pragma omp parallel
+  {
+    TempVarsComputeIntersections tempVars;
+
+    vector<Point> coordsVerticesOfEdgesTemp[2];
+    vector<VertexFromIntersection> verticesOfEdgesTemp[2];
+
+    VertexFromIntersection tempVertexFromIntersection[2]; //TODO: avoid copying...
+    Point tempCoordsVerticesFromIntersection[2];
+
+    #pragma omp for
+    for(int i=0;i<numPairsTrianglesToProcess;i++) {
+      InputTriangle *t1 = inputTrianglesToConsider[i].first;
+      InputTriangle *t2 = inputTrianglesToConsider[i].second;
+
+      
+      int coplanar;
+      int intersect = intersectTwoTriangles(*t1,*t2,
+             tempCoordsVerticesFromIntersection[0], tempVertexFromIntersection[0], tempCoordsVerticesFromIntersection[1],
+             tempVertexFromIntersection[1],tempVars.tempRationals);
+
+      if(intersect) {
+	      coordsVerticesOfEdgesTemp[0].push_back(tempCoordsVerticesFromIntersection[0]);
+	      coordsVerticesOfEdgesTemp[1].push_back(tempCoordsVerticesFromIntersection[1]);
+
+	      verticesOfEdgesTemp[0].push_back(tempVertexFromIntersection[0]);
+	      verticesOfEdgesTemp[1].push_back(tempVertexFromIntersection[1]);
+	    }
+
+    }
+
+    #pragma omp critical
+    {
+    	for(int i=0;i<2;i++) {
+      	coordsVerticesOfEdges[i].insert(coordsVerticesOfEdges[i].end(),coordsVerticesOfEdgesTemp[i].begin(),coordsVerticesOfEdgesTemp[i].end());
+      	verticesOfEdges[i].insert(verticesOfEdges[i].end(),verticesOfEdgesTemp[i].begin(),verticesOfEdgesTemp[i].end());
+    	}
+    }
+
+  }
+
+  cerr << "Number of edges from intersection: " << verticesOfEdges[0].size() << endl;
+
+  //TODO: create edges, vertices, etc.
+  //TODO: improve tri-tri intersection: reduce copies, avoid re-computing the normals every time
+
+}
+
+
+
+
+
+
 #include <iomanip>
 
 
