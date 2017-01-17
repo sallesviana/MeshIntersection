@@ -82,7 +82,8 @@ void Nested3DGridWrapper::initGridCells() {
 
   MeshIntersectionGeometry &meshGeometry = *meshGeometryPtr;
 
-  
+  cerr << "Initializing grid cells first step..." << endl;
+
   grid.childGrids = new Nested3DGrid ***[gridSizeLevel1];
   for(int i=0;i<gridSizeLevel1;i++) {
   	grid.childGrids[i] = new Nested3DGrid **[gridSizeLevel1];
@@ -96,6 +97,9 @@ void Nested3DGridWrapper::initGridCells() {
 
 
   timespec t0,t1;
+
+  cerr << "Starting first pass..." << endl;
+
 
   for(int imap=0;imap<2;imap++) { // for each map...
     const size_t sz = meshGeometry.inputTriangles[imap].size();

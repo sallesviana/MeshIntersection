@@ -57,7 +57,7 @@
 
 //#define DOT(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
 
-void DOT(VertCoord &dest, VertCoord v1[3], VertCoord v2[3], VertCoord &tmp) {
+void DOT(VertCoord &dest, const Point &v1, const Point &v2, VertCoord &tmp) {
   dest = v1[0];
   dest *= v2[0];
   tmp = v1[1];
@@ -66,6 +66,17 @@ void DOT(VertCoord &dest, VertCoord v1[3], VertCoord v2[3], VertCoord &tmp) {
   tmp = v1[2];
   tmp *= v2[2];
   dest += tmp;  
+}
+
+void MinusDOT(VertCoord &dest, const Point &v1, const Point &v2, VertCoord &tmp) {
+  dest = -v1[0];
+  dest *= v2[0];
+  tmp = v1[1];
+  tmp *= v2[1];
+  dest -= tmp;
+  tmp = v1[2];
+  tmp *= v2[2];
+  dest -= tmp;  
 }
 
 
@@ -342,8 +353,8 @@ int coplanar_tri_tri(VertCoord N[3],VertCoord *V0,VertCoord *V1,VertCoord *V2,
              else smallest=0;
 
 //tmpVars should have at least 5 rationals
-inline void isect2(VertCoord VTX0[3],VertCoord VTX1[3],VertCoord VTX2[3],const VertCoord &VV0, const VertCoord &VV1,const VertCoord &VV2,
-	    const VertCoord &D0, const VertCoord &D1, const VertCoord &D2,VertCoord *isect0,VertCoord *isect1,VertCoord isectpoint0[3],VertCoord isectpoint1[3], VertCoord *tmpVars) 
+inline void isect2(Point &VTX0,Point & VTX1,Point & VTX2,const VertCoord &VV0, const VertCoord &VV1,const VertCoord &VV2,
+	    const VertCoord &D0, const VertCoord &D1, const VertCoord &D2,VertCoord &isect0,VertCoord  &isect1,Point &isectpoint0,Point &isectpoint1, VertCoord *tmpVars) 
 {
   //VertCoord tmp=D0/(D0-D1);          
   VertCoord &tmp = tmpVars[0];
@@ -356,10 +367,10 @@ inline void isect2(VertCoord VTX0[3],VertCoord VTX1[3],VertCoord VTX2[3],const V
   //VertCoord diff[3];
   VertCoord *diff = tmpVars+1;
   //*isect0=VV0+(VV1-VV0)*tmp;         
-  *isect0   =VV1; //+(VV1-VV0)*tmp; 
-  *isect0  -=VV0;
-  *isect0 *= tmp;
-  *isect0 += VV0;
+  isect0   =VV1; //+(VV1-VV0)*tmp; 
+  isect0  -=VV0;
+  isect0 *= tmp;
+  isect0 += VV0;
 
   SUB(diff,VTX1,VTX0);              
   //MULT(diff,diff,tmp);     
@@ -375,10 +386,10 @@ inline void isect2(VertCoord VTX0[3],VertCoord VTX1[3],VertCoord VTX2[3],const V
   tmp /= tmp2;
 
   //*isect1=VV0+(VV2-VV0)*tmp;       
-  *isect1 = VV2;
-  *isect1 -= VV0;
-  *isect1 *= tmp;
-  *isect1 += VV0;
+  isect1 = VV2;
+  isect1 -= VV0;
+  isect1 *= tmp;
+  isect1 += VV0;
   SUB(diff,VTX2,VTX0);                   
   //MULT(diff,diff,tmp);      
   diff[0]*=tmp;
@@ -404,10 +415,10 @@ inline void isect2(VertCoord VTX0[3],VertCoord VTX1[3],VertCoord VTX2[3],const V
 
 
 // VV0, VV1 and VV2 are the coordinates of Vert0,Vert1,... considering the largest coordinate (projected..)
-inline int compute_intervals_isectline(VertCoord VERT0[3],VertCoord VERT1[3],VertCoord VERT2[3],
+inline int compute_intervals_isectline(Point &VERT0,Point & VERT1,Point &VERT2,
 				       const VertCoord &VV0,const VertCoord &VV1,const VertCoord &VV2,const VertCoord &D0,const VertCoord &D1,const VertCoord &D2,
-				       const int D0D1,const int D0D2,VertCoord *isect0,VertCoord *isect1,
-				       VertCoord isectpoint0[3],VertCoord isectpoint1[3], pair<int,int> &edgeCreatedA0, pair<int,int> &edgeCreatedA1, VertCoord * tmpVars)
+				       const int D0D1,const int D0D2,VertCoord &isect0,VertCoord & isect1,
+				       Point &isectpoint0,Point & isectpoint1, pair<int,int> &edgeCreatedA0, pair<int,int> &edgeCreatedA1, VertCoord * tmpVars)
 {
 
   //TODO: SoS when triangles touch...
@@ -463,83 +474,23 @@ inline int compute_intervals_isectline(VertCoord VERT0[3],VertCoord VERT1[3],Ver
   return 0;
 }
 
-#define COMPUTE_INTERVALS_ISECTLINE(VERT0,VERT1,VERT2,VV0,VV1,VV2,D0,D1,D2,D0D1,D0D2,isect0,isect1,isectpoint0,isectpoint1,tmpVars) \
-  if(D0D1>0.0f)                                         \
-  {                                                     \
-    /* here we know that D0D2<=0.0 */                   \
-    /* that is D0, D1 are on the same side, D2 on the other or on the plane */ \
-    isect2(VERT2,VERT0,VERT1,VV2,VV0,VV1,D2,D0,D1,&isect0,&isect1,isectpoint0,isectpoint1,tmpVars);          \
-  }                                                     
-#if 0
-  else if(D0D2>0.0f)                                    \
-  {                                                     \
-    /* here we know that d0d1<=0.0 */                   \
-    isect2(VERT1,VERT0,VERT2,VV1,VV0,VV2,D1,D0,D2,&isect0,&isect1,isectpoint0,isectpoint1);          \
-  }                                                     \
-  else if(D1*D2>0.0f || D0!=0.0f)                       \
-  {                                                     \
-    /* here we know that d0d1<=0.0 or that D0!=0.0 */   \
-    isect2(VERT0,VERT1,VERT2,VV0,VV1,VV2,D0,D1,D2,&isect0,&isect1,isectpoint0,isectpoint1);          \
-  }                                                     \
-  else if(D1!=0.0f)                                     \
-  {                                                     \
-    isect2(VERT1,VERT0,VERT2,VV1,VV0,VV2,D1,D0,D2,&isect0,&isect1,isectpoint0,isectpoint1);          \
-  }                                                     \
-  else if(D2!=0.0f)                                     \
-  {                                                     \
-    isect2(VERT2,VERT0,VERT1,VV2,VV0,VV1,D2,D0,D1,&isect0,&isect1,isectpoint0,isectpoint1);          \
-  }                                                     \
-  else                                                  \
-  {                                                     \
-    /* triangles are coplanar */                        \
-    coplanar=1;                                         \
-    return coplanar_tri_tri(N1,V0,V1,V2,U0,U1,U2);      \
-  }
-#endif
+
+
+
 
 int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
-             VertexFromIntersection &vertexThatCreatedPt2, VertCoord *tempRationals)
+             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars)
 {
-  VertCoord *V0 = getCoordinates(*triMesh0.getInputVertex(0)).data();
-  VertCoord *V1 = getCoordinates(*triMesh0.getInputVertex(1)).data();
-  VertCoord *V2 = getCoordinates(*triMesh0.getInputVertex(2)).data();
+  Point &V0 = getCoordinates(*triMesh0.getInputVertex(0));
+  Point &V1 = getCoordinates(*triMesh0.getInputVertex(1));
+  Point &V2 = getCoordinates(*triMesh0.getInputVertex(2));
 
-  VertCoord *U0 = getCoordinates(*triMesh1.getInputVertex(0)).data();
-  VertCoord *U1 = getCoordinates(*triMesh1.getInputVertex(1)).data();
-  VertCoord *U2 = getCoordinates(*triMesh1.getInputVertex(2)).data();
+  Point &U0 = getCoordinates(*triMesh1.getInputVertex(0));
+  Point &U1 = getCoordinates(*triMesh1.getInputVertex(1));
+  Point &U2 = getCoordinates(*triMesh1.getInputVertex(2));
 
-
-  //VertCoord E1[3],E2[3];
-  VertCoord *E1 = tempRationals;
-  VertCoord *E2 = tempRationals+3;
-
-  //VertCoord N1[3],N2[3],d1,d2;
-  VertCoord *N1 = tempRationals+6;
-  VertCoord *N2 = tempRationals+9;
-  VertCoord &d1 = *(tempRationals+12);
-  VertCoord &d2 = *(tempRationals+13);
   
-  //VertCoord du0,du1,du2,dv0,dv1,dv2;
-  VertCoord &du0 = *(tempRationals+14);
-  VertCoord &du1 = *(tempRationals+15);
-  VertCoord &du2 = *(tempRationals+16);
-  VertCoord &dv0 = *(tempRationals+17);
-  VertCoord &dv1 = *(tempRationals+18);
-  VertCoord &dv2 = *(tempRationals+19);
-
-  //VertCoord D[3];
-  VertCoord *D = tempRationals+20;
-  // VertCoord isect1[2], isect2[2];
-  VertCoord *isect1 = tempRationals+23;
-  VertCoord *isect2 = tempRationals+25;
-  //VertCoord isectpointA1[3],isectpointA2[3];
-  VertCoord *isectpointA1 = tempRationals+27;
-  VertCoord *isectpointA2 = tempRationals+30;
-  //VertCoord isectpointB1[3],isectpointB2[3];
-  VertCoord *isectpointB1 = tempRationals+33;
-  VertCoord *isectpointB2 = tempRationals+36;
-
   //VertCoord du0du1,du0du2,dv0dv1,dv0dv2;
   // VertCoord &du0du1 = *(tempRationals+39);
   // VertCoord &du0du2 = *(tempRationals+40);
@@ -551,47 +502,40 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   int dv0dv2;
 
   short index;
-  //VertCoord vp0,vp1,vp2;
-  VertCoord &vp0 = *(tempRationals+43);
-  VertCoord &vp1 = *(tempRationals+44);
-  VertCoord &vp2 = *(tempRationals+45);
-  //VertCoord up0,up1,up2;
-  VertCoord &up0 = *(tempRationals+46);
-  VertCoord &up1 = *(tempRationals+47);
-  VertCoord &up2 = *(tempRationals+48);
-  //VertCoord b,c,max;
-  VertCoord &b = *(tempRationals+49);
-  VertCoord &c = *(tempRationals+50);
-  VertCoord &max = *(tempRationals+51);
-  //VertCoord tmp,diff[3];
-  VertCoord &tmp = *(tempRationals+52);
-  VertCoord *diff = (tempRationals+53);
+  
 
   //until here we've used up to tempRationals+55 (next available is tempRationals+56)
   int smallest1,smallest2;
   
   /* compute plane equation of triangle(V0,V1,V2) */
-  SUB(E1,V1,V0);
+  /*SUB(E1,V1,V0);
   SUB(E2,V2,V0);
   CROSS(N1,E1,E2,tmp);
   //d1=-DOT(N1,V0);
   DOT(d1,N1,V0,tmp);
   d1 *= -1;
+  */
+
+  const PlaneEquation &equationTri0 = getPlaneEquationInputTriangle(0, &triMesh0-&(inputTriangles[0][0]),tempVars.tempVarsComputeEquation);
+  const Point &N1 = equationTri0.normal;
+  const VertCoord &d1 = equationTri0.d;
+
+
 
   /* plane equation 1: N1.X+d1=0 */
 
   /* put U0,U1,U2 into plane equation 1 to compute signed distances to the plane*/
   //du0=DOT(N1,U0)+d1;
-  DOT(du0,N1,U0,tmp);
-  du0 += d1;
+  DOT(tempVars.du0,N1,U0,tempVars.tmp);
+  tempVars.du0 += d1;
 
   //du1=DOT(N1,U1)+d1;
-  DOT(du1,N1,U1,tmp);
-  du1 += d1;
+  DOT(tempVars.du1,N1,U1,tempVars.tmp);
+  tempVars.du1 += d1;
 
   //du2=DOT(N1,U2)+d1;
-  DOT(du2,N1,U2,tmp);
-  du2 += d1;
+  DOT(tempVars.du2,N1,U2,tempVars.tmp);
+  tempVars.du2 += d1;
 
   /* coplanarity robustness check */
 /*#if USE_EPSILON_TEST==TRUE
@@ -604,34 +548,38 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   //TODO: SoS here...
   //du0du1=du0; //TODO: remove this multiplication! we only need the sign!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   //du0du1*=du1;
-  du0du1 = sgn(du0)*sgn(du1);
+  du0du1 = sgn(tempVars.du0)*sgn(tempVars.du1);
   //du0du2=du0*du2;
   //du0du2=du0;
   //du0du2*=du2;
-  du0du2 = sgn(du0)*sgn(du2);
+  du0du2 = sgn(tempVars.du0)*sgn(tempVars.du2);
 
   if(du0du1>0 && du0du2>0) /* same sign on all of them + not equal 0 ? */
     return 0;                    /* no intersection occurs */
 
   /* compute plane of triangle (U0,U1,U2) */
-  SUB(E1,U1,U0);
+ /* SUB(E1,U1,U0);
   SUB(E2,U2,U0);
   CROSS(N2,E1,E2,tmp);
   //d2=-DOT(N2,U0);
   DOT(d2,N2,U0,tmp);
-  d2 *= -1;
+  d2 *= -1;*/
+  const PlaneEquation &equationTri1 = getPlaneEquationInputTriangle(1, &triMesh1-&(inputTriangles[1][0]),tempVars.tempVarsComputeEquation);
+  const Point &N2 = equationTri1.normal;
+  const VertCoord &d2 = equationTri1.d;
+
   /* plane equation 2: N2.X+d2=0 */
 
   /* put V0,V1,V2 into plane equation 2 */
   //dv0=DOT(N2,V0)+d2;
-  DOT(dv0,N2,V0,tmp);
-  dv0 += d2;
+  DOT(tempVars.dv0,N2,V0,tempVars.tmp);
+  tempVars.dv0 += d2;
   //dv1=DOT(N2,V1)+d2;
-  DOT(dv1,N2,V1,tmp);
-  dv1 += d2;
+  DOT(tempVars.dv1,N2,V1,tempVars.tmp);
+  tempVars.dv1 += d2;
   //dv2=DOT(N2,V2)+d2;
-  DOT(dv2,N2,V2,tmp);
-  dv2 += d2;
+  DOT(tempVars.dv2,N2,V2,tempVars.tmp);
+  tempVars.dv2 += d2;
 
 /*
 #if USE_EPSILON_TEST==TRUE
@@ -646,11 +594,11 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   //dv0dv1=dv0*dv1;
   //dv0dv1=dv0;
   //dv0dv1*=dv1;
-  dv0dv1 = sgn(dv0)*sgn(dv1);
+  dv0dv1 = sgn(tempVars.dv0)*sgn(tempVars.dv1);
   //dv0dv2=dv0*dv2;
   //dv0dv2=dv0;
   //dv0dv2*=dv2;
-  dv0dv2 = sgn(dv0)*sgn(dv2);
+  dv0dv2 = sgn(tempVars.dv0)*sgn(tempVars.dv2);
         
   if(dv0dv1>0 && dv0dv2>0) /* same sign on all of them + not equal 0 ? */
     return 0;                    /* no intersection occurs */
@@ -660,35 +608,27 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   /* compute direction of intersection line */
   // L = tD + O , for some point O on the line...
   // D = N1 x N2 (cross)
-  CROSS(D,N1,N2,tmp);
+  CROSS(tempVars.D,N1,N2,tempVars.tmp);
 
   /* compute an index to the largest component of D */
   //max=fabs(D[0]);
-  fabs(max,D[0]);
+  fabs(tempVars.max,tempVars.D[0]);
   index=0;
   //b=fabs(D[1]);
   //c=fabs(D[2]);
-  fabs(b,D[1]);
-  fabs(c,D[2]);
-  if(b>max) max=b,index=1;
-  if(c>max) max=c,index=2;
+  fabs(tempVars.b,tempVars.D[1]);
+  fabs(tempVars.c,tempVars.D[2]);
+  if(tempVars.b>tempVars.max) tempVars.max=tempVars.b,index=1;
+  if(tempVars.c>tempVars.max) tempVars.max=tempVars.c,index=2;
 
   /* this is the simplified projection onto L*/
 
   //TODO: no need to copy here: use reference...
-  vp0=V0[index];
-  vp1=V1[index];
-  vp2=V2[index];
-  
-  up0=U0[index];
-  up1=U1[index];
-  up2=U2[index];
-
   pair<int,int> edgeCreatedA1;
   pair<int,int> edgeCreatedA2;
   /* compute interval for triangle 1 */
-  int coplanar=compute_intervals_isectline(V0,V1,V2,vp0,vp1,vp2,dv0,dv1,dv2,
-				       dv0dv1,dv0dv2,&isect1[0],&isect1[1],isectpointA1,isectpointA2,edgeCreatedA1,edgeCreatedA2,tempRationals+54);
+  int coplanar=compute_intervals_isectline(V0,V1,V2,V0[index],V1[index],V2[index],tempVars.dv0,tempVars.dv1,tempVars.dv2,
+				       dv0dv1,dv0dv2,tempVars.isect1[0],tempVars.isect1[1],tempVars.isectpointA1,tempVars.isectpointA2,edgeCreatedA1,edgeCreatedA2,tempVars.tempRationals);
 
   //SoS: will never happen...
   if(coplanar) return 0;     
@@ -697,20 +637,20 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   pair<int,int> edgeCreatedB1;
   pair<int,int> edgeCreatedB2;
   /* compute interval for triangle 2 */
-  compute_intervals_isectline(U0,U1,U2,up0,up1,up2,du0,du1,du2,
-			      du0du1,du0du2,&isect2[0],&isect2[1],isectpointB1,isectpointB2,edgeCreatedB1,edgeCreatedB2,tempRationals+54);
+  compute_intervals_isectline(U0,U1,U2,U0[index],U1[index],U2[index],tempVars.du0,tempVars.du1,tempVars.du2,
+			      du0du1,du0du2,tempVars.isect2[0],tempVars.isect2[1],tempVars.isectpointB1,tempVars.isectpointB2,edgeCreatedB1,edgeCreatedB2,tempVars.tempRationals);
 
-  SORT2(isect1[0],isect1[1],smallest1,tmp); //smallest1 == 0 iff isect1[0] < isect1[1]
-  SORT2(isect2[0],isect2[1],smallest2,tmp);
+  SORT2(tempVars.isect1[0],tempVars.isect1[1],smallest1,tempVars.tmp); //smallest1 == 0 iff isect1[0] < isect1[1]
+  SORT2(tempVars.isect2[0],tempVars.isect2[1],smallest2,tempVars.tmp);
 
-  if(isect1[1]<isect2[0] || isect2[1]<isect1[0]) return 0;
+  if(tempVars.isect1[1]<tempVars.isect2[0] || tempVars.isect2[1]<tempVars.isect1[0]) return 0;
 
   /* at this point, we know that the triangles intersect */
 
-  if(isect2[0]<isect1[0])
+  if(tempVars.isect2[0]<tempVars.isect1[0])
   {
     if(smallest1==0) { 
-      SET(coordsPt1,isectpointA1); 
+      SET(coordsPt1,tempVars.isectpointA1); 
       //the first vertex is vertex A1
       //A1 is the intersection between edgeCreatedA1 and the plane of the second triangle
       vertexThatCreatedPt1 = VertexFromIntersection(*triMesh0.getInputVertex(edgeCreatedA1.first), *triMesh0.getInputVertex(edgeCreatedA1.second), 
@@ -718,22 +658,22 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
 
     } // if(isect1[0] < isect1[1]) copy the point isectpointA1 to the output isectpoint1..
     else { 
-      SET(coordsPt1,isectpointA2); 
+      SET(coordsPt1,tempVars.isectpointA2); 
 
       vertexThatCreatedPt1 = VertexFromIntersection(*triMesh0.getInputVertex(edgeCreatedA2.first), *triMesh0.getInputVertex(edgeCreatedA2.second), 
                                                       triMesh1);
     }
 
-    if(isect2[1]<isect1[1])
+    if(tempVars.isect2[1]<tempVars.isect1[1])
     {
       if(smallest2==0) { 
-        SET(coordsPt2,isectpointB2); 
+        SET(coordsPt2,tempVars.isectpointB2); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh1.getInputVertex(edgeCreatedB2.first), *triMesh1.getInputVertex(edgeCreatedB2.second), 
                                                       triMesh0);
       }
       else { 
-        SET(coordsPt2,isectpointB1); 
+        SET(coordsPt2,tempVars.isectpointB1); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh1.getInputVertex(edgeCreatedB1.first), *triMesh1.getInputVertex(edgeCreatedB1.second), 
                                                       triMesh0);
@@ -742,13 +682,13 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
     else
     {
       if(smallest1==0) { 
-        SET(coordsPt2,isectpointA2); 
+        SET(coordsPt2,tempVars.isectpointA2); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh0.getInputVertex(edgeCreatedA2.first), *triMesh0.getInputVertex(edgeCreatedA2.second), 
                                                       triMesh1);
       }
       else { 
-        SET(coordsPt2,isectpointA1);
+        SET(coordsPt2,tempVars.isectpointA1);
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh0.getInputVertex(edgeCreatedA1.first), *triMesh0.getInputVertex(edgeCreatedA1.second), 
                                                       triMesh1);
@@ -758,28 +698,28 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   else
   {
     if(smallest2==0) { 
-      SET(coordsPt1,isectpointB1); 
+      SET(coordsPt1,tempVars.isectpointB1); 
 
       vertexThatCreatedPt1 = VertexFromIntersection(*triMesh1.getInputVertex(edgeCreatedB1.first), *triMesh1.getInputVertex(edgeCreatedB1.second), 
                                                       triMesh0);
     }
     else { 
-      SET(coordsPt1,isectpointB2); 
+      SET(coordsPt1,tempVars.isectpointB2); 
 
       vertexThatCreatedPt1 = VertexFromIntersection(*triMesh1.getInputVertex(edgeCreatedB2.first), *triMesh1.getInputVertex(edgeCreatedB2.second), 
                                                       triMesh0);
     }
 
-    if(isect2[1]>isect1[1])
+    if(tempVars.isect2[1]>tempVars.isect1[1])
     {
       if(smallest1==0) { 
-        SET(coordsPt2,isectpointA2); 
+        SET(coordsPt2,tempVars.isectpointA2); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh0.getInputVertex(edgeCreatedA2.first), *triMesh0.getInputVertex(edgeCreatedA2.second), 
                                                       triMesh1);
       }
       else { 
-        SET(coordsPt2,isectpointA1); 
+        SET(coordsPt2,tempVars.isectpointA1); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh0.getInputVertex(edgeCreatedA1.first), *triMesh0.getInputVertex(edgeCreatedA1.second), 
                                                       triMesh1);
@@ -788,13 +728,13 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
     else
     {
       if(smallest2==0) { 
-        SET(coordsPt2,isectpointB2); 
+        SET(coordsPt2,tempVars.isectpointB2); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh1.getInputVertex(edgeCreatedB2.first), *triMesh1.getInputVertex(edgeCreatedB2.second), 
                                                       triMesh0);
       }
       else { 
-        SET(coordsPt2,isectpointB1); 
+        SET(coordsPt2,tempVars.isectpointB1); 
 
         vertexThatCreatedPt2 = VertexFromIntersection(*triMesh1.getInputVertex(edgeCreatedB1.first), *triMesh1.getInputVertex(edgeCreatedB1.second), 
                                                       triMesh0);

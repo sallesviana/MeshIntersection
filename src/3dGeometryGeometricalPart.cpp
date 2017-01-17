@@ -63,4 +63,14 @@ int MeshIntersectionGeometry::getGridCellZContainingVertex(int meshId,const Vert
 
 
 
+//Given the vertices of a triangle, compute the plane equation ( N1.x + d = 0)
+void MeshIntersectionGeometry::computePlaneEquation(PlaneEquation &equation, const Point &V0, const Point &V1, const Point &V2, TempVarsComputePlaneEquation &tempVars) {
+  /* compute plane equation of triangle(V0,V1,V2) */
+  SUB(tempVars.E1,V1,V0);
+  SUB(tempVars.E2,V2,V0);
+  CROSS(equation.normal,tempVars.E1,tempVars.E2,tempVars.temp);
+  //d1=-DOT(N1,V0);
+  MinusDOT(equation.d,equation.normal,V0,tempVars.temp);  
 
+  /* plane equation 1: N1.X+d1=0 */
+}

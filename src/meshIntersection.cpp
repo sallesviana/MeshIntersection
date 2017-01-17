@@ -199,9 +199,10 @@ unsigned long long  computeIntersections(MeshIntersectionGeometry &meshIntersect
   vector< pair<InputTriangle *,InputTriangle *> >  intersectingTrianglesThatGeneratedEdges;
   vector< pair<VertexFromIntersection, VertexFromIntersection> >  edgesFromIntersection;  
 
+  cerr << "starting compute intersections" << endl;
   meshIntersectionGeometry.computeIntersections(vtPairsTrianglesToProcess, intersectingTrianglesThatGeneratedEdges, edgesFromIntersection,totalTests );
-
-    
+  cerr << "End compute intersections" << endl;
+     
   clock_gettime(CLOCK_REALTIME, &t1);
   timeDetectIntersections = convertTimeMsecs(diff(t0,t1))/1000; 
 
@@ -325,7 +326,7 @@ int main(int argc, char **argv) {
 
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to detect intersections (includes time for computing statistics and for saving intersections for debugging): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
-  Print_Current_Process_Memory_Used();
+  //Print_Current_Process_Memory_Used();
 
 
 
