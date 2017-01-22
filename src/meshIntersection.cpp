@@ -34,7 +34,7 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include "common2.h"
 #include <omp.h>
 #include <parallel/algorithm>
-
+#include "triangleRetesselation.h"
 
 using namespace std;
 
@@ -158,7 +158,7 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
   //cerr << "T before sort: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
   cerr << "Pairs before unique: " << pairsTrianglesToProcess.size() << "\n";
-  sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
+  __gnu_parallel::sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
   vector<pair<InputTriangle *,InputTriangle *> >::iterator it = std::unique (pairsTrianglesToProcess.begin(), pairsTrianglesToProcess.end());
   pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10 
 
@@ -170,7 +170,7 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
-unsigned long long  computeIntersections(MeshIntersectionGeometry &meshIntersectionGeometry, const Nested3DGridWrapper *uniformGrid, unordered_set<const InputTriangle *> trianglesThatIntersect[2]) {
+unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshIntersectionGeometry, const Nested3DGridWrapper *uniformGrid, unordered_set<const InputTriangle *> trianglesThatIntersect[2], vector<BoundaryPolygon> polygonsFromRetesselation[2]) {
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
    
@@ -208,12 +208,17 @@ unsigned long long  computeIntersections(MeshIntersectionGeometry &meshIntersect
 
   totalIntersections = intersectingTrianglesThatGeneratedEdges.size();
 
-  /*
+
+  
   clock_gettime(CLOCK_REALTIME, &t0);
-  retesselateIntersectingTriangles(edges,intersectingTrianglesThatGeneratedEdges);
+  retesselateIntersectingTriangles(meshIntersectionGeometry, 
+                                  edgesFromIntersection, 
+                                  intersectingTrianglesThatGeneratedEdges,
+                                  polygonsFromRetesselation);
+
   clock_gettime(CLOCK_REALTIME, &t1);
   timeRetesselate = convertTimeMsecs(diff(t0,t1))/1000; 
-  */
+  
 
 
   //Some statistics...
@@ -318,11 +323,14 @@ int main(int argc, char **argv) {
   cerr << "Time to create and refine grid: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   timeCreateGrid = convertTimeMsecs(diff(t0,t1))/1000; 
 
+
+  vector<BoundaryPolygon> polygonsFromRetesselation[2];
+
    //After the uniform grid is initialized, let's compute the intersection between the triangles...
   cerr << "Detecting intersections..." << endl;
   clock_gettime(CLOCK_REALTIME, &t0); 
   unordered_set<const InputTriangle *> trianglesThatIntersect[2];
-  unsigned long long numIntersectionsDetected = computeIntersections(meshIntersectionGeometry,&uniformGrid,trianglesThatIntersect);
+  unsigned long long numIntersectionsDetected = processTriangleIntersections(meshIntersectionGeometry,&uniformGrid,trianglesThatIntersect,polygonsFromRetesselation);
 
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to detect intersections (includes time for computing statistics and for saving intersections for debugging): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;

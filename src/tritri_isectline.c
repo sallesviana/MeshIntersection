@@ -399,19 +399,6 @@ inline void isect2(Point &VTX0,Point & VTX1,Point & VTX2,const VertCoord &VV0, c
 }
 
 
-#if 0
-#define ISECT2(VTX0,VTX1,VTX2,VV0,VV1,VV2,D0,D1,D2,isect0,isect1,isectpoint0,isectpoint1) \
-              tmp=D0/(D0-D1);                    \
-              isect0=VV0+(VV1-VV0)*tmp;          \
-	      SUB(diff,VTX1,VTX0);               \
-	      MULT(diff,diff,tmp);               \
-              ADD(isectpoint0,diff,VTX0);        \
-              tmp=D0/(D0-D2);                    
-/*              isect1=VV0+(VV2-VV0)*tmp;          \ */
-/*              SUB(diff,VTX2,VTX0);               \     */
-/*              MULT(diff,diff,tmp);               \   */
-/*              ADD(isectpoint1,VTX0,diff);           */
-#endif
 
 
 // VV0, VV1 and VV2 are the coordinates of Vert0,Vert1,... considering the largest coordinate (projected..)

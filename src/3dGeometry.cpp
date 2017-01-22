@@ -162,6 +162,7 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
     //vector<Point> coordsVerticesOfEdgesTemp[2];
     vector<pair<Point,Point> > coordsVerticesOfEdgesTemp;
     vector< pair<VertexFromIntersection, VertexFromIntersection> > edgesFromIntersectionTemp;
+    vector< pair<InputTriangle *,InputTriangle *> > intersectingTrianglesThatGeneratedEdgesTemp;
 
     VertexFromIntersection tempVertexFromIntersection[2]; //TODO: avoid copying...
     Point tempCoordsVerticesFromIntersection[2];
@@ -184,6 +185,7 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
         edgesFromIntersectionTemp.push_back(make_pair(tempVertexFromIntersection[0],tempVertexFromIntersection[1]));
 	      //verticesOfEdgesTemp[0].push_back(tempVertexFromIntersection[0]);
 	      //verticesOfEdgesTemp[1].push_back(tempVertexFromIntersection[1]);
+        intersectingTrianglesThatGeneratedEdgesTemp.push_back(inputTrianglesToConsider[i]);
 	    }
 
     }
@@ -194,6 +196,7 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
       	//coordsVerticesOfEdges[i].insert(coordsVerticesOfEdges[i].end(),coordsVerticesOfEdgesTemp[i].begin(),coordsVerticesOfEdgesTemp[i].end());
       	edgesFromIntersection.insert(edgesFromIntersection.end(),edgesFromIntersectionTemp.begin(),edgesFromIntersectionTemp.end());
         //verticesOfEdges[i].insert(verticesOfEdges[i].end(),verticesOfEdgesTemp[i].begin(),verticesOfEdgesTemp[i].end());
+        intersectingTrianglesThatGeneratedEdges.insert(intersectingTrianglesThatGeneratedEdges.end(),intersectingTrianglesThatGeneratedEdgesTemp.begin(),intersectingTrianglesThatGeneratedEdgesTemp.end());
     }
   }
 
@@ -240,6 +243,12 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
 
 }
 
+
+
+void BoundaryPolygon::reverseVerticesOrder() {
+  std::reverse(vertexSequence.begin(),vertexSequence.end());
+  swap(above,below);
+}
 
 
 
