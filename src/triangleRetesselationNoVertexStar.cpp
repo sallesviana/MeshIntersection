@@ -1,33 +1,5 @@
 #include "triangleRetesselation.h"
 
-
-struct VertexPtrLessComparator {
-    bool operator() (const Vertex* const a, const Vertex* const b) const{
-        return *a<*b;
-    }
-};
-
-struct VertexPairPtrLessComparator {
-    bool operator() (const pair<const Vertex*,const Vertex*> &a, const pair<const Vertex*,const Vertex*> &b) const{
-        if( *a.first != *b.first ) return *a.first < *b.first;
-        return *a.second < *b.second;
-    }
-};
-
-struct VertexPtrEqualComparator {
-    bool operator() (const Vertex* const a, const Vertex* const b) const{
-        return *a==*b;
-    }
-};
-
-bool lessThan(const Vertex* const a, const Vertex* const b) {
-        return *a<*b;
-}
-
-bool equalTo(const Vertex* const a, const Vertex* const b) {
-        return *a==*b;
-}
-
 long long ctEdgeIntersect  = 0; //how many of the intersection tests performed are true?
 long long ctEdgeDoNotIntersect = 0;
 int numVerticesInEdges = 0;
@@ -93,13 +65,13 @@ int binarySearchFirstOccurrency(const vector<pair<const Vertex *,const Vertex *>
   int hi = v.size()-1;
   while (lo < hi) {
       mid = lo + (hi-lo)/2;   // note: division truncates
-      if (!lessThan(v[mid].first,key))
+      if (v[mid].first>=key)
          hi = mid;
       else
          lo = mid+1;
   }
           
-  if (!equalTo(v[lo].first,key))
+  if (v[lo].first!=key)
       return ERROR_CODE;                // p(x) is true for all x in S!
       
   return lo;         // lo is the least x for which p(x) is true
@@ -107,7 +79,7 @@ int binarySearchFirstOccurrency(const vector<pair<const Vertex *,const Vertex *>
 
 bool checkIfPolygonsAreConnected(const vector<pair<const Vertex *,const Vertex *> > &raggedArraySortedEdges) {
   queue<const Vertex *> verticesToProcess;
-  set<const Vertex *,VertexPtrLessComparator> processedVertices;
+  set<const Vertex *> processedVertices;
   verticesToProcess.push(raggedArraySortedEdges[0].first);
   processedVertices.insert(raggedArraySortedEdges[0].first);
 
@@ -121,7 +93,7 @@ bool checkIfPolygonsAreConnected(const vector<pair<const Vertex *,const Vertex *
 
     int posStartVRaggedArray =  binarySearchFirstOccurrency(raggedArraySortedEdges,v);
     //cerr << "v and pos v " << v << " " << posStartVRaggedArray << endl;
-    for(int i=posStartVRaggedArray;i<raggedArraySortedEdges.size()&& equalTo(raggedArraySortedEdges[i].first,v);i++) {
+    for(int i=posStartVRaggedArray;i<raggedArraySortedEdges.size()&&raggedArraySortedEdges[i].first==v;i++) {
       const Vertex * adj = raggedArraySortedEdges[i].second; //adj is one of the vertices adjacent to v
       if(processedVertices.count(adj)==0) {
         processedVertices.insert(adj);
@@ -150,9 +122,9 @@ int binarySearch(vector<array<const Vertex *,3> > &v,const pair<const Vertex *,c
   int lo = 0, hi = v.size()-1, mid;
   while (lo<=hi) {
     mid = lo + (hi-lo)/2;
-    if( equalTo(v[mid][0],key.first) && equalTo(v[mid][1],key.second)) 
+    if(v[mid][0]==key.first && v[mid][1]==key.second) 
       return mid;
-    else if ( lessThan(v[mid][0] , key.first) || (equalTo(v[mid][0] , key.first) && lessThan(v[mid][1] , key.second)) ) //is the element v[mid] smaller than the key?
+    else if ( (v[mid][0] < key.first) || ((v[mid][0] == key.first) && (v[mid][1] < key.second)) ) //is the element v[mid] smaller than the key?
       lo = mid+1;
     else 
       hi = mid-1;
@@ -214,7 +186,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
   //now we need to sort the edges basing on the first vertex and, then, on the angle with horizon (considering whatPlaneProjectTo)
   
   sort(raggedArraySortedEdges.begin(),raggedArraySortedEdges.end(), [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
-            if(!equalTo(e1.first,e2.first)) return lessThan(e1.first,e2.first); //sort first by the first vertex..
+            if(e1.first!=e2.first) return e1.first<e2.first; //sort first by the first vertex..
             return meshIntersectionGeometry.isAngleWith0Greater(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
         } );
   
@@ -234,7 +206,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
 
       array<const Vertex *,3> &wedgeToAdd = wedgesTemp.back();
       //did we reach the end of a group?
-      if(nextElement >= numDirectedEdges || !equalTo(raggedArraySortedEdges[nextElement].first , raggedArraySortedEdges[currElemnt].first)) {
+      if(nextElement >= numDirectedEdges || raggedArraySortedEdges[nextElement].first != raggedArraySortedEdges[currElemnt].first) {
         //if yes, we will create a wedge from currElement to the first one! (to complete the wedges from this group..)
         //the next element is actually the first element in this group...
         wedgeToAdd[0] = raggedArraySortedEdges[firstElementGroup].second; //c
@@ -265,11 +237,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
   //- Go to the first step...
 
   //sort wedges:
-  sort(wedgesTemp.begin(),wedgesTemp.end(), [](const array<const Vertex *,3> &a, const array<const Vertex *,3> &b) {
-                                              if(!equalTo(a[0],b[0])) return lessThan(a[0],b[0]);
-                                              if(!equalTo(a[1],b[1])) return lessThan(a[1],b[1]);
-                                              return lessThan(a[2],b[2]);
-                                            });
+  sort(wedgesTemp.begin(),wedgesTemp.end());
   const int numWedges = wedgesTemp.size();
   usedWedgesTemp.resize(numWedges);
   for(int i=0;i<numWedges;i++) usedWedgesTemp[i] = false;
@@ -295,7 +263,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
       keyForBinarySearch.first = wedgesTemp[next][1];
       keyForBinarySearch.second = wedgesTemp[next][2];
 
-      if(equalTo(wedgesTemp[next][1] , wedgesTemp[wedgeStart][0])) { //have I completed a polygon?
+      if(wedgesTemp[next][1] == wedgesTemp[wedgeStart][0]) { //have I completed a polygon?
         polygons.push_back(wedgesTemp[wedgeStart][0]);
         break; //let's find a (possible) next vertex to start a new polygon...
       }
@@ -308,7 +276,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
 
 
 int doesPolygonContainAllEdges(const vector<const Vertex *> &polygons,const int firstElementPolygon,const int lastElementPolygon,
-                                const set<pair<const Vertex *,const Vertex *>, VertexPairPtrLessComparator > & edgesFromTriangleBoundary) {
+                                const set<pair<const Vertex *,const Vertex *> > & edgesFromTriangleBoundary) {
 
   if(edgesFromTriangleBoundary.count(make_pair(polygons[firstElementPolygon],polygons[firstElementPolygon+1]))) {
     //check if all edges in same order are there...
@@ -443,7 +411,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
 
   
-  set<pair<const Vertex *,const Vertex *>, VertexPairPtrLessComparator > edgesFromTriangleBoundary;
+  set<pair<const Vertex *,const Vertex *> > edgesFromTriangleBoundary;
 
   bool allSimple = true;
   //no vertex intersect the edge t.p[0]-t.p[1] --> it will be in the triangulation!!!
@@ -463,7 +431,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
         statistics.ctEdgesActuallyInsertedInRetesselation++;
       #endif
 
-      assert(!equalTo(candidateEdge.first , candidateEdge.second));
+      assert(candidateEdge.first != candidateEdge.second);
       edgesUsedInThisTriangle.push_back(candidateEdge);
       edgesFromTriangleBoundary.insert(candidateEdge);
     } else {
@@ -484,7 +452,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
           statistics.ctEdgesActuallyInsertedInRetesselation++;
         #endif
 
-        assert(!equalTo(candidateEdge.first , candidateEdge.second));
+        assert(candidateEdge.first != candidateEdge.second);
         edgesUsedInThisTriangle.push_back(candidateEdge);
         edgesFromTriangleBoundary.insert(candidateEdge);
 
@@ -495,7 +463,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
           #pragma omp atomic
           statistics.ctEdgesActuallyInsertedInRetesselation++;
         #endif
-        assert(!equalTo(candidateEdge.first , candidateEdge.second));
+        assert(candidateEdge.first != candidateEdge.second);
         edgesUsedInThisTriangle.push_back(candidateEdge);
         edgesFromTriangleBoundary.insert(candidateEdge);
       } else {
@@ -552,7 +520,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
     #endif
     //cerr << "Candidate edge: " << candidateEdge.first << " " << candidateEdge.second << endl;
     //cerr <<"V1 v2 : " << v1 << " " << v2 << endl;
-    assert(!equalTo(candidateEdge.first , candidateEdge.second));
+    assert(candidateEdge.first != candidateEdge.second);
     //assert(edgesUsedInThisTriangle.count(candidateEdge)==0);
     //cerr << "Inserting edge: " << candidateEdge.first << " " << candidateEdge.second << endl;
     //printVertexForDebugging(*getPointFromVertexId(candidateEdge.first,meshWhereTriangleIs));
@@ -569,7 +537,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
         #pragma omp atomic
         statistics.ctEdgesActuallyInsertedInRetesselation++;
       #endif
-      assert(!equalTo(candidateEdge.first , candidateEdge.second));
+      assert(candidateEdge.first != candidateEdge.second);
       //assert(edgesUsedInThisTriangle.count(candidateEdge)==0);
 
       //cerr << "Inserting edge: " << candidateEdge.first << " " << candidateEdge.second << endl;
@@ -593,8 +561,6 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
   //created because of intersections with other triangles. Thus, edgesUsedInThisTriangle will define a planar partitioning..
 
  // cerr << "End..." << allSimple << endl;
-
-
   
   vector<pair<const Vertex *,const Vertex *> > edgesUsedInThisTriangleV(edgesUsedInThisTriangle.begin(),edgesUsedInThisTriangle.end());
 
@@ -607,6 +573,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
   //at the end of the previous function raggedArrayEdges will contain the directed edges sorted by their first vertex...
   bool arePolygonsConnected = checkIfPolygonsAreConnected(tempVars.raggedArraySortedEdges);
+
 
 
   //at the end of the previous function, raggedArrayEdges will be filled with the edges sorted by the first vertex of each edge
@@ -654,7 +621,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
     //for each polygon p inside the triangle, we will triangulate p
     for(int firstElementPolygon=0;firstElementPolygon<sizePolygonsVector;) { 
       int lastElementPolygon = firstElementPolygon+1;
-      while(!equalTo(polygons[lastElementPolygon], polygons[firstElementPolygon])) lastElementPolygon++;
+      while(polygons[lastElementPolygon]!= polygons[firstElementPolygon]) lastElementPolygon++;
 
       //let's process the polygon defined by the vertices in polygons[firstElementPolygon..lastElementPolygon]
 
@@ -663,7 +630,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
       if(!exteriorPolygonAlreadyFound) {
         int numVerticesOriginalTriangleInThisPolygon = 0;
         for(int i=firstElementPolygon;i<lastElementPolygon;i++) {
-          if( equalTo(polygons[i],t.getInputVertex(0)) || equalTo(polygons[i],t.getInputVertex(1)) || equalTo(polygons[i],t.getInputVertex(2))) numVerticesOriginalTriangleInThisPolygon++;
+          if(polygons[i]==t.getInputVertex(0) || polygons[i]==t.getInputVertex(1) || polygons[i]==t.getInputVertex(2)) numVerticesOriginalTriangleInThisPolygon++;
         }
         if(numVerticesOriginalTriangleInThisPolygon>=3) {          
           //this will be 0 if false, 1 if has all edges and in same orientation, -1 if has all edges but in reverse orientation..
@@ -681,6 +648,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
       newPolygonsGeneratedFromRetesselation.push_back(BoundaryPolygon(whatPlaneProjectTriangleTo));
       BoundaryPolygon &polygon = newPolygonsGeneratedFromRetesselation.back();
       polygon.vertexSequence.assign(polygons.begin()+firstElementPolygon,polygons.begin()+lastElementPolygon+1);
+      polygon.whatPlaneProjectTriangleTo = whatPlaneProjectTriangleTo;
 
       firstElementPolygon = lastElementPolygon+1;
     }
@@ -839,8 +807,6 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 
   vector<pair<int,int> > newTriEdgesFromEachMap[2];
 
-
-
   for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
     vector< const pair<const InputTriangle * const, vector<int> >* > intersectingEdgesInEachTriangleToProcess;
     for(const auto &elem:intersectingEdgesInEachTriangle[meshIdToProcess]) intersectingEdgesInEachTriangleToProcess.push_back(&elem);
@@ -938,8 +904,7 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 
     #pragma omp parallel
     {
-      BoundaryPolygon::TempVarsTriangulatePolygon tempVarsTriangulatePolygon;
-
+      VertCoord tempCoords[2];
       #pragma omp for
       for(int i=0;i<numPolygons;i++) {
         //cerr << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*100/numPolygons << endl;
@@ -947,7 +912,7 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
           clog << "Triangulating " << i << " of " << numPolygons << " Percent= " << (i*100)/numPolygons << "\n";
           clog << "TODO: finish implementation of triangulate polygons...\n";
         }
-        polygonsFromRetesselation[meshIdToProcess][i].triangulatePolygon(meshIntersectionGeometry,tempVarsTriangulatePolygon);
+        //polygonsFromRetesselation[meshIdToProcess][i].triangulatePolygon(meshIntersectionGeometry,meshIdToProcess,tempCoords);
       }
     }
   }

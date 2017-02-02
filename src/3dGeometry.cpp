@@ -10,7 +10,7 @@
 
 
 
-
+#include "boundaryPolygon.cpp"
 
 
 const MeshIntersectionGeometry::PlaneEquation &MeshIntersectionGeometry::getPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars) {
@@ -245,13 +245,6 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
 
 
 
-void BoundaryPolygon::reverseVerticesOrder() {
-  std::reverse(vertexSequence.begin(),vertexSequence.end());
-  swap(above,below);
-}
-
-
-
 
 
 #include <iomanip>
@@ -438,7 +431,13 @@ void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle>
 	}
 }
 
+void MeshIntersectionGeometry::storeAllVertices(ostream &out) {
+  for(int meshId=0;meshId<3;meshId++)
+    for(const Point &p:verticesCoordinates[meshId]) 
+      out << p[0].get_d() << " " << p[1].get_d() << " " << p[2].get_d() << "\n";    
+}
 
+//For debugging purposes
 Point MeshIntersectionGeometry::computePointFromIntersectionVertex(VertexFromIntersection &vertexFromIntersection) {
 	Point   u, v, n;              // triangle vectors
   Point    dir, w0, w;           // ray vectors

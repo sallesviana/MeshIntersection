@@ -7,6 +7,8 @@
 
 using namespace std;
 
+#define COLLECT_STATISTICS
+
 void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectionGeometry, 
 																			const vector< pair<VertexFromIntersection, 
 																			VertexFromIntersection> >  &edgesFromIntersection, 

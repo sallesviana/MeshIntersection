@@ -160,12 +160,15 @@ struct Nested3DGridWrapper {
 	*/
 
   int get_global_x_coord_mesh_vertex(int iMesh,int vertexId) const {
+    assert(iMesh<3);
     return gridCellEachPointLevel1[iMesh][vertexId][0]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][0];
   }
   int get_global_y_coord_mesh_vertex(int iMesh,int vertexId) const {
+    assert(iMesh<3);
     return gridCellEachPointLevel1[iMesh][vertexId][1]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][1];
   }
   int get_global_z_coord_mesh_vertex(int iMesh,int vertexId) const {
+    assert(iMesh<3);
     return gridCellEachPointLevel1[iMesh][vertexId][2]*gridSizeLevel2 + gridCellEachPointLevel2[iMesh][vertexId][2];
   }
 

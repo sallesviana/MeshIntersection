@@ -28,10 +28,9 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-struct ScanLineInterval {
-	int x,y;
-	int z0,z1;
-};
+#include "floodFillScanline.h"
+
+
 
 #include <stack>
 #include <array>
