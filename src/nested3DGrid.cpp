@@ -445,7 +445,10 @@ void Nested3DGridWrapper::init(MeshIntersectionGeometry &meshGeometry, const int
   assert(cellScaleLevel2>0);
   assert(cellWidthLevel2>0);
 
+  //cerr << "Resizing..." << endl;
   this->trianglesInGrid[0].resize(meshGeometryPtr->inputTriangles[0].size());
+  //cerr << "resized..." << endl;
+
   const int numTriMesh0 = trianglesInGrid[0].size();
   for(int i=0;i<numTriMesh0;i++) trianglesInGrid[0][i] = &(meshGeometryPtr->inputTriangles[0][i]);
 

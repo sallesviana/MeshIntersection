@@ -173,6 +173,7 @@ struct Nested3DGridWrapper {
   }
 
   
+  /*
   typedef MeshIntersectionGeometry::TempVarsGetGridCellContainingVertex CellFromCoordTempVars;
   //Returns the "global" cell where a point with a given coordinate is...
   //We call a global grid coordinate the coordinate supposing the grid has  resolution (gridSizeLevel1*gridSizeLevel2)^3
@@ -207,7 +208,7 @@ struct Nested3DGridWrapper {
   }
   int z_cell_from_coord_level2(int meshId,const VertCoord &z, CellFromCoordTempVars &tempVars) const {
     return z_global_cell_from_coord(meshId, z, tempVars)%gridSizeLevel2;
-  }
+  }*/
 
    
 };

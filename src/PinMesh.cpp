@@ -589,7 +589,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
 
             //What if the point is on two triangles simultaneously? we need to decide which one is lower!
             //TODO...
-
+            //maybe use same idea used in function whichPointIsCloser? 
           }
         }
       }

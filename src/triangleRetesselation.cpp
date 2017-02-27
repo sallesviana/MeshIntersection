@@ -81,7 +81,7 @@ struct TempVarsRetesselateTriangleFunction {
   MeshIntersectionGeometry::TempVarsIsCloser tempVarsIsCloser;
   MeshIntersectionGeometry::TempVarsIsAngleWith0Greater tempVarsIsAngleWith0Greater;
   MeshIntersectionGeometry::TempVarsGetPlaneTriangleIsNotPerpendicular tempVarsGetPlaneTriangleIsNotPerpendicular;
-  MeshIntersectionGeometry::TempVarsIsBoundaryClockwise tempVarsIsBoundaryClockwise;
+  //MeshIntersectionGeometry::TempVarsIsBoundaryClockwise tempVarsIsBoundaryClockwise;
   MeshIntersectionGeometry::TempVarsIsTriangleClockwisedOriented tempVarsIsTriangleClockwisedOriented;
 };
 
@@ -398,9 +398,9 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
   const int meshContainingT = t.getMeshId();
 
   //Computes the vertices incident to each edge of the original triangle...
-  //verticesIncidentEachEdgeOriginalTriangle[0] is for vertex t.p[0]-t.p[1]
-  //verticesIncidentEachEdgeOriginalTriangle[1] is for vertex t.p[1]-t.p[2]
-  //verticesIncidentEachEdgeOriginalTriangle[2] is for vertex t.p[2]-t.p[0]
+  //verticesIncidentEachEdgeOriginalTriangle[0] is for edge t.p[0]-t.p[1]
+  //verticesIncidentEachEdgeOriginalTriangle[1] is for edge t.p[1]-t.p[2]
+  //verticesIncidentEachEdgeOriginalTriangle[2] is for edge t.p[2]-t.p[0]
   vector<const Vertex *> verticesIncidentEachEdgeOriginalTriangle[3];
   for(int i=0;i<numVerticesToTesselateNow;i++) {
     const VertexFromIntersection &v = *((VertexFromIntersection*) verticesToTesselate[i]); //since we have not inserted the original vertices yet, all vertices are InputVertex...
@@ -534,7 +534,10 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
     //sort the vertices basing on the distance from v1
 
     sort(verticesToCreateEdges.begin(),verticesToCreateEdges.end(), [&](const Vertex *v1, const Vertex *v2) {
-                              return meshIntersectionGeometry.isCloser(*edgeOrig,*v1,*v2,tempVars.tempVarsIsCloser);
+                              //return meshIntersectionGeometry.isCloser(*edgeOrig,*v1,*v2,tempVars.tempVarsIsCloser);
+                              //until now all the vertices in the vector are from intersection...
+                              //thus, we can static cast...
+                              return meshIntersectionGeometry.isCloser(*edgeOrig,*static_cast<const VertexFromIntersection*>(v1),*static_cast<const VertexFromIntersection*>(v2),tempVars.tempVarsIsCloser);
                             });
     
     verticesToCreateEdges.push_back(edgeDest); //v2 is the vertex that is furthest from v1 along edge v1,v2 

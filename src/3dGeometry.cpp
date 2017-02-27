@@ -2,11 +2,19 @@
 
 
 
-#include "tritri_isectline.c"
+
+
+#include "nested3DGrid.h"
+
+
+#include "geometry/3dGeometryGeometricalPredicatesSoSImpl.cpp"
+#include "geometry/3dGeometryGeometricalPredicatesMainImpl.cpp"
+#include "geometry/3dGeometryGeometricalPredicatesMainImplOrig.cpp"
+#include "geometry/3dGeometryGeometricalPredicates.cpp"
 
 
 
-#include "3dGeometryGeometricalPart.cpp"
+
 
 
 

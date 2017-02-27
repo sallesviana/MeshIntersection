@@ -5,40 +5,13 @@ Predicates and functions needing SoS
 
 */
 
-#include "tritri_isectline.c"
 
-
-
-
-array<int,3> MeshIntersectionGeometry::getGridCellContainingVertex(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const {
-	VertCoord &tempVar = tempVars.tempVertCoords;//tempVertCoords[poolToUse];
-	const vector<Point> &points = verticesCoordinates[meshId];
-
-  const Point &boundingBoxMin = boundingBoxTwoMeshesTogetter[0];
-
-	tempVar = points[vertexId][0];
-  tempVar -= boundingBoxMin[0];
-  tempVar *= cellScale;
-  const int x = convertToInt(tempVar,tempVars.tempVarsInt);
-
-  tempVar = points[vertexId][1];
-  tempVar -= boundingBoxMin[1];
-  tempVar *= cellScale;
-  const int y = convertToInt(tempVar,tempVars.tempVarsInt);
-
-  tempVar = points[vertexId][2];
-  tempVar -= boundingBoxMin[2];
-  tempVar *= cellScale;
-  const int z  = convertToInt(tempVar,tempVars.tempVarsInt);
-
-  return {x,y,z};
-}
 
 
 
 
 //Is v1 closer to origV than v2 is?
-bool MeshIntersectionGeometry::isCloser(const InputVertex &origV, const Vertex &v1V, const Vertex &v2V, TempVarsIsCloser &tempVars) const {
+bool MeshIntersectionGeometry::isCloserOrig(const InputVertex &origV, const Vertex &v1V, const Vertex &v2V, TempVarsIsCloser &tempVars) const {
   const Point &orig = getCoordinates(origV);
   const Point &v1 = getCoordinates(v1V);
   const Point &v2 = getCoordinates(v2V);
@@ -73,7 +46,7 @@ bool MeshIntersectionGeometry::isCloser(const InputVertex &origV, const Vertex &
 }
 
 
-bool MeshIntersectionGeometry::isAngleWith0Greater(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
+bool MeshIntersectionGeometry::isAngleWith0GreaterOrig(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
   int xCoord = 0;
   int yCoord = 1;
   if(planeToProject==PLANE_Y0) {
@@ -183,7 +156,7 @@ bool checkIfPointIsInProjection(const Point &p0, const Point &p1, const Point &p
 }
 
 
-bool MeshIntersectionGeometry::isVertexInTriangleProjection(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) {
+bool MeshIntersectionGeometry::isVertexInTriangleProjectionOrig(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
   const Point &p = getCoordinates(queryPoint);
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
@@ -194,7 +167,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const Vertex &v1,con
   return ans;
 }
 
-bool MeshIntersectionGeometry::isVertexConvex(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) {
+bool MeshIntersectionGeometry::isVertexConvexOrig(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const {
   const Point &vertex1 =  getCoordinates(v1);
   const Point &vertex2 =  getCoordinates(queryVertex);
   const Point &vertex3 =  getCoordinates(v3);
@@ -244,7 +217,7 @@ bool MeshIntersectionGeometry::isVertexConvex(const Vertex &v1,const Vertex &que
 
 /*************** PinMesh Part... ****************/
 
-bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
+bool MeshIntersectionGeometry::isVertexInTriangleProjectionOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
   const Point &p0 = getCoordinates(*t.getInputVertex(0));
   const Point &p1 = getCoordinates(*t.getInputVertex(1));
   const Point &p2 = getCoordinates(*t.getInputVertex(2));
@@ -252,7 +225,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle 
   const Point &p = getCoordinates(queryPoint);
 
   if ( p==p0 || p==p1 || p==p2)  {
-    cerr << "TODO: SoS vertex in triangle projection 1" << endl;
+    //cerr << "TODO: SoS vertex in triangle projection 1" << endl;
     return false;
     //return pointInTriangleProjSoS(p0, p1, p2, p) ;//return 0; // degenerate case --> SoS
   }
@@ -338,7 +311,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle 
 
   //All coordinates are >=0 && <=1... so we have either a degenerate case or the point is in the triangle...
   if (sgn(tempVertCoords[3])==0 || sgn(tempVertCoords[2])==0 || sgn(tempVertCoords[1])==0) {
-    cerr << "TODO: SoS vertex in triangle projection 3" << endl;
+    //cerr << "TODO: SoS vertex in triangle projection 3" << endl;
     return false;
     //bool ans =  pointInTriangleProjSoS(p0, p1, p2, p) ; //SoS
     //return ans;
@@ -349,7 +322,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle 
 
 
 //Given a vertex p, is p below the triangle t ? (we know p projected to z=0 is on t projected to z=0...)
-bool MeshIntersectionGeometry::isTriangleAbovePointSoS(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
+bool MeshIntersectionGeometry::isTriangleAbovePointSoSOrig(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
   cerr << "TODO: SoS is triangle above point" << endl;
   return false;
 }
@@ -360,7 +333,7 @@ bool MeshIntersectionGeometry::isTriangleAbovePointSoS(const InputTriangle &t, c
 //TODO: use pre-computed normals here...
 //If all points from the same mesh are translated equally, we will not need SoS here
 //because we will never chose an input triangle that is vertical 
-bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZ(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const {
+bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZOrig(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const {
     const Point &p0 = getCoordinates(*t.getInputVertex(0));
     const Point &p1 = getCoordinates(*t.getInputVertex(1));
     const Point &p2 = getCoordinates(*t.getInputVertex(2));
@@ -403,7 +376,7 @@ bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZ(const InputTria
 
 
 //TODO: use input point/triangle to correctly classify according to SoS in case of coincidences...
-int MeshIntersectionGeometry::zCellGlobalFromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const {
+int MeshIntersectionGeometry::zCellGlobalFromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const {
   VertCoord &tempVar = tempVars.tempVertCoord;
   const Point &boundingBoxMin = boundingBoxTwoMeshesTogetter[0];
 
@@ -416,7 +389,7 @@ int MeshIntersectionGeometry::zCellGlobalFromProjectionOfPoint(const HeightPoint
 }
 
 
-int MeshIntersectionGeometry::zCellLevel1FromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) const {
+int MeshIntersectionGeometry::zCellLevel1FromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) const {
   VertCoord &tempVar = tempVars.tempVertCoord;
   const Point &boundingBoxMin = boundingBoxTwoMeshesTogetter[0];
 
@@ -431,7 +404,7 @@ int MeshIntersectionGeometry::zCellLevel1FromProjectionOfPoint(const HeightPoint
 
 //Given two triangles above a point, where the height above point is equal for both triangles, decide which one is lower according after SoS
 //Make sure the two triangles are not the same... (this could happen, but we avoid that by checkin in PinMesh... )
-const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoS(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const {
+const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoSOrig(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const {
   cerr << "TODO: SoS get best triangle point in object SoS" << endl;
   return candidateTriangle;
 }
@@ -439,250 +412,3 @@ const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoS(
 
 
 
-
-/*
-Maybe SoS?
-
-*/
-
-int signCrossProduct2D(const Point &v11,const Point &v12,const Point &v21,const Point &v22,int whatPlaneProjectTo, VertCoord tempVars[]) {
-  if(whatPlaneProjectTo == PLANE_X0) {
-    VertCoord component1 = (v12[1]-v11[1])*(v22[2]-v21[2]); //v1.y * v2.z 
-    VertCoord component2 = (v22[1]-v21[1])*(v12[2]-v11[2]); //v2.y*v1.z
-    if(component1==component2) return 0;
-    if(component1>component2) return 1;
-    return -1;
-  }
-  else if(whatPlaneProjectTo == PLANE_Y0) { //TODO: xz or zx ?
-    VertCoord component1 = (v12[2]-v11[2])*(v22[0]-v21[0]); //v1.z * v2.x 
-    VertCoord component2 = (v22[2]-v21[2])*(v12[0]-v11[0]); //v2.z*v1.x
-    if(component1==component2) return 0;
-    if(component1>component2) return 1;
-    return -1;
-  }
-  VertCoord component1 = (v12[0]-v11[0])*(v22[1]-v21[1]); //v1.x * v2.y 
-  VertCoord component2 = (v22[0]-v21[0])*(v12[1]-v11[1]); //v2.x*v1.y
-  if(component1==component2) return 0;
-  if(component1>component2) return 1;
-  return -1;  
-}
-
-//Input triangles should not be degenerated
-//The projection of the triangle should not be degenerated (we always choose a plane whose projection is non degenerated)
-//Thus, the sign will be either negative or positive (with or without SoS)
-//SoS (infinitesimals) should not change the orientation of the triangles
-//TODO: reuse normals --> ans: no need for now... only 0.11% of time!
-bool MeshIntersectionGeometry::isTriangleClockwisedOriented(const InputTriangle &t,const int whatPlaneProjectTo, TempVarsIsTriangleClockwisedOriented &tempVars) const {
-  return signCrossProduct2D(getCoordinates(*t.getInputVertex(0)),getCoordinates(*t.getInputVertex(1)),getCoordinates(*t.getInputVertex(0)),getCoordinates(*t.getInputVertex(2)),whatPlaneProjectTo,tempVars.tempCoords)<0;
-}
-
-
-//No need for SoS here (performance workaround...):
-//For consistency, we try to "hide" coordinates inside the HeightPointInTriangleProjection struct (so that PinMesh, like other classes, does not have access to coordinates)
-//No need for SoS here: the triangle will be non-degenerate (input triangle) and, thus, the height of the projection
-//onto the plane is well defined...
-void MeshIntersectionGeometry::computeHeightAbovePointNoSoS(HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &queryPoint, TempVarComputeHeightAbovePointNoSoS &tempVars) const {
-  //TODO: re-use plane equations, pre-computed normals, etc..
-  const Point &p0 = getCoordinates(*triangle.getInputVertex(0));
-  const Point &p1 = getCoordinates(*triangle.getInputVertex(1));
-  const Point &p2 = getCoordinates(*triangle.getInputVertex(2));
-
-  const Point &p = getCoordinates(queryPoint);
-
-  Point *vec = tempVars.vec;
-
-  // lets compute the cross product of two vectors of the triangle in order to get the plane equation A(x-x0)+ B(y-y0)+C(z-z0)= 0
-  //more info: http://tutorial.math.lamar.edu/Classes/CalcIII/EqnsOfPlanes.aspx
-  //VertCoord vec[2][3];
-  vec[0][0] = p1[0]; vec[0][0] -= p0[0]; //vec[0][0] = p1[0]-p0[0];
-  vec[0][1] = p1[1]; vec[0][1] -= p0[1]; //vec[0][1] = p1[1]-p0[1];
-  vec[0][2] = p1[2]; vec[0][2] -= p0[2];  //vec[0][2] = p1[2]-p0[2];
-
-  vec[1][0] = p2[0]; vec[1][0] -= p0[0]; //vec[1][0] = p2[0]-p0[0];
-  vec[1][1] = p2[1]; vec[1][1] -= p0[1]; //vec[1][1] = p2[1]-p0[1];
-  vec[1][2] = p2[2]; vec[1][2] -= p0[2]; //vec[1][2] = p2[2]-p0[2];
-
-  VertCoord *tempVertCoords = tempVars.tempVertCoords;
-
-  //lets compute the values A,B,C basing on the two 3D vectors vec[0] and vec[1]
-  //  | i             j           k     |
-  //  | vec[0][0]  vec[0][1]  vec[0][2] |
-  //  | vec[1][0]  vec[1][1]  vec[1][2] |
-
-  //VertCoord A = vec[0][1]*vec[1][2] - vec[0][2]*vec[1][1];
-  tempVertCoords[0] = vec[0][1];
-  tempVertCoords[0] *= vec[1][2];
-  tempVertCoords[1] =  vec[0][2];
-  tempVertCoords[1] *= vec[1][1];
-  tempVertCoords[0] -= tempVertCoords[1]; //this will be A
-
-
-  //wrong--->  VertCoord B = vec[0][0]*vec[1][2] - vec[0][2]*vec[1][0];
-  //correct --> VertCoord B = vec[0][2]*vec[1][0] - vec[0][0]*vec[1][2];
-  tempVertCoords[1] = vec[0][2];
-  tempVertCoords[1] *= vec[1][0];
-  tempVertCoords[2] =  vec[0][0];
-  tempVertCoords[2] *= vec[1][2];
-  tempVertCoords[1] -= tempVertCoords[2]; // this will be B
-
-  //VertCoord C = vec[0][0]*vec[1][1] - vec[0][1]*vec[1][0];
-  tempVertCoords[2] = vec[0][0];
-  tempVertCoords[2] *= vec[1][1];
-  tempVertCoords[3] = vec[0][1];
-  tempVertCoords[3] *= vec[1][0];
-  tempVertCoords[2] -= tempVertCoords[3]; //this will be C
-
-  //assert(C!=0);
-  assert(tempVertCoords[2]!=0);
-
-  // now we have an equation A(x-triangle[0][0]) +  B(y-triangle[0][1]) + C(z-triangle[0][2]) = 0
-
-  //heightAbovePoint = ( A*(p0[0]-p[0]) +  B*(p0[1]-p[1]) +  C*p0[2])/C; //TODO: check this...
-  tempVertCoords[3] = p0[0];
-  tempVertCoords[3] -= p[0];
-  tempVertCoords[3] *= tempVertCoords[0];
-  heightAbovePoint.height = tempVertCoords[3];
-
-  tempVertCoords[3] = p0[1];
-  tempVertCoords[3] -= p[1];
-  tempVertCoords[3] *= tempVertCoords[1];
-  heightAbovePoint.height += tempVertCoords[3];
-
-  tempVertCoords[3] = p0[2];
-  tempVertCoords[3] *= tempVertCoords[2];
-  heightAbovePoint.height += tempVertCoords[3];
-
-  heightAbovePoint.height /= tempVertCoords[2];
-}
-
-//1 if p < heightAbovePoint  (considering the z-coordinate)
-//0 if equal
-//-1 otherwise
-int MeshIntersectionGeometry::compareHeightWithPointHeightNoSoS(const InputVertex &queryPoint,const HeightPointInTriangleProjection &heightOtherPoint) const {
-  const Point &p = getCoordinates(queryPoint);
-  if(heightOtherPoint.height > p[2]) return 1;
-  if(heightOtherPoint.height == p[2]) return 0;
-  return -1;
-}
-
-//1 if height is smaller than the best, 0 if equal, -1 otherwise
-int MeshIntersectionGeometry::compareHeightWithBestHeightNoSoS(const HeightPointInTriangleProjection &heightAbovePointObj,const HeightPointInTriangleProjection &bestHeightAbovePoint) const {
-  if(heightAbovePointObj.height < bestHeightAbovePoint.height) return 1;
-  if(heightAbovePointObj.height == bestHeightAbovePoint.height) return 0;
-  return -1;
-}
-
-
-/*
-Possible no need for SoS...
-
-*/
-
-
-array<VertCoord,3> MeshIntersectionGeometry::coordRangeMeshes() const {
-  return {boundingBoxTwoMeshesTogetter[1][0]-boundingBoxTwoMeshesTogetter[0][0],boundingBoxTwoMeshesTogetter[1][1]-boundingBoxTwoMeshesTogetter[0][1],boundingBoxTwoMeshesTogetter[1][2]-boundingBoxTwoMeshesTogetter[0][2]};
-} 
-
-//Given the vertices of a triangle, compute the plane equation ( N1.x + d = 0)
-void MeshIntersectionGeometry::computePlaneEquation(PlaneEquation &equation, const Point &V0, const Point &V1, const Point &V2, TempVarsComputePlaneEquation &tempVars) {
-  /* compute plane equation of triangle(V0,V1,V2) */
-  SUB(tempVars.E1,V1,V0);
-  SUB(tempVars.E2,V2,V0);
-  CROSS(equation.normal,tempVars.E1,tempVars.E2,tempVars.temp);
-  //d1=-DOT(N1,V0);
-  MinusDOT(equation.d,equation.normal,V0,tempVars.temp);  
-
-  /* plane equation 1: N1.X+d1=0 */
-}
-
-
-int MeshIntersectionGeometry::getPlaneTriangleIsNotPerpendicular(const InputTriangle &t, TempVarsGetPlaneTriangleIsNotPerpendicular &tempVariables) {
-
-  VertCoord*tempVars = tempVariables.tempRationals;
-
-  const Point &p1 = getCoordinates(*t.getInputVertex(0));
-  const Point &p2 = getCoordinates(*t.getInputVertex(1));
-  const Point &p3 = getCoordinates(*t.getInputVertex(2));
-
-  //a = (tempVars[0],tempVars[1],tempVars[2])
-  tempVars[0]=p2[0];
-  tempVars[0]-=p1[0];
-
-  tempVars[1]=p2[1];
-  tempVars[1]-=p1[1];
-
-  
-  //b = (tempVars[3],tempVars[4],tempVars[5])
-  tempVars[3]=p3[0]; 
-  tempVars[3]-=p1[0];
-
-  tempVars[4]=p3[1];
-  tempVars[4]-=p1[1];
-
-  
-
-  //Let's check if the z-component of the normal is 0
-  //if it is --> the triangle is perpendicular to z=0...
-  tempVars[6] = tempVars[0]; //a.x
-  tempVars[6] *= tempVars[4]; //b.y
-  tempVars[7] = tempVars[1]; //a.y
-  tempVars[7] *=tempVars[3]; //b.x
-  tempVars[6] -= tempVars[7]; //a.x*b.y - a.y*b.x
-  if(sgn(tempVars[6])!=0) return PLANE_Z0; //the triangle is NOT perpendicular to z=0...
-
-
-  tempVars[2]=p2[2];
-  tempVars[2]-=p1[2];
-
-  tempVars[5]=p3[2];
-  tempVars[5]-=p1[2];
-
-  tempVars[6] = tempVars[2]; //a.z
-  tempVars[6] *= tempVars[3]; //b.x
-  tempVars[7] = tempVars[0]; //a.x
-  tempVars[7] *=tempVars[5]; //b.z
-  tempVars[6] -= tempVars[7]; //a.z*b.x - a.x*b.z
-  if(sgn(tempVars[6])!=0) return PLANE_Y0; //the triangle is NOT perpendicular to y=0...
-  
-  return PLANE_X0; //we do not need to check... (unless the triangle is just a point...)
-}
-
-
-//We are actually not using functions below...
-/*
-int MeshIntersectionGeometry::getGridCellXContainingVertex(int meshId,const VertCoord &xCoord, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const {
-  VertCoord &tempVar = tempVars.tempVertCoords;
-  const Point &boundingBoxMin = boundingBoxTwoMeshesTogetter[0];
-
-  tempVar = xCoord;
-  tempVar -= boundingBoxMin[0];
-  tempVar *= cellScale;
-  const int x = convertToInt(tempVar,tempVars.tempVarsInt);
-
-  return x;
-}
-
-int MeshIntersectionGeometry::getGridCellYContainingVertex(int meshId,const VertCoord &yCoord, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const {
-  VertCoord &tempVar = tempVars.tempVertCoords;
-  const Point &boundingBoxMin = boundingBoxTwoMeshesTogetter[0];
-
-  tempVar = yCoord;
-  tempVar -= boundingBoxMin[1];
-  tempVar *= cellScale;
-  const int y = convertToInt(tempVar,tempVars.tempVarsInt);
-
-  return y;
-}
-
-int MeshIntersectionGeometry::getGridCellZContainingVertex(int meshId,const VertCoord &zCoord, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const {
-  VertCoord &tempVar = tempVars.tempVertCoords;
-  const Point &boundingBoxMin = boundingBoxTwoMeshesTogetter[0];
-
-  tempVar = zCoord;
-  tempVar -= boundingBoxMin[2];
-  tempVar *= cellScale;
-  const int z  = convertToInt(tempVar,tempVars.tempVarsInt);
-
-  return z;
-}
-*/

@@ -144,6 +144,9 @@ void BoundaryPolygon::initializeLinkedList(MeshIntersectionGeometry &geometry,Tr
 			}
 		}
 	}
+
+
+	
 }
 
 
