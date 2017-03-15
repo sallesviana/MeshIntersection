@@ -144,7 +144,7 @@ int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex 
   const Point &p2 =  getCoordinates(v3);
 
   if ( p==p0 || p==p1 || p==p2) {
-    return 0; //is the point directly above a vertex of the triangle?
+    return 0; //is the point directly on a vertex of the triangle?
   }
 
   //supposing the triangle will be projected to z=0...
@@ -160,7 +160,7 @@ int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex 
   
   VertCoord denominator = ((p1[coordY] - p2[coordY])*(p0[coordX] - p2[coordX]) + (p2[coordX] - p1[coordX])*(p0[coordY] - p2[coordY]));
   if (denominator==0) { 
-    return 0;
+    return -1; //because of SoS, vertices will never be below vertical triangles...
   }
   VertCoord a = ((p1[coordY] - p2[coordY])*(p[coordX] - p2[coordX]) + (p2[coordX] - p1[coordX])*(p[coordY] - p2[coordY])) / denominator;
   if ( a<0 || a >1) return -1;

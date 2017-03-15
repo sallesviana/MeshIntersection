@@ -1,4 +1,6 @@
 
+
+
 /*
 Predicates and functions needing SoS
 
@@ -13,6 +15,7 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   //TODO: detect coincidencies properly here...
   //co-planar is not necessarely a coincidence...
   //TODO
+  //TODO: intersection at edge/vertex --> SoS...
   int ans = intersectTwoTrianglesMainImpl(triMesh0,triMesh1,coordsPt1,vertexThatCreatedPt1, coordsPt2, vertexThatCreatedPt2, tempVars);
   
   /*VertexFromIntersection p1SoS,p2SoS;
@@ -38,6 +41,16 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
     }
   }*/
 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIntersectTwoTriangles++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIntersectTwoTriangles++;
+    }
+  #endif
+
   return ans==1;
 }
 
@@ -45,11 +58,22 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
 //Is v1 closer to origV than v2 is?
 bool MeshIntersectionGeometry::isCloser(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const {
   int ans = isCloserMainImpl(origV, v1V, v2V, tempVars);
-  bool ansSoS = isCloserSoSImpl(origV, v1V, v2V, tempVars);
-  bool ansOrig = isCloserOrig(origV, v1V, v2V, tempVars);
+  
 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIsCloser++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIsCloser++;
+    }
+  #endif
 
   if(ans==0) {
+    bool ansSoS = isCloserSoSImpl(origV, v1V, v2V, tempVars);
+    bool ansOrig = isCloserOrig(origV, v1V, v2V, tempVars);
+
     //cerr << "Coincidency in isAngleGreater...: " << ans << " " << ansSoS << endl;
     if(ansOrig!=ansSoS) {
       #pragma omp critical
@@ -63,7 +87,7 @@ bool MeshIntersectionGeometry::isCloser(const InputVertex &origV, const VertexFr
 
     return ansSoS;
   } else {
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
     return ans==1;
   }
 }
@@ -71,10 +95,21 @@ bool MeshIntersectionGeometry::isCloser(const InputVertex &origV, const VertexFr
 
 bool MeshIntersectionGeometry::isAngleWith0Greater(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
   int ans = isAngleWith0GreaterMainImpl(origV, v1V, v2V, planeToProject, tempVars);
-  bool ansSoS = isAngleWith0GreaterSoSImpl(origV, v1V, v2V, planeToProject, tempVars);
-  bool ansOrig = isAngleWith0GreaterOrig(origV, v1V, v2V, planeToProject, tempVars);
+  
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIsAngleWith0Greater++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIsAngleWith0Greater++;
+    }
+  #endif
 
   if(ans==0) {
+    bool ansSoS = isAngleWith0GreaterSoSImpl(origV, v1V, v2V, planeToProject, tempVars);
+    bool ansOrig = isAngleWith0GreaterOrig(origV, v1V, v2V, planeToProject, tempVars);
     //cerr << "Coincidency in isAngleGreater...: " << ans << " " << ansSoS << endl;
     if(ansOrig!=ansSoS) {
       #pragma omp critical
@@ -88,27 +123,32 @@ bool MeshIntersectionGeometry::isAngleWith0Greater(const Vertex &origV, const Ve
 
     return ansSoS;
   } else {
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
-    assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) ); //if SoS answer is true --> ans have to be 1
     return ans==1;
   }
 
   
-  if(ans==0) {
-    //cerr << "Coincidency in isAngleGreater...: " << ans << " " << ansSoS << endl;
-    return ansSoS;
-  } else {
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
-    return ans==1;
-  }
+  
 }
 
 bool MeshIntersectionGeometry::isVertexInTriangleProjection(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) {
   int ans = isVertexInTriangleProjectionMainImpl(v1,v2,v3, queryPoint, whatPlaneProjectTrianglesTo,tempVars);
-  bool ansSoS = isVertexInTriangleProjectionSoSImpl(v1,v2,v3, queryPoint, whatPlaneProjectTrianglesTo,tempVars);
-  bool ansOrig = isVertexInTriangleProjectionOrig(v1,v2,v3, queryPoint, whatPlaneProjectTrianglesTo,tempVars);
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIsVertexInTriangleProjection++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIsVertexInTriangleProjection++;
+    }
+  #endif
 
   if(ans==0) {
+    bool ansSoS = isVertexInTriangleProjectionSoSImpl(v1,v2,v3, queryPoint, whatPlaneProjectTrianglesTo,tempVars);
+    bool ansOrig = isVertexInTriangleProjectionOrig(v1,v2,v3, queryPoint, whatPlaneProjectTrianglesTo,tempVars);
+
     if(ansOrig!=ansSoS) {
       #pragma omp critical
       {
@@ -121,24 +161,36 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const Vertex &v1,con
 
     return ansSoS;
   } else {
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
-    assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) );
+    //assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) );
     return ans==1;
   }
 }
 
 bool MeshIntersectionGeometry::isVertexConvex(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) {
   int ans = isVertexConvexMainImpl(v1,queryVertex,v3,whatPlaneProjectTrianglesTo,tempVars);
-  bool ansSoS = isVertexConvexSoSImpl(v1,queryVertex,v3,whatPlaneProjectTrianglesTo,tempVars);
-  bool ansOrig  = isVertexConvexOrig(v1,queryVertex,v3,whatPlaneProjectTrianglesTo,tempVars);
+  
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIsVertexConvex++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIsVertexConvex++;
+    }
+  #endif
 
   if(ans==0) {
     //cerr << "Coincidency in isAngleGreater...: " << ans << " " << ansSoS << endl;
+    bool ansSoS = isVertexConvexSoSImpl(v1,queryVertex,v3,whatPlaneProjectTrianglesTo,tempVars);
+    bool ansOrig  = isVertexConvexOrig(v1,queryVertex,v3,whatPlaneProjectTrianglesTo,tempVars);
+
     assert(ansSoS==ansOrig);
     return ansSoS;
   } else {
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
-    assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) );
+    //assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) );
     return ans==1;
   }
 }
@@ -147,11 +199,21 @@ bool MeshIntersectionGeometry::isVertexConvex(const Vertex &v1,const Vertex &que
 /*************** PinMesh Part... ****************/
 bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
   int ans = isVertexInTriangleProjectionMainImpl(t, queryPoint,tempVars);
-  bool ansSoS = isVertexInTriangleProjectionSoSImpl(t, queryPoint,tempVars);
-  bool ansOrig = isVertexInTriangleProjectionOrig(t, queryPoint,tempVars);
+  
 
+  #ifdef COLLECT_GEOMETRY_STATISTICS    
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIsVertexInInputTriangleProjection++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIsVertexInInputTriangleProjection++;
+    }
+  #endif
 
   if(ans==0) {
+    bool ansSoS = isVertexInTriangleProjectionSoSImpl(t, queryPoint,tempVars);
+    bool ansOrig = isVertexInTriangleProjectionOrig(t, queryPoint,tempVars);
     //cerr << "Coincidency in isAngleGreater...: " << ans << " " << ansSoS << endl;
     if(ansOrig!=ansSoS) {
       #pragma omp critical
@@ -165,8 +227,8 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle 
 
     return ansSoS;
   } else {
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
-    assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) );
+    //assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansOrig)) || ((ans==-1)&&(!ansOrig)) );
     return ans==1;
   }
 }
@@ -176,15 +238,26 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjection(const InputTriangle 
 //because we will never chose an input triangle that is vertical 
 bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZ(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const {
   int ans = isTriangleNormalPointingPositiveZMainImpl(t, tempVars);
-  bool ansSoS = isTriangleNormalPointingPositiveZSoSImpl(t, tempVars);
+  
   //bool ansOrig = isTriangleNormalPointingPositiveZOrig(t, tempVars);
 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    if(ans==0) {
+      #pragma omp atomic
+      geometryStatisticsDegenerateCases.ctDegeneraciesIsTriangleNormalPointingPositiveZ++;
+    } else {
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIsTriangleNormalPointingPositiveZ++;
+    }
+  #endif
+
   if(ans==0) {
+    bool ansSoS = isTriangleNormalPointingPositiveZSoSImpl(t, tempVars);
     cerr << "@@@@ Coincidency in isTriangleNormalPoitingPositiveZ...: " << ans << " " << ansSoS << endl;
     return ansSoS;
   } else {
     //test disabled because SoS not implemented yet...
-    assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
+    //assert( ((ans==1)&&(ansSoS)) || ((ans==-1)&&(!ansSoS)) ); //if SoS answer is true --> ans have to be 1
     return ans==1;
   }
 }
@@ -195,12 +268,22 @@ bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZ(const InputTria
 
 //Given a vertex p, is p below the triangle t ? (we know p projected to z=0 is on t projected to z=0...)
 bool MeshIntersectionGeometry::isTriangleAbovePointSoS(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.ctDegeneraciesIsTriangleAbovePointSoS++;
+  #endif
+
   return isTriangleAbovePointSoSOrig(t, p,tempVars);
 }
 
 //Given two triangles above a point, where the height above point is equal for both triangles, decide which one is lower according after SoS
 //Make sure the two triangles are not the same... (this could happen, but we avoid that by checkin in PinMesh... )
 const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoS(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.ctDegeneraciesGetBestTrianglePointInObjectSoS++;
+  #endif
+
   return getBestTrianglePointInObjectSoSOrig(candidateTriangle,bestTriangle, p,tempVars);
 }
 

@@ -1,5 +1,9 @@
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo) const { 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DOOO++;
+  #endif
 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
@@ -20,6 +24,10 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVertex &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DOOI++;
+  #endif
 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
@@ -40,6 +48,10 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DOII++;
+  #endif
 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
@@ -60,6 +72,11 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
 }
 
 int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DIII++;
+  #endif
+
 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
@@ -80,6 +97,8 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
 }
 
 int cts[20] = {0};
+//TODO: remove cts++ for performance...
+
 //1 if make a left turn, -1 if make a right turn, 0 --> degeneracy (shouldn't happen...)
 int MeshIntersectionGeometry::orientation(const Vertex &v1, const Vertex &v2, const Vertex &p, int whatPlaneProjectTrianglesTo) const { 
   bool isV1InputVertex = (&v1)->isInputVertex();
@@ -104,7 +123,7 @@ int MeshIntersectionGeometry::orientation(const Vertex &v1, const Vertex &v2, co
       cts[4]++;
       return -orientation(*static_cast<const InputVertex*>(&p),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&v1),whatPlaneProjectTrianglesTo);
     }
-  } else { //numImputVertices is 2...
+  } else { //numInputVertices is 2...
     if(!isV1InputVertex) { // v2 and p are input vertices
       cts[5]++;
       return orientation(*static_cast<const InputVertex*>(&v2),*static_cast<const InputVertex*>(&p),*static_cast<const VertexFromIntersection*>(&v1),whatPlaneProjectTrianglesTo);
@@ -159,10 +178,19 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation3DOO++;
+  #endif
+
   return signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation3DOI++;
+  #endif
   return signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
 }
 
@@ -177,6 +205,11 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
 //what is the signal of each coordinate the vector from orig to dest
 //cannot be 0 (SoS)
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.signVector++;
+  #endif
+
   const Point &p0 =  getCoordinates(orig);
   const Point &p1 =  getCoordinates(dest);
   int ans = sgn(p1[coord]-p0[coord]);

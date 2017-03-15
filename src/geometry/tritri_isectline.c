@@ -542,7 +542,7 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
   du0du2 = sgn(tempVars.du0)*sgn(tempVars.du2);
 
   if(du0du1>0 && du0du2>0) /* same sign on all of them + not equal 0 ? */
-    return 0;                    /* no intersection occurs */
+    return -1;                    /* no intersection occurs */
 
   /* compute plane of triangle (U0,U1,U2) */
  /* SUB(E1,U1,U0);
@@ -588,7 +588,7 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
   dv0dv2 = sgn(tempVars.dv0)*sgn(tempVars.dv2);
         
   if(dv0dv1>0 && dv0dv2>0) /* same sign on all of them + not equal 0 ? */
-    return 0;                    /* no intersection occurs */
+    return -1;                    /* no intersection occurs */
 
 
 
@@ -618,7 +618,7 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
 				       dv0dv1,dv0dv2,tempVars.isect1[0],tempVars.isect1[1],tempVars.isectpointA1,tempVars.isectpointA2,edgeCreatedA1,edgeCreatedA2,tempVars.tempRationals);
 
   //SoS: will never happen...
-  if(coplanar) return 0;     
+  if(coplanar) return -2;     
 
 
   pair<int,int> edgeCreatedB1;
@@ -630,7 +630,7 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
   SORT2(tempVars.isect1[0],tempVars.isect1[1],smallest1,tempVars.tmp); //smallest1 == 0 iff isect1[0] < isect1[1]
   SORT2(tempVars.isect2[0],tempVars.isect2[1],smallest2,tempVars.tmp);
 
-  if(tempVars.isect1[1]<tempVars.isect2[0] || tempVars.isect2[1]<tempVars.isect1[0]) return 0;
+  if(tempVars.isect1[1]<tempVars.isect2[0] || tempVars.isect2[1]<tempVars.isect1[0]) return -1;
 
   /* at this point, we know that the triangles intersect */
 

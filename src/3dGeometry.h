@@ -36,6 +36,10 @@ using namespace std;
 
 #define COLLECT_GEOMETRY_STATISTICS
 
+
+
+
+
 //===============================================================
 // Definitions...
 //===============================================================
@@ -265,7 +269,7 @@ class MeshIntersectionGeometry {
 		int getNumVertices(int meshId) const {return verticesCoordinates[meshId].size();}
 	
 
-		~MeshIntersectionGeometry() {cerr << "Freeing memory..." << endl;}
+		~MeshIntersectionGeometry();
 
 
 
