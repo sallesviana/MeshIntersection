@@ -7,14 +7,42 @@
 #include "nested3DGrid.h"
 
 
+
+#ifdef COLLECT_GEOMETRY_STATISTICS
+struct GeometryStatistics {
+  const int ctDegeneraciesIntersectTwoTriangles =0,
+            ctDegeneraciesIsCloser=0,
+            ctDegeneraciesIsAngleWith0Greater=0,
+            ctDegeneraciesIsVertexInTriangleProjection=0,
+            ctDegeneraciesIsVertexConvex=0,
+            ctDegeneraciesIsVertexInInputTriangleProjection=0,
+            ctDegeneraciesIsTriangleNormalPointingPositiveZ=0,
+            ctDegeneraciesIsTriangleAbovePointSoS=0,
+            ctDegeneraciesGetBestTrianglePointInObjectSoS=0;
+
+
+   void printStats() {
+     cerr << "ctDegeneraciesIntersectTwoTriangles: " << ctDegeneraciesIntersectTwoTriangles<< "\n";
+     cerr << "ctDegeneraciesIsCloser: " << ctDegeneraciesIsCloser<< "\n";
+     cerr << "ctDegeneraciesIsAngleWith0Greater: " << ctDegeneraciesIsAngleWith0Greater<< "\n";
+     cerr << "ctDegeneraciesIsVertexInTriangleProjection: " << ctDegeneraciesIsVertexInTriangleProjection<< "\n";
+     cerr << "ctDegeneraciesIsVertexConvex << ctDegeneraciesIsVertexConvex: "<< "\n";
+     cerr << "ctDegeneraciesIsVertexInInputTriangleProjection: " << ctDegeneraciesIsVertexInInputTriangleProjection<< "\n";
+     cerr << "ctDegeneraciesIsTriangleNormalPointingPositiveZ: " << ctDegeneraciesIsTriangleNormalPointingPositiveZ<< "\n";
+     cerr << "ctDegeneraciesIsTriangleAbovePointSoS: " << ctDegeneraciesIsTriangleAbovePointSoS<< "\n";     
+     cerr << "ctDegeneraciesGetBestTrianglePointInObjectSoS: " << ctDegeneraciesGetBestTrianglePointInObjectSoS<< "\n";  
+   }         
+
+};
+GeometryStatistics geometryStatistics;
+#endif
+
+
+
 #include "geometry/3dGeometryGeometricalPredicatesSoSImpl.cpp"
 #include "geometry/3dGeometryGeometricalPredicatesMainImpl.cpp"
 #include "geometry/3dGeometryGeometricalPredicatesMainImplOrig.cpp"
 #include "geometry/3dGeometryGeometricalPredicates.cpp"
-
-
-
-
 
 
 

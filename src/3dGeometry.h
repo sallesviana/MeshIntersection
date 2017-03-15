@@ -33,6 +33,9 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
+
+#define COLLECT_GEOMETRY_STATISTICS
+
 //===============================================================
 // Definitions...
 //===============================================================
@@ -251,6 +254,7 @@ class MeshIntersectionGeometry {
 	public:
 		MeshIntersectionGeometry(const string &pathMesh0, const string &pathMesh1);
 
+		//the meshId can be either 0 or 1
 		struct TempVarsGetGridCellContainingVertex { VertCoord tempVertCoords; big_int tempVarsInt[3];};
 		array<int,3> getGridCellContainingVertex(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const;
 		
