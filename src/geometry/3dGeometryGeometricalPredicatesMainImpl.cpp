@@ -137,6 +137,61 @@ int MeshIntersectionGeometry::isAngleWith0GreaterMainImpl(const Vertex &origV, c
 }
 
 
+//this works only when no angle is 0 and no edge is degenerate
+int MeshIntersectionGeometry::isAngleWith0GreaterNonZeroAngleMainImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
+  int xCoord = 0;
+  int yCoord = 1;
+  if(planeToProject==PLANE_Y0) {
+    xCoord= 2;
+    yCoord= 0;
+  } else if(planeToProject==PLANE_X0) {
+    xCoord= 1;
+    yCoord= 2;    
+  } 
+
+  const Point &e10 = getCoordinates(origV);
+  const Point &e11 = getCoordinates(v1V);
+
+  //e20 = e10, since the two edges share the origin...
+  const Point &e21 = getCoordinates(v2V);
+
+  VertCoord &v1x = tempVars.v1x;
+  VertCoord &v1y = tempVars.v1y;
+  VertCoord &v2x = tempVars.v2x;
+  VertCoord &v2y = tempVars.v2y;
+  v1x = e11[xCoord];
+  v1x -= e10[xCoord];
+
+  v1y = e11[yCoord];
+  v1y -= e10[yCoord];
+
+  v2x = e21[xCoord];
+  v2x -= e10[xCoord];
+
+  v2y = e21[yCoord];
+  v2y -= e10[yCoord];
+
+  const int sgnV1y = sgn(v1y);
+  const int sgnV2y = sgn(v2y);
+
+  if(sgnV1y>0 && sgnV2y<0) return 1; //check if the two vectors are in different sides of the x axis...
+  if(sgnV1y<0 && sgnV2y>0) return -1;
+
+
+  //TODO: maybe accelerate by checking if in different quadrants...
+
+  //is the cross product positive?
+  v1x *= v2y; //const VertCoord component1 = v1x*v2y; //v1.x * v2.y 
+  v2x *= v1y; //const VertCoord component2 = v2x*v1y; //v2.x*v1.y
+
+  //the cross product is = component1-component2
+  //is it positive?
+  if(v1x > v2x) return 1;//return (component1 > component2);
+  else if(v1x < v2x) return -1;
+  else return 0;
+}
+
+
 int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
   const Point &p = getCoordinates(queryPoint);
   const Point &p0 =  getCoordinates(v1);

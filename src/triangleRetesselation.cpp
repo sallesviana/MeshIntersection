@@ -83,6 +83,7 @@ struct TempVarsRetesselateTriangleFunction {
   MeshIntersectionGeometry::TempVarsGetPlaneTriangleIsNotPerpendicular tempVarsGetPlaneTriangleIsNotPerpendicular;
   //MeshIntersectionGeometry::TempVarsIsBoundaryClockwise tempVarsIsBoundaryClockwise;
   MeshIntersectionGeometry::TempVarsIsTriangleClockwisedOriented tempVarsIsTriangleClockwisedOriented;
+  MeshIntersectionGeometry::TempVarsSortEdgesByAngle tempVarsSortEdgesByAngle;
 };
 
 
@@ -164,7 +165,6 @@ int binarySearch(vector<array<const Vertex *,3> > &v,const pair<const Vertex *,c
 
 
 
-
 //given a triangle t, this function will split t at the intersection edges (intersection with other triangles)
 //and retesselate t, creating more triangles.
 //each edge is represented by a pair of ids of the vertices connected by that edge
@@ -213,10 +213,25 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
   int x = 0;
   //now we need to sort the edges basing on the first vertex and, then, on the angle with horizon (considering whatPlaneProjectTo)
   
+  //edges sharing the first vertex will be together after this sorting...
   sort(raggedArraySortedEdges.begin(),raggedArraySortedEdges.end(), [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
             if(!equalTo(e1.first,e2.first)) return lessThan(e1.first,e2.first); //sort first by the first vertex..
-            return meshIntersectionGeometry.isAngleWith0Greater(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+            else return false;
+            //return meshIntersectionGeometry.isAngleWith0Greater(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
         } );
+
+ // cerr << "Aqui" << endl;
+  //now, we have to sort edges sharing the first vertex by angle.
+  vector<pair<const Vertex *,const Vertex *> >::iterator startSortingByAngle = raggedArraySortedEdges.begin();
+  while(startSortingByAngle!=raggedArraySortedEdges.end()) {
+    //cerr << "getting end.." << endl;
+    vector<pair<const Vertex *,const Vertex *> >::iterator endSortingByAngle = startSortingByAngle;
+    while(endSortingByAngle != raggedArraySortedEdges.end() && equalTo(startSortingByAngle->first,endSortingByAngle->first))
+      endSortingByAngle++;
+
+    meshIntersectionGeometry.sortEdgesSharingStartingVertexByAngle(startSortingByAngle,endSortingByAngle,planeProjectTriangleTo,tempVars.tempVarsSortEdgesByAngle);
+    startSortingByAngle = endSortingByAngle;
+  }
   
 
   wedgesTemp.resize(0);

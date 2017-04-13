@@ -11,6 +11,7 @@
 #ifdef COLLECT_GEOMETRY_STATISTICS
 struct GeometryStatistics {
   int ctDegeneraciesIntersectTwoTriangles =0,
+      ctDegeneraciesIntersectTwoTrianglesCoplanar= 0,
             ctDegeneraciesIsCloser=0,
             ctDegeneraciesIsAngleWith0Greater=0,
             ctDegeneraciesIsVertexInTriangleProjection=0,
@@ -42,6 +43,7 @@ struct GeometryStatistics {
 
    void printStats() {
      cerr << "ctDegeneraciesIntersectTwoTriangles: " << ctDegeneraciesIntersectTwoTriangles<< "\n";
+     cerr << "ctDegeneraciesIntersectTwoTrianglesCoplanar: " << ctDegeneraciesIntersectTwoTrianglesCoplanar << "\n";
      cerr << "ctDegeneraciesIsCloser: " << ctDegeneraciesIsCloser<< "\n";
      cerr << "ctDegeneraciesIsAngleWith0Greater: " << ctDegeneraciesIsAngleWith0Greater<< "\n";
      cerr << "ctDegeneraciesIsVertexInTriangleProjection: " << ctDegeneraciesIsVertexInTriangleProjection<< "\n";
@@ -65,6 +67,138 @@ GeometryStatistics geometryStatisticsDegenerateCases, geometryStatisticsNonDegen
 
 
 #include "boundaryPolygon.cpp"
+
+
+
+
+
+void MeshIntersectionGeometry::sortEdgesSharingStartingVertexByAngle(vector<pair<const Vertex *,const Vertex *> >::iterator begin,
+                                            vector<pair<const Vertex *,const Vertex *> >::iterator end,
+                                            const int planeProjectTriangleTo,  TempVarsSortEdgesByAngle &tempVars) const {
+
+  
+
+  //sort(begin,end, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
+  //          return meshIntersectionGeometry.isAngleWith0Greater(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+  //      } );
+  //cerr << "Sorting..." << endl;
+  bool hasDegenerate = false;
+  vector<pair<const Vertex *,const Vertex *> >::iterator firstNonZero = begin;
+
+  vector<pair<const Vertex *,const Vertex *> >::iterator it = begin;
+  while(it!=end) {
+    int onZeroPlusAxis = isOnZeroPlusAxisNoSoS(*it->first,*it->second,planeProjectTriangleTo,tempVars.tempVarsIsOnZeroPlusAxisNoSoS);
+    if(onZeroPlusAxis==1) {
+      //vertex pointed by it is on zeroplus axis...
+      swap(*it,*firstNonZero);
+      firstNonZero++;
+    } else if(onZeroPlusAxis ==0) {
+      hasDegenerate = true;
+      break;
+    }
+
+    it++;
+  }
+  //cerr << "End sorting" << endl;
+
+  if(hasDegenerate) {
+    //we will need an special function to sort everything...
+    //a degenerate edge may be anywhere...
+
+    //if this happens, let's just call the SoS implementation
+    //cerr << "Degenerate" << endl;
+    sort(begin,end, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
+      return 1==isAngleWith0GreaterSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+    } );
+    //cerr << "end Degenerate" << endl;
+    
+  } else {
+    //we do not have any degenerate edge
+
+    //cerr << "non degenerate..." << endl;
+    //the vertices [begin,firstNonZero) are on the zero+ axis
+    //we can simply sort them by orientation using SoS (since they are coincident)
+    //since they are all coincident, we do not have to care with the axis (just with the orientation)
+    //so, everything is sorted now (but we are not considering SoS...)
+    //thus, we have to sort everything that is coincident using SoS
+
+    //first, let's sort the edges with angle 0...
+    //we have to sort them using SoS...
+    sort(begin,firstNonZero, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
+        return isOrientationPositiveSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+      } );
+
+
+    //the vertices [firstNonZero,end) are not on the zero+ axis
+    //we can sort them using the non-SoS version of the function...
+    sort(firstNonZero,end, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
+        return isAngleWith0GreaterNoSoSNonZeroAngle(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+      } );
+
+  
+    //now, we have to sort the coincident vertices (that don't have angle 0)
+    vector<pair<const Vertex *,const Vertex *> >::iterator itB = firstNonZero;
+    vector<pair<const Vertex *,const Vertex *> >::iterator itE;
+    while(itB!=end) {
+      itE = itB+1;    
+
+      //check if there is a coincidence...
+      while(itE!=end && 0==isAngleWith0GreaterNoSoSNonZeroAngle(*(itB->first), *(itB->second),*(itE->second), planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater)){
+        itE++;
+      }
+
+      //edges in [itB,itE) have equal angles... we have to sort them by orientation...
+      sort(itB,itE, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
+        return isOrientationPositiveSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+      } );
+
+      itB = itE;
+    }
+
+    //cerr << "end non degenerate..." << endl;
+  }
+
+
+  #ifdef DEBUGGING_MODE
+    int nv = end-begin;
+
+    int ctDiff = 0;
+    for(int i=0;i<nv;i++) {
+        const pair<const Vertex *,const Vertex *> &e1 = *(begin+i);
+        const pair<const Vertex *,const Vertex *> &e2 = *(begin+(i+1)%nv);
+        int isAngle = isAngleWith0GreaterSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+        ctDiff += isAngle==0;
+      } 
+
+
+    if(ctDiff!=1) {
+      #pragma omp critical
+      {
+        for(int i=0;i<10;i++)
+          cerr << "======================================================" << endl;
+        cerr << "Comparing: ";      
+        for(int i=0;i<nv;i++) {
+          const pair<const Vertex *,const Vertex *> &e1 = *(begin+i);
+          const pair<const Vertex *,const Vertex *> &e2 = *(begin+(i+1)%nv);
+          int isAngle = isAngleWith0GreaterSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
+          cerr << isAngle << " ";
+        } cerr << endl;
+      }
+    }
+  #endif
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 MeshIntersectionGeometry::~MeshIntersectionGeometry() {

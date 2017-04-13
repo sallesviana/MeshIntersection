@@ -289,6 +289,8 @@ class MeshIntersectionGeometry {
 		bool isCloser(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
 
 
+
+
 		//Supposing all vertices are projected to a plane
 		//we will have two vectors (v1V-origV) and (v2V-origV).
 		//Is the angle the second vector larger than the angle of the first one? (supposing the positive part of y=0 is the angle 0 (when the plane to project is the z=0) )
@@ -304,6 +306,9 @@ class MeshIntersectionGeometry {
 		struct TempVarsIsVertexConvex { VertCoord tempCoords[2];};
 		bool isVertexConvex(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTo,TempVarsIsVertexConvex &tempVars);
 	
+
+
+		
 
 		//**************************************************************************************//
 		//------------------ For PinMesh...
@@ -349,6 +354,21 @@ class MeshIntersectionGeometry {
 
 
 		//-------------------------------- End PinMesh
+
+		struct TempVarsIsOnZeroPlusAxisNoSoS { VertCoord vecLen[2]; };
+		int isOnZeroPlusAxisNoSoS(const Vertex &v1,const Vertex &v2,const int whatPlaneProjectTo, TempVarsIsOnZeroPlusAxisNoSoS &tempVars) const;
+
+
+		bool isAngleWith0GreaterNoSoSNonZeroAngle(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
+
+
+		//Sorting edges by angle with 0...
+		struct TempVarsSortEdgesByAngle { TempVarsIsAngleWith0Greater tempVarsIsAngleWith0Greater; TempVarsIsOnZeroPlusAxisNoSoS tempVarsIsOnZeroPlusAxisNoSoS; };
+		void sortEdgesSharingStartingVertexByAngle(vector<pair<const Vertex *,const Vertex *> >::iterator begin,
+                                            vector<pair<const Vertex *,const Vertex *> >::iterator end,
+                                            const int planeProjectTriangleTo,  TempVarsSortEdgesByAngle &tempVars) const;
+
+		//
 
 	
 		void storeAllVertices(ostream &out); //the coordinates of vertices from mesh 0, mesh 1 and from intersection are stored in a stream
@@ -404,7 +424,7 @@ class MeshIntersectionGeometry {
              VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars);
 
 
-	
+		
 
 		//We are actually not using these functions...
 		/*
@@ -418,6 +438,10 @@ class MeshIntersectionGeometry {
 		//bool function() //the public function, no coincidency is allowed to happen
 		//int functionMainImpl() //the (private) actual implementation , coincidencies (0) can happen, 1 is true, -1 is false
 		//bool functionSoSImpl() //the (private) implementation using SoS...
+
+
+		//this works only when the angle is >0 and there is no degenerate edge..
+		int isAngleWith0GreaterNonZeroAngleMainImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 
 
 		//Implementation of geometrical predicates (these implementations do not handle degeneracies --> they return 0 for degenerate cases)
@@ -459,7 +483,10 @@ class MeshIntersectionGeometry {
 		//cannot be 0 (SoS)
 		int signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const;
 
+
 		bool isCloserSoSImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
+		
+		bool isOrientationPositiveSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 		bool isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 		bool isVertexInTriangleProjectionSoSImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
 		bool isVertexConvexSoSImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;

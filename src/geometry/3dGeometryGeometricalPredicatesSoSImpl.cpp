@@ -202,6 +202,10 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
   return orientation(*(t.getInputVertex(0)),*(t.getInputVertex(1)),*(t.getInputVertex(2)),v);
 }  
 
+
+//this is basically what we need for the "brute force" retesselation...
+//this is essentially a 1D orientation!!!!
+//TODO: implement this as 1D orientation...
 //what is the signal of each coordinate the vector from orig to dest
 //cannot be 0 (SoS)
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const {
@@ -299,6 +303,11 @@ bool MeshIntersectionGeometry::isTriangleAbovePointSoSImpl(const InputTriangle &
   //if the point is on the negative sie, it will be below the triangle if it points up...
 }
 
+
+
+bool MeshIntersectionGeometry::isOrientationPositiveSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
+  return orientation(origV,v1V,v2V,planeToProject)>0;
+}
 
 //we need to consider point on axis and the angle...
 bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {

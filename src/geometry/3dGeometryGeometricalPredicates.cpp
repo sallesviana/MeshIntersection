@@ -45,6 +45,9 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
     if(ans==0) {
       #pragma omp atomic
       geometryStatisticsDegenerateCases.ctDegeneraciesIntersectTwoTriangles++;
+    } else if(ans==-2){
+      #pragma omp atomic
+      geometryStatisticsNonDegenerateCases.ctDegeneraciesIntersectTwoTrianglesCoplanar++;
     } else {
       #pragma omp atomic
       geometryStatisticsNonDegenerateCases.ctDegeneraciesIntersectTwoTriangles++;
@@ -92,6 +95,15 @@ bool MeshIntersectionGeometry::isCloser(const InputVertex &origV, const VertexFr
   }
 }
 
+
+/*
+//returns -2 if there is a degenerate edge
+//0 if the two edges have same angle
+int MeshIntersectionGeometry::isAngleWith0GreaterNoSoS(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
+  //
+
+}
+*/
 
 bool MeshIntersectionGeometry::isAngleWith0Greater(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
   int ans = isAngleWith0GreaterMainImpl(origV, v1V, v2V, planeToProject, tempVars);
@@ -396,6 +408,41 @@ int signCrossProduct2D(const Point &v11,const Point &v12,const Point &v21,const 
 //TODO: reuse normals --> ans: no need for now... only 0.11% of time!
 bool MeshIntersectionGeometry::isTriangleClockwisedOriented(const InputTriangle &t,const int whatPlaneProjectTo, TempVarsIsTriangleClockwisedOriented &tempVars) const {
   return signCrossProduct2D(getCoordinates(*t.getInputVertex(0)),getCoordinates(*t.getInputVertex(1)),getCoordinates(*t.getInputVertex(0)),getCoordinates(*t.getInputVertex(2)),whatPlaneProjectTo,tempVars.tempCoords)<0;
+}
+
+
+//We do not use SoS here...
+int MeshIntersectionGeometry::isOnZeroPlusAxisNoSoS(const Vertex &v1,const Vertex &v2,const int whatPlaneProjectTo, TempVarsIsOnZeroPlusAxisNoSoS &tempVars) const {
+  const Point &p0 = getCoordinates(v1);
+  const Point &p1 = getCoordinates(v2);
+
+  int xCoord = 0;
+  int yCoord = 1;
+  if(whatPlaneProjectTo==PLANE_Y0) {
+    xCoord= 2;
+    yCoord= 0;
+  } else if(whatPlaneProjectTo==PLANE_X0) {
+    xCoord= 1;
+    yCoord= 2;    
+  } 
+
+  tempVars.vecLen[0] = p1[yCoord];
+  tempVars.vecLen[0] -= p0[yCoord];
+
+  tempVars.vecLen[1] = p1[xCoord];
+  tempVars.vecLen[1] -= p0[xCoord];
+
+  int sgnY = sgn(tempVars.vecLen[0]);
+  int sgnX = sgn(tempVars.vecLen[1]);
+  if(sgnY==0 && sgnX==0) return 0; //coincidence!!
+  if(sgnY==0 && sgnX>0) return 1;
+  return -1;
+}
+
+//this works only when no angle is 0 and no edge is degenerate
+bool MeshIntersectionGeometry::isAngleWith0GreaterNoSoSNonZeroAngle(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
+  int ans = isAngleWith0GreaterNonZeroAngleMainImpl(origV, v1V, v2V, planeToProject, tempVars);
+  return ans==1;  
 }
 
 
