@@ -306,8 +306,10 @@ class MeshIntersectionGeometry {
 		struct TempVarsIsVertexConvex { VertCoord tempCoords[2];};
 		bool isVertexConvex(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTo,TempVarsIsVertexConvex &tempVars);
 	
-
-
+		//given two vertices, do they intersect (except at endpoints) ?
+		struct TempVarsDoIntersect { };
+		bool doIntersect(const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2, int whatPlaneProjectTriangleTo, TempVarsDoIntersect &tempVars) const;
+		bool onSegment(const Vertex & p, const Vertex & q, const Vertex & r, int whatPlaneProjectTo) const;
 		
 
 		//**************************************************************************************//
@@ -373,6 +375,13 @@ class MeshIntersectionGeometry {
 	
 		void storeAllVertices(ostream &out); //the coordinates of vertices from mesh 0, mesh 1 and from intersection are stored in a stream
 	//TODO: for debugging purposes...
+
+		
+
+		//for debugging purposes...
+		void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) const;
+		void saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) const;
+
 	private:
 		struct PlaneEquation {Point normal; VertCoord d;};
 		vector<PlaneEquation> planeEquationsInputTriangles[2];
@@ -400,6 +409,13 @@ class MeshIntersectionGeometry {
 
 		const Point &getCoordinates(const Vertex &v) const {
 			return verticesCoordinates[v.getMeshId()][v.getId()];
+		}
+
+		const array<double,3> getCoordinatesForDebugging(const Vertex &v) const {
+			const Point &p = getCoordinates(v);
+			array<double,3> pDouble;
+			for(int i=0;i<3;i++) pDouble[i] = p[i].get_d();
+		  return pDouble;
 		}
 
 		void initTriangleBoundingBox(int meshId, int triangleId);
@@ -482,7 +498,7 @@ class MeshIntersectionGeometry {
 		//what is the signal of each coordinate the vector from orig to dest
 		//cannot be 0 (SoS)
 		int signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const;
-
+		int signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const;
 
 		bool isCloserSoSImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
 		

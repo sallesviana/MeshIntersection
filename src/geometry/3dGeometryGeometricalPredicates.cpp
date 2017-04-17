@@ -302,6 +302,165 @@ const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoS(
 
 
 
+
+//given three collinear points, check if q is between p and r
+//this function returns false when q is exactly on r or p
+bool MeshIntersectionGeometry::onSegment(const Vertex & p, const Vertex & q, const Vertex & r, int whatPlaneProjectTo) const
+{
+    //if (&q==&r || &q==&p) return false; //the endpoints coincide...
+    //we will project the points to the plane whatPlaneProjectTriangleTo
+    //what coordinates should we check during computations?
+    //if the points are projected to z=0 --> we have to use x and y
+    //if the points are projected to y=0 --> we have to use x and z
+    //...............................x=0 --> we have to use y and z
+    int coord1=0,coord2=1;
+    if(whatPlaneProjectTo==PLANE_Y0) {
+      coord1=0;
+      coord2=2;
+    } else if(whatPlaneProjectTo==PLANE_X0) {
+      coord1=1;
+      coord2=2;
+    }
+
+
+    /*
+    if (q[coord1] < max(p[coord1], r[coord1]) && q[coord1] > min(p[coord1], r[coord1]) &&
+        q[coord2] <= max(p[coord2], r[coord2]) && q[coord2] >= min(p[coord2], r[coord2]))
+       return true;
+
+    if (q[coord1] <= max(p[coord1], r[coord1]) && q[coord1] >= min(p[coord1], r[coord1]) &&
+        q[coord2] < max(p[coord2], r[coord2]) && q[coord2] > min(p[coord2], r[coord2])) 
+      return true;
+    */
+
+    bool p1GEr1 = signalVectorCoordCanBe0(p, r, coord1)<=0; //p[coord1] >= r[coord1] ? iff r[coord1]-p[coord1] <= 0
+    bool p2GEr2 = signalVectorCoordCanBe0(p, r, coord2)<=0; //p[coord2] >= r[coord2]
+
+    int sgnQminusR1 = signalVectorCoordCanBe0(r, q, coord1);
+    int sgnQminusP1 = signalVectorCoordCanBe0(p, q, coord1);
+
+    int sgnQminusR2 = signalVectorCoordCanBe0(r, q, coord2);
+    int sgnQminusP2 = signalVectorCoordCanBe0(p, q, coord2);
+
+    bool q1Lp1 = sgnQminusP1<0;
+    bool q1LEp1 = sgnQminusP1<=0;
+    bool q1Gp1 = sgnQminusP1>0;
+    bool q1GEp1 = sgnQminusP1>=0;
+
+    bool q1Lr1 = sgnQminusR1<0;
+    bool q1LEr1 = sgnQminusR1<=0;
+    bool q1Gr1 = sgnQminusR1>0;
+    bool q1GEr1 = sgnQminusR1>=0; 
+
+
+    bool q2Lp2 = sgnQminusP2<0;
+    bool q2LEp2 = sgnQminusP2<=0;
+    bool q2Gp2 = sgnQminusP2>0;
+    bool q2GEp2 = sgnQminusP2>=0;
+
+    bool q2Lr2 = sgnQminusR2<0;
+    bool q2LEr2 = sgnQminusR2<=0;
+    bool q2Gr2 = sgnQminusR2>0;
+    bool q2GEr2 = sgnQminusR2>=0; 
+
+    if(p1GEr1) { //if(p[coord1] >= r[coord1]) {
+      if(p2GEr2) { //if(p[coord2] >= r[coord2]) {
+        //if (q[coord1] <  p[coord1] && q[coord1] >  r[coord1] &&
+            //q2LEp2 && q2GEr2)
+        if(q1Lp1 && q1Gr1 && q2LEp2 && q2GEr2)
+         return true;
+
+        //if (q[coord1] <= p[coord1] && q[coord1] >= r[coord1] &&
+        //    q[coord2] <  p[coord2] && q[coord2] >  r[coord2]) 
+        if (q1LEp1 && q1GEr1 && q2Lp2 && q2Gr2) 
+          return true;
+      } else { //p[coord2] < r[coord2]
+        //(q[coord1] <  p[coord1] && q[coord1] >  r[coord1] && q[coord2] <= r[coord2] && q[coord2] >= p[coord2])
+        if (q1Lp1 && q1Gr1 && q2LEr2 && q2GEp2)
+         return true;
+
+        //if (q[coord1] <= p[coord1] && q[coord1] >= r[coord1] && q[coord2] <  r[coord2] && q[coord2] >  p[coord2]) 
+        if (q1LEp1 && q1GEr1 && q2Lr2 && q2Gp2) 
+          return true;
+      }
+    } else {
+      if(p2GEr2) { //if(p[coord2] >= r[coord2]) {
+        //if (q[coord1] <  r[coord1] && q[coord1] >  p[coord1] && q[coord2] <= p[coord2] && q[coord2] >= r[coord2])
+        if (q1Lr1 && q1Gp1 && q2LEp2 && q2GEr2)
+         return true;
+
+        //if (q[coord1] <= r[coord1] && q[coord1] >= p[coord1] && q[coord2] <  p[coord2] && q[coord2] >  r[coord2]) 
+        if (q1LEr1 && q1GEp1 && q2Lp2 && q2Gr2) 
+          return true;
+      } else { //p[coord2] < r[coord2]
+        //if (q[coord1] <  r[coord1] && q[coord1] >  p[coord1] && q[coord2] <= r[coord2] && q[coord2] >= p[coord2])
+        if (q1Lr1 && q1Gp1 && q2LEr2 && q2GEp2)
+         return true;
+
+        //if (q[coord1] <= r[coord1] && q[coord1] >= p[coord1] && q[coord2] <  r[coord2] && q[coord2] >  p[coord2]) 
+        if (q1LEr1 && q1GEp1 && q2Lr2 && q2Gp2) 
+          return true;          
+      }      
+    }
+    
+ 
+    return false;
+}
+
+
+// TODO: special cases!!!
+//do p1-q1 intersect p2-q2 ?
+//the two segments are co-planar
+//during computation, we project them to whatPlaneProjectTriangleTo plane... 
+bool MeshIntersectionGeometry::doIntersect(const pair<const Vertex *,const Vertex *> &e1, 
+                                            const pair<const Vertex *,const Vertex *> &e2, 
+                                            int whatPlaneProjectTriangleTo, 
+                                            TempVarsDoIntersect &tempVars) const {
+  const Vertex &p1 = *e1.first;
+  const Vertex &q1 = *e1.second;
+  const Vertex &p2 = *e2.first;
+  const Vertex &q2 = *e2.second;
+
+    // Find the four orientations needed for general and
+    // special cases
+    int o1 = orientation(p1, q1, p2,whatPlaneProjectTriangleTo);
+
+    // Special Cases
+    // p1, q1 and p2 are colinear and p2 lies on segment p1q1
+    if (o1 == 0 && onSegment(p1, p2, q1,whatPlaneProjectTriangleTo)) return true;
+
+
+    int o2 = orientation(p1, q1, q2,whatPlaneProjectTriangleTo);
+
+    // p1, q1 and p2 are colinear and q2 lies on segment p1q1
+    if (o2 == 0 && onSegment(p1, q2, q1,whatPlaneProjectTriangleTo)) return true;
+
+    //the two segments are collinear, but they do not intersect 
+    if(o1==0 && o2==0) return false;
+
+
+    int o3 = orientation(p2, q2, p1,whatPlaneProjectTriangleTo);
+
+    // p2, q2 and p1 are colinear and p1 lies on segment p2q2
+    if (o3 == 0 && onSegment(p2, p1, q2,whatPlaneProjectTriangleTo)) return true;
+
+    int o4 = orientation(p2, q2, q1,whatPlaneProjectTriangleTo); 
+    
+ 
+     // p2, q2 and q1 are colinear and q1 lies on segment p2q2
+    if (o4 == 0 && onSegment(p2, q1, q2,whatPlaneProjectTriangleTo)) return true;
+
+    // General case
+    if (o1!=0 && o2!=0 && o3!=0  && o4!=0)
+      if (o1 != o2 && o3 != o4) {
+       return true;
+      }
+ 
+    return false; // Doesn't fall in any of the above cases   
+}
+
+
+
 //These are not predicates....
 
 

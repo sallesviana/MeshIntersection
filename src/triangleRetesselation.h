@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <sstream>
 #include "rationals.h"
 #include "utils.h"
 #include "nested3DGrid.h"

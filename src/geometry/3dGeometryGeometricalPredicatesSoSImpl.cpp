@@ -208,6 +208,8 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
 //TODO: implement this as 1D orientation...
 //what is the signal of each coordinate the vector from orig to dest
 //cannot be 0 (SoS)
+//I think this could be 0... suppose the two vertices are from same mesh, for example...
+//TODO: review...
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const {
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
@@ -218,6 +220,19 @@ int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex
   const Point &p1 =  getCoordinates(dest);
   int ans = sgn(p1[coord]-p0[coord]);
   return  (ans==0)?1:ans;
+}
+
+//TODO: review this...
+int MeshIntersectionGeometry::signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.signVector++;
+  #endif
+
+  const Point &p0 =  getCoordinates(orig);
+  const Point &p1 =  getCoordinates(dest);
+  int ans = sgn(p1[coord]-p0[coord]);
+  return  ans;
 }
 
 
@@ -326,6 +341,8 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
   const int sgnV1y = signalVectorCoord(origV,v1V,yCoord);
   const int sgnV2y = signalVectorCoord(origV,v2V,yCoord);
 
+  //TODO: consider the case where one of the vectors is exactly on 0... this can happen!
+  
   if(sgnV1y>0 && sgnV2y<0) return true; //check if the two vectors are in different sides of the x axis...
   if(sgnV1y<0 && sgnV2y>0) return false;
 

@@ -84,6 +84,7 @@ struct TempVarsRetesselateTriangleFunction {
   //MeshIntersectionGeometry::TempVarsIsBoundaryClockwise tempVarsIsBoundaryClockwise;
   MeshIntersectionGeometry::TempVarsIsTriangleClockwisedOriented tempVarsIsTriangleClockwisedOriented;
   MeshIntersectionGeometry::TempVarsSortEdgesByAngle tempVarsSortEdgesByAngle;
+  MeshIntersectionGeometry::TempVarsDoIntersect tempVarsDoIntersect;
 };
 
 
@@ -113,8 +114,6 @@ bool checkIfPolygonsAreConnected(const vector<pair<const Vertex *,const Vertex *
   processedVertices.insert(raggedArraySortedEdges[0].first);
 
   
-  
-
   //visit all vertices reachable from v...
   while(!verticesToProcess.empty()) {
     const Vertex * v = verticesToProcess.front();
@@ -135,11 +134,8 @@ bool checkIfPolygonsAreConnected(const vector<pair<const Vertex *,const Vertex *
   for(const pair<const Vertex *,const Vertex *> &p:raggedArraySortedEdges) {
     if(processedVertices.count(p.first)==0) return false; //at least one vertex was not visited...
     //cerr << p.first << " " << p.second << endl;
-
   } 
- /* cerr << "Visited: " << endl;
-  for(int i:processedVertices) cerr << i << endl;  
-  */
+ 
 
   return true;
 }
@@ -184,7 +180,7 @@ int binarySearch(vector<array<const Vertex *,3> > &v,const pair<const Vertex *,c
 //at the end of the function the edges in raggedArraySortedEdges will be sorted by the first vertex and, if there is a tie, by the slope of the edge (w.r.t. the projection to whatPlaneProjectTo)
 //at the end of this function raggedArraySortedEdges will contain the edges (two directed edges for each edge) sorted
 //by the first vertex and by the angle of the edge 
-void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGeometry &meshIntersectionGeometry, const vector<pair<const Vertex *,const Vertex *> > &edges,const int numEdgesFromIntersection, const int planeProjectTriangleTo,  TempVarsRetesselateTriangleFunction &tempVars ) {
+void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGeometry &meshIntersectionGeometry, const vector<pair<const Vertex *,const Vertex *> > &edges, const int planeProjectTriangleTo,  TempVarsRetesselateTriangleFunction &tempVars ) {
   //Algorithm: http://ac.els-cdn.com/016786559390104L/1-s2.0-016786559390104L-main.pdf?_tid=7586b72e-a059-11e6-afdd-00000aacb35d&acdnat=1478021856_7213cc56dd2148587a06891102f5d518
    
   
@@ -319,6 +315,76 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
 
   
 }
+
+
+
+
+
+
+
+
+//returns true iff the candidate edge (represented using the ids of the vertices in meshIdToProcess -- negative vertices are in the "common layer")
+//intersects an edge from the set edgesToTest (these edges are in the same layer).
+//we do not consider intersections in endpoints..
+//TODO: consider special cases: vertical triangle, parallel edges, etc...
+bool intersects(const MeshIntersectionGeometry &meshIntersectionGeometry,const pair<const Vertex *,const Vertex *> &candidateEdge,
+                  const set<pair<const Vertex *,const Vertex *>,VertexPairPtrLessComparator > &edgesToTest,
+                  int meshIdToProcess, int whatPlaneProjectTriangleTo, TempVarsRetesselateTriangleFunction &tempVars) {
+  //cerr << "Testing intersection: " << candidateEdge.first << " " << candidateEdge.second << endl;
+
+  for(const pair<const Vertex *,const Vertex *> &edgeToTest:edgesToTest) {
+    bool inter = meshIntersectionGeometry.doIntersect(candidateEdge,edgeToTest,whatPlaneProjectTriangleTo,tempVars.tempVarsDoIntersect);
+    
+    if(inter) 
+      return true;
+  }
+  return false;
+}
+
+
+void addEdgesToTriangleAndMakeItConnected(const MeshIntersectionGeometry &meshIntersectionGeometry, 
+                                          const vector<const Vertex *> vertices, 
+                                          vector<pair<const Vertex *,const Vertex *> > &edges, 
+                                          const int whatPlaneProjectTriangleTo, const int meshWhereTriangleIs, 
+                                          TempVarsRetesselateTriangleFunction &tempVars ) {
+  //TODO: count statistics ...
+
+
+
+  //this set will store the edges we used in the retesselated triangle
+  //we need to choose what edges to create and, then, use these new edges to reconstruct the triangulation..
+  //This set will have the edges that will form the retriangulation of ts..
+  set<pair<const Vertex *,const Vertex *>,VertexPairPtrLessComparator > setEdgesUsedInTriangle(edges.begin(),edges.end());
+
+
+  cerr << "Edges before adding extra edges using brute force: " << setEdgesUsedInTriangle.size() << endl;
+
+  const int numVTriangle =  vertices.size();
+  for(int i=0;i<numVTriangle;i++)
+    for(int j=i+1;j<numVTriangle;j++) {
+      const Vertex * v1 = vertices[i];
+      const Vertex * v2 = vertices[j];
+            
+      //let's try to insert edge (v1,v2)...
+      pair<const Vertex *,const Vertex *> candidateEdge(v1,v2);
+      if(setEdgesUsedInTriangle.count(candidateEdge)!=0) continue; //the edge was already used...
+      if(setEdgesUsedInTriangle.count( pair<const Vertex *,const Vertex *>(v2,v1))!=0) continue; //the edge was already used...
+
+
+      //if edge e=(v1,v2) does not intersect other edges already inserted in this triangle,
+      //we will add e to the new triangulation...
+      //any triangulation is fine as soon as the edges from the intersection of the meshes are there...
+      if(!intersects(meshIntersectionGeometry,candidateEdge,setEdgesUsedInTriangle,meshWhereTriangleIs,whatPlaneProjectTriangleTo,tempVars)) {
+        setEdgesUsedInTriangle.insert(candidateEdge); //if it does not intersect, we can safely add this edge to the triangulation...
+      } 
+    }       
+
+  cerr << "Edges after adding more: " << setEdgesUsedInTriangle.size() << endl << endl;
+    
+  edges = vector<pair<const Vertex *,const Vertex *> >(setEdgesUsedInTriangle.begin(),setEdgesUsedInTriangle.end());
+}
+
+
 
 
 
@@ -610,21 +676,65 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
   //Now, edgesUsedInThisTriangle will contain the original edges of the triangle (split because of intersections) and new edges
   //created because of intersections with other triangles. Thus, edgesUsedInThisTriangle will define a planar partitioning..
 
- // cerr << "End..." << allSimple << endl;
+ 
 
+  //-----------------------------------------------------------------------------------------------------------------------
+  //Now, it is finally time to start creating the polygons, checking if they are connected, etc...
 
-  
+  //TODO: why do we need a copy of edgesUsedInThisTriangle?
   vector<pair<const Vertex *,const Vertex *> > edgesUsedInThisTriangleV(edgesUsedInThisTriangle.begin(),edgesUsedInThisTriangle.end());
 
   const int whatPlaneProjectTriangleTo = meshIntersectionGeometry.getPlaneTriangleIsNotPerpendicular(t,tempVars.tempVarsGetPlaneTriangleIsNotPerpendicular);
 
 
-  sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(meshIntersectionGeometry, edgesUsedInThisTriangleV,edgesFromIntersection.size(), whatPlaneProjectTriangleTo,  tempVars );
-
-  vector<const Vertex *> &polygons = tempVars.polygons; 
+  sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(meshIntersectionGeometry, edgesUsedInThisTriangleV, whatPlaneProjectTriangleTo,  tempVars );
 
   //at the end of the previous function raggedArrayEdges will contain the directed edges sorted by their first vertex...
   bool arePolygonsConnected = checkIfPolygonsAreConnected(tempVars.raggedArraySortedEdges);
+
+  if(!arePolygonsConnected) {
+    static int numDisconnectedTrianglesNow = 0;
+    
+    {
+      numDisconnectedTrianglesNow++;
+      stringstream trianglesDisconnectedPath;
+      trianglesDisconnectedPath << "triangleDisconnectedPath_before_" << numDisconnectedTrianglesNow << ".gts";
+      string path = trianglesDisconnectedPath.str();
+      meshIntersectionGeometry.saveEdgesAsGTS(edgesUsedInThisTriangleV,  path);
+    }
+
+
+    //the graph is not connected... let's add edges using "brute force" and make it connected...
+    //since this should happen rarely, we can use a simple algorithm to connect the graph...
+
+    cerr << "Found a non-connected.." << endl;
+    cerr << "Number of vertices: " << verticesToTesselate.size() << endl;
+    addEdgesToTriangleAndMakeItConnected(meshIntersectionGeometry,verticesToTesselate, edgesUsedInThisTriangleV,whatPlaneProjectTriangleTo,meshContainingT,tempVars);
+
+    cerr << "Sorting..." << endl;
+    //now the graph is connected... let's run the polygon extraction algorithm again 
+    sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(meshIntersectionGeometry, edgesUsedInThisTriangleV,whatPlaneProjectTriangleTo,  tempVars );
+
+ 
+    //TODO: remove...
+    //now the graph have to be connected!
+    arePolygonsConnected = checkIfPolygonsAreConnected(tempVars.raggedArraySortedEdges);
+    assert(arePolygonsConnected);
+    cerr << "End of non-connected part..." << endl << endl;
+    //TODO: update are polygons connected....
+
+
+    
+    {
+      stringstream trianglesDisconnectedPath;
+      trianglesDisconnectedPath << "triangleDisconnectedPath_after_" << numDisconnectedTrianglesNow << ".gts";
+      string path = trianglesDisconnectedPath.str();
+      meshIntersectionGeometry.saveEdgesAsGTS(edgesUsedInThisTriangleV,  path);
+    }
+  }
+
+  //these are the polygons extracted by the polygon extraction algorithm...
+  vector<const Vertex *> &polygons = tempVars.polygons; 
 
 
   //at the end of the previous function, raggedArrayEdges will be filled with the edges sorted by the first vertex of each edge
@@ -647,6 +757,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
   int numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes = newPolygonsGeneratedFromRetesselation.size();
  
+  //TOOD: remove the "if"
   if(arePolygonsConnected) {
     //since the graph is connected, all polygons in "polygons" are oriented similarly
     //we need to check if this orientation is equal to the orientation of the original triangle
@@ -936,9 +1047,9 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
     }
 
     
-    for(BoundaryPolygon p:polygonsFromRetesselation[meshIdToProcess]) {
+    /*for(BoundaryPolygon p:polygonsFromRetesselation[meshIdToProcess]) {
       //assert(p.isInClockwiseDirection(vertices,meshIdToProcess));
-    }
+    }*/
   }
 
 

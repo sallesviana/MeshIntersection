@@ -182,6 +182,20 @@ void saveEdgesAsGTS(const vector< pair< array<VertCoord,3>,array<VertCoord,3> > 
   storeEdgesAsGts(path,edgesToStore );
 }
 
+
+void saveEdgesAsGTS(const MeshIntersectionGeometry &geom, const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) {
+  vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+  for(const pair<const Vertex *,const Vertex *> &edge:edges) {
+
+    array<double,3> v0 = geom.getCoordinatesForDebugging(edge.first);
+    array<double,3> v1 = geom.getCoordinatesForDebugging(edge.second);
+    edgesToStore.push_back({v0,v1});
+  }
+
+  storeEdgesAsGts(path,edgesToStore );
+}
+
+
 void saveEdgesAsGTS(const vector< pair< int, int> > &edgesWithVertexIds, int meshWhereTriangleIs,  const string &path) {
   vector<pair<array<double,3>,array<double,3>> > edgesInThisTriangleDouble;
   for(const auto &e:edgesWithVertexIds) {

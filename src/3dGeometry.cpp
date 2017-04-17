@@ -128,6 +128,14 @@ void MeshIntersectionGeometry::sortEdgesSharingStartingVertexByAngle(vector<pair
         return isOrientationPositiveSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
       } );
 
+    #ifdef COLLECT_GEOMETRY_STATISTICS
+      int numDegenerates = 0;
+      if(firstNonZero-begin > 1) numDegenerates = firstNonZero-begin-1;
+      #pragma omp atomic
+        geometryStatisticsDegenerateCases.ctDegeneraciesIsAngleWith0Greater+= numDegenerates;      
+    #endif
+
+
 
     //the vertices [firstNonZero,end) are not on the zero+ axis
     //we can sort them using the non-SoS version of the function...
@@ -151,6 +159,13 @@ void MeshIntersectionGeometry::sortEdgesSharingStartingVertexByAngle(vector<pair
       sort(itB,itE, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
         return isOrientationPositiveSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
       } );
+
+      #ifdef COLLECT_GEOMETRY_STATISTICS
+        int numDegenerates = 0;
+        if(itE-itB > 1) numDegenerates = itE-itB-1;
+        #pragma omp atomic
+          geometryStatisticsDegenerateCases.ctDegeneraciesIsAngleWith0Greater+= numDegenerates;      
+      #endif
 
       itB = itE;
     }
@@ -680,4 +695,59 @@ Point MeshIntersectionGeometry::computePointFromIntersectionVertex(VertexFromInt
 
   return ans;
 
+}
+
+
+void MeshIntersectionGeometry::saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) const {
+  vector<pair<array<double,3>,array<double,3>> > edgesToStore;
+  for(const pair<const Vertex *,const Vertex *> &edge:edges) {
+
+    array<double,3> v0 = getCoordinatesForDebugging(*edge.first);
+    array<double,3> v1 = getCoordinatesForDebugging(*edge.second);
+    edgesToStore.push_back({v0,v1});
+  }
+
+  storeEdgesAsGts(path,edgesToStore );
+}
+
+void MeshIntersectionGeometry::storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) const {
+  /*map<array<double,3>, int> vertexToId;
+
+  vector<array<double,3> > vertices;
+  for(auto &e:edgesToStore) {
+    if(vertexToId.count(e.first)==0) {
+      int id = vertexToId.size();
+      vertexToId[e.first] = id;
+      vertices.push_back(e.first);
+    }
+    if(vertexToId.count(e.second)==0) {
+      int id = vertexToId.size();
+      vertexToId[e.second] = id;
+      vertices.push_back(e.second);
+    }
+  }*/
+
+  ofstream fout(path.c_str());
+  int numVert = 3*edgesToStore.size();
+  int numEdges = 3*edgesToStore.size();
+  int numFaces = edgesToStore.size();
+
+  fout << numVert << " " << numEdges << " " << numFaces << "\n";
+  for(pair<array<double,3>,array<double,3>> e:edgesToStore) {
+    fout << e.first[0] << " " << e.first[1] << " " << e.first[2] << "\n";
+    fout << e.second[0] << " " << e.second[1] << " " << e.second[2] << "\n";
+    fout << e.second[0] << " " << e.second[1] << " " << e.second[2] << "\n";
+  }
+  int start = 1;
+  for(int i=0;i<numFaces;i++) {
+    fout << start << " " << start+1 << "\n";
+    fout << start+1 << " " << start+2 << "\n";
+    fout << start+2 << " " << start << "\n";
+    start+= 3;
+  }  
+  start = 1;
+  for(int i=0;i<numFaces;i++) {
+    fout << start << " " << start+1 << " " << start+2 <<  "\n";
+    start+= 3;
+  }
 }

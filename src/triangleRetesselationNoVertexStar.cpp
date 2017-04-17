@@ -689,7 +689,6 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
     }
 
     #ifdef SANITY_CHECKS
-
     
     for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) {
       bool isOrientedCorrectly = newPolygonsGeneratedFromRetesselation[i].isInClockwiseDirection(vertices, meshWhereTriangleIs);
