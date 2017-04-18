@@ -554,7 +554,7 @@ public:
 	vector<array<const Vertex * ,3> > triangulatedPolygon; //stores a triangulated version of this polygon...
 	ObjectId above, below;
 
-	BoundaryPolygon(const int whatPlaneProjectTrianglesTo_): whatPlaneProjectTrianglesTo(whatPlaneProjectTrianglesTo_) {}
+	BoundaryPolygon(const int whatPlaneProjectTrianglesTo_): whatPlaneProjectTrianglesTo(whatPlaneProjectTrianglesTo_), polyhedronOfOtherMeshWherePolygonIs(DONT_KNOW_ID) {}
 
 	struct TempVarsTriangulatePolygon {
 		MeshIntersectionGeometry::TempVarsIsVertexTriangleProjection tempVarsIsVertexTriangleProjection;
@@ -579,7 +579,16 @@ public:
 		}
 	}*/
 
+
+	void setPolyhedronWherePolygonIs(ObjectId polyId) {
+		polyhedronOfOtherMeshWherePolygonIs = polyId;
+	}
+	ObjectId getPolyhedronWherePolygonIs() const {
+		return polyhedronOfOtherMeshWherePolygonIs;
+	}
 private:
+	ObjectId polyhedronOfOtherMeshWherePolygonIs;
+
 	int whatPlaneProjectTrianglesTo; //to what plane can we project this polygon without creating a degenerate polygon?
 
 	bool pointInTriangleProj(MeshIntersectionGeometry &geometry,int p0,int p1, int p2, int queryPoint,TempVarsTriangulatePolygon &tempVars);

@@ -63,10 +63,9 @@ const Vertex* getNonSharedVertextFromPolygon(const Vertex * const*begin,const Ve
 void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
                                             MeshIntersectionGeometry &geometry, 
                                             const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
-                                            vector<BoundaryPolygon> polygonsFromRetesselation[2],
+                                            vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],
                                             int meshId,
-                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh,
-                                            vector<ObjectId> &locationOfPolygonsFromRetesselationInOtherMesh) {  
+                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh) {  
     
     vector<InputTriangle> *inputTriangles = geometry.inputTriangles;
 
@@ -97,8 +96,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 
         adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
         adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());
-        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId());        
-
+        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
       } 
     }
 
@@ -139,12 +137,17 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     }
       
     int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
-    const int numPolygonsFromRetesselation = polygonsFromRetesselation[meshId].size();
-    cerr << "Mesh " << meshId << " Num polygons from retesselation: " << numPolygonsFromRetesselation << endl;
-    
+
+    int numPolygonsFromRetesselation = 0;
     int numTriFromRetesselation = 0;
-    for(const BoundaryPolygon &b:polygonsFromRetesselation[meshId])
-      numTriFromRetesselation += b.triangulatedPolygon.size();
+    for(const auto &tri:polygonsFromRetesselationOfEachTriangle[meshId]) {
+      const auto &boundaryPolygons = tri.second;
+      numPolygonsFromRetesselation += boundaryPolygons.size();
+      for(const BoundaryPolygon &b:boundaryPolygons)
+        numTriFromRetesselation += b.triangulatedPolygon.size();
+    }
+
+    cerr << "Mesh " << meshId << " Num boundary polygons : " << numPolygonsFromRetesselation << endl;         
     cerr << "Mesh " << meshId << " Num tri from retesselation: " << numTriFromRetesselation << endl;
     
 
@@ -172,7 +175,11 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     pointLocationAlgorithm.locateVerticesInObject(verticesToLocateInOtherMesh,locationOfEachVertexInOtherMesh,1-meshId);
     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+
+    //----------------------------------------------------------------------------------------------------------
     //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
+
     clock_gettime(CLOCK_REALTIME, &t0);
 
 
@@ -189,19 +196,30 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
       }
     }
 
-    locationOfPolygonsFromRetesselationInOtherMesh = vector<ObjectId>(numPolygonsFromRetesselation,DONT_KNOW_FLAG);
-    for(int pid =0;pid<numPolygonsFromRetesselation;pid++) {
-      const BoundaryPolygon& polygon = polygonsFromRetesselation[meshId][pid];
-      const Vertex *nonSharedVertex = getNonSharedVertextFromPolygon(&(*polygon.vertexSequence.begin()),&(*polygon.vertexSequence.end()));
-      if(nonSharedVertex!=NULL) {
-        int connectedComponentOfThisVertex = connectedComponentEachVertex[nonSharedVertex->getId()];
-        locationOfPolygonsFromRetesselationInOtherMesh[pid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
-      } else {
-        //TODO: triangle with all vertices shared...
+    //next step: locate triangles intersecting other triangles...
+
+    int ctOnlySharedVertices = 0;
+    //locationOfPolygonsFromRetesselationInOtherMesh = vector<ObjectId>(numPolygonsFromRetesselation,DONT_KNOW_FLAG);
+
+    //TODO: maybe parallelize...
+    for(auto &tri:polygonsFromRetesselationOfEachTriangle[meshId]) {
+      auto &boundaryPolygons = tri.second;
+      for(BoundaryPolygon &polygon:boundaryPolygons) {
+        const Vertex *nonSharedVertex = getNonSharedVertextFromPolygon(&(*polygon.vertexSequence.begin()),&(*polygon.vertexSequence.end()));
+        if(nonSharedVertex!=NULL) {
+          int connectedComponentOfThisVertex = connectedComponentEachVertex[nonSharedVertex->getId()];
+          polygon.setPolyhedronWherePolygonIs(locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex]);
+        } else {
+          
+          //TODO: triangle with all vertices shared...
+          ctOnlySharedVertices++;
+        }
       }
     }
 
     
+    cerr << "Num polygons with only shared vertices: " << ctOnlySharedVertices << endl;
+    cerr << "Num polygons with input vertices: " << numPolygonsFromRetesselation-ctOnlySharedVertices << endl;
      
     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "Total copy triangle labels: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
@@ -280,7 +298,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
                                         MeshIntersectionGeometry &geometry, 
                                         const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
-                                        vector<BoundaryPolygon> polygonsFromRetesselation[2],                                                                             
+                                        vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],                                                                             
                                         ostream &outputStream) {
 	timespec t0,t0ThisFunction,t1;
 	clock_gettime(CLOCK_REALTIME, &t0);
@@ -294,11 +312,11 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid,
 	for(int meshId=0;meshId<2;meshId++){
     timespec t0,t1;
 
-    vector<ObjectId> locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh;
+    vector<ObjectId> locationOfEachNonIntersectingTrianglesInOtherMesh;
 
     clock_gettime(CLOCK_REALTIME, &t0);
     //TODO
-    locateTrianglesAndPolygonsInOtherMesh(uniformGrid,geometry,trianglesThatIntersect,polygonsFromRetesselation,meshId,locationOfEachNonIntersectingTrianglesInOtherMesh,locationOfTrianglesFromRetesselationInTheOtherMesh);
+    locateTrianglesAndPolygonsInOtherMesh(uniformGrid,geometry,trianglesThatIntersect,polygonsFromRetesselationOfEachTriangle,meshId,locationOfEachNonIntersectingTrianglesInOtherMesh);
      //TODO: remove this....
     
 
@@ -327,20 +345,22 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid,
    
     //for each polygon   
     bool hadTriangleDontKnow = false;
-    int numPolygonsIntersectingInThisMesh = polygonsFromRetesselation[meshId].size();    
-    for(int i=0;i<numPolygonsIntersectingInThisMesh;i++) {
-      const BoundaryPolygon&p = polygonsFromRetesselation[meshId][i];
-      ObjectId objWhereTriangleIs = locationOfTrianglesFromRetesselationInTheOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];          
-      
-      if (objWhereTriangleIs!=OUTSIDE_OBJECT) {   
-        for(array<const Vertex *,3> tris:p.triangulatedPolygon) {
-          assert(tris[0]->getMeshId()<3);
-          outputTrianglesFromRetesselation[meshId].push_back( RetesselationTriangle(*tris[0], *tris[1], *tris[2],p.above, p.below));
-        }
-      } 
-      if(objWhereTriangleIs==DONT_KNOW_FLAG) {
-        hadTriangleDontKnow = true;
-      }              
+    int numTrianglesRetesselated = polygonsFromRetesselationOfEachTriangle[meshId].size();    
+    for(int i=0;i<numTrianglesRetesselated;i++) {
+      //for each boundary polygon from this triangle...
+      for(const BoundaryPolygon&p:polygonsFromRetesselationOfEachTriangle[meshId][i].second) {
+        ObjectId objWhereTriangleIs = p.getPolyhedronWherePolygonIs(); //locationOfTrianglesFromRetesselationInTheOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];          
+        
+        if (objWhereTriangleIs!=OUTSIDE_OBJECT) {   
+          for(array<const Vertex *,3> tris:p.triangulatedPolygon) {
+            assert(tris[0]->getMeshId()<3);
+            outputTrianglesFromRetesselation[meshId].push_back( RetesselationTriangle(*tris[0], *tris[1], *tris[2],p.above, p.below));
+          }
+        } 
+        if(objWhereTriangleIs==DONT_KNOW_FLAG) {
+          hadTriangleDontKnow = true;
+        }   
+      }           
     }
 
     if(hadTriangleDontKnow) {

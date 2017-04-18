@@ -24,7 +24,7 @@ using namespace std;
 void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 																				MeshIntersectionGeometry &geometry, 
                                         const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
-                                        vector<BoundaryPolygon> polygonsFromRetesselation[2],                                                                             
+                                        vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],                                                                             
                                         ostream &outputStream);
 
 #endif

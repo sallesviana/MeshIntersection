@@ -171,7 +171,11 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
 
 //returns the number of intersections found
 //the sets are filled with the triangles (from the corresponding mesh) that intersect
-unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshIntersectionGeometry, const Nested3DGridWrapper *uniformGrid, unordered_set<const InputTriangle *> trianglesThatIntersect[2], vector<BoundaryPolygon> polygonsFromRetesselation[2], vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection) {
+unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshIntersectionGeometry, 
+                                                  const Nested3DGridWrapper *uniformGrid, unordered_set<const InputTriangle *> trianglesThatIntersect[2], 
+                                                  vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2], 
+                                                  vector< pair<VertexFromIntersection, 
+                                                  VertexFromIntersection> >  &edgesFromIntersection) {
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
    
@@ -215,7 +219,7 @@ unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshI
   retesselateIntersectingTriangles(meshIntersectionGeometry, 
                                   edgesFromIntersection, 
                                   intersectingTrianglesThatGeneratedEdges,
-                                  polygonsFromRetesselation);
+                                  polygonsFromRetesselationOfEachTriangle);
 
   clock_gettime(CLOCK_REALTIME, &t1);
   timeRetesselate = convertTimeMsecs(diff(t0,t1))/1000; 
@@ -323,7 +327,7 @@ int main(int argc, char **argv) {
   timeCreateGrid = convertTimeMsecs(diff(t0,t1))/1000; 
 
 
-  vector<BoundaryPolygon> polygonsFromRetesselation[2];
+  vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2];
 
    //After the uniform grid is initialized, let's compute the intersection between the triangles...
   cerr << "Detecting intersections..." << endl;
@@ -333,7 +337,7 @@ int main(int argc, char **argv) {
   //because we use pointers to vertices we need to keep the vertices from intersection allocated in the memory
   //during the lifetime of our program...
   vector< pair<VertexFromIntersection, VertexFromIntersection> >  edgesFromIntersection;
-  unsigned long long numIntersectionsDetected = processTriangleIntersections(meshIntersectionGeometry,&uniformGrid,trianglesThatIntersect,polygonsFromRetesselation,edgesFromIntersection);
+  unsigned long long numIntersectionsDetected = processTriangleIntersections(meshIntersectionGeometry,&uniformGrid,trianglesThatIntersect,polygonsFromRetesselationOfEachTriangle,edgesFromIntersection);
 
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to detect intersections (includes time for computing statistics and for saving intersections for debugging): " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
@@ -347,7 +351,7 @@ int main(int argc, char **argv) {
 
   classifyTrianglesAndGenerateOutput(&uniformGrid, meshIntersectionGeometry, 
                                         trianglesThatIntersect,
-                                        polygonsFromRetesselation,                                                                               
+                                        polygonsFromRetesselationOfEachTriangle,                                                                               
                                         outputStream);
   
 

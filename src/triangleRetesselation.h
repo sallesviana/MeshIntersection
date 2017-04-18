@@ -14,4 +14,4 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 																			const vector< pair<VertexFromIntersection, 
 																			VertexFromIntersection> >  &edgesFromIntersection, 
 																			const vector< pair<InputTriangle *,InputTriangle *> > &intersectingTrianglesThatGeneratedEdges,
-																			vector<BoundaryPolygon> polygonsFromRetesselation[2]);
+																			vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2]);

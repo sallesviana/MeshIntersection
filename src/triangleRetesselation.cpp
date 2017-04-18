@@ -931,7 +931,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectionGeometry, 
                                       const vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection, 
                                       const vector< pair<InputTriangle *,InputTriangle *> > &intersectingTrianglesThatGeneratedEdges,
-                                      vector<BoundaryPolygon> polygonsFromRetesselation[2]) {
+                                      vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2]) {
 
   assert(edgesFromIntersection.size()==intersectingTrianglesThatGeneratedEdges.size());
   timespec t0,t1;
@@ -978,6 +978,7 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
     //the vector of the edges actually have the ids (position in the edgesFromIntersection vector)
 
     int numTrianglesToProcess = intersectingEdgesInEachTriangleToProcess.size();
+    polygonsFromRetesselationOfEachTriangle[meshIdToProcess].resize(numTrianglesToProcess);
 
     cerr << "Number of triangles to retesselate in this mesh: " << numTrianglesToProcess << "\n";
 
@@ -987,8 +988,7 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
     {
       //vector<pair<int,int> > myNewTriEdgesFromEachMap;
 
-      vector<BoundaryPolygon> myNewPolygonsFromRetesselation;
-      //myNewPolygonsFromRetesselation.reserve(numTrianglesToProcess);
+      
 
       TempVarsRetesselateTriangleFunction tempVars;
 
@@ -1008,8 +1008,10 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
         const auto &ts  = *intersectingEdgesInEachTriangleToProcess[i];
         //ts.first = a triangle from map 0
         //ts.second = list of edges formed by the intersection of ts.first with other triangles...
-        const auto &t = *ts.first;
         const auto &edgesFromIntersectionThisTriangle =  ts.second;
+
+        polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].first = ts.first;
+        vector<BoundaryPolygon> &boundaryPolygonsFromThisTriangle  = polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].second;
 
         
         #ifdef COLLECT_STATISTICS_PRINT_TRIANGLES_INTERSECTIONS
@@ -1030,18 +1032,11 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
         #endif
 
         //retesselateTriangle(edges, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
-        retesselateTriangleUsingWedgeSorting(meshIntersectionGeometry,edgesFromIntersection,edgesFromIntersectionThisTriangle,t, myNewPolygonsFromRetesselation, tempVars, statisticsAboutRetesseation);
+        retesselateTriangleUsingWedgeSorting(meshIntersectionGeometry,edgesFromIntersection,edgesFromIntersectionThisTriangle,*polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].first, boundaryPolygonsFromThisTriangle, tempVars, statisticsAboutRetesseation);
 
       }
 
-      #pragma omp critical 
-      {
-        //cerr << "Number of polygons in vector of retesselated: " << myNewPolygonsFromRetesselation.size() << endl;
-        //cerr << "Capacity: " << myNewPolygonsFromRetesselation.capacity() << endl;
-        //newTriEdgesFromEachMap[meshIdToProcess].insert( newTriEdgesFromEachMap[meshIdToProcess].end(),myNewTriEdgesFromEachMap.begin(),myNewTriEdgesFromEachMap.end());
-        //trianglesFromRetesselation[meshIdToProcess].insert(trianglesFromRetesselation[meshIdToProcess].end(),myNewTrianglesFromRetesselation.begin(),myNewTrianglesFromRetesselation.end());
-        polygonsFromRetesselation[meshIdToProcess].insert(polygonsFromRetesselation[meshIdToProcess].end(),myNewPolygonsFromRetesselation.begin(),myNewPolygonsFromRetesselation.end() );
-      }
+      
 
       //break;
     }
@@ -1059,10 +1054,10 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
   clock_gettime(CLOCK_REALTIME, &t0);
   cerr << "Triangulating polygons from retesselation...\n";
   for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
-    int numPolygons = polygonsFromRetesselation[meshIdToProcess].size();
+    int numTriangles = polygonsFromRetesselationOfEachTriangle[meshIdToProcess].size();
 
     const int percentShowLog = 10;
-    int onePercentNumPolygons = (numPolygons*percentShowLog)/100;
+    int onePercentNumPolygons = (numTriangles*percentShowLog)/100;
     if(onePercentNumPolygons==0) onePercentNumPolygons = 1;
 
     #pragma omp parallel
@@ -1070,13 +1065,14 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
       BoundaryPolygon::TempVarsTriangulatePolygon tempVarsTriangulatePolygon;
 
       #pragma omp for
-      for(int i=0;i<numPolygons;i++) {
-        //cerr << "Triangulating " << i << " of " << numPolygons << " Percent= " << i*100/numPolygons << endl;
+      for(int i=0;i<numTriangles;i++) {
+        //Let's triangulate the polygons on this triangle....
+
         if((i%onePercentNumPolygons)==0) {
-          clog << "Triangulating " << i << " of " << numPolygons << " Percent= " << (i*100)/numPolygons << "\n";
-          clog << "TODO: finish implementation of triangulate polygons...\n";
+          clog << "Triangulating " << i << " of " << numTriangles << " Percent= " << (i*100)/numTriangles << "\n";
         }
-        polygonsFromRetesselation[meshIdToProcess][i].triangulatePolygon(meshIntersectionGeometry,tempVarsTriangulatePolygon);
+        for(BoundaryPolygon &polygon:polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].second)        
+          polygon.triangulatePolygon(meshIntersectionGeometry,tempVarsTriangulatePolygon);
       }
     }
   }
