@@ -159,6 +159,10 @@ public:
 		return p[0]==t.p[0] && p[1]==t.p[1] && p[2] == t.p[2];
 	}
 
+	bool operator!=(const InputTriangle &t) const {
+		return !((*this)==t);
+	}
+
 	//for sorting purposes...
 	bool operator<(const InputTriangle &t) const {
 		if(above!=t.above) return above<t.above;
@@ -548,10 +552,17 @@ struct TriangulationVertex {
 	}
 };
 
+
+class BoundaryPolygon;
+
 class BoundaryPolygon {
 public:
 	vector<const Vertex * > vertexSequence; //the vertices in the vertexSequence always end with the first vertex... (e.g.: 1,5,9,4,1)
 	vector<array<const Vertex * ,3> > triangulatedPolygon; //stores a triangulated version of this polygon...
+	
+	vector<BoundaryPolygon *> boundaryPolygonOtherSideEdge;
+	vector<pair<ObjectId,ObjectId> > objectsOtherMeshBoundedByThisEdge;
+
 	ObjectId above, below;
 
 	BoundaryPolygon(const int whatPlaneProjectTrianglesTo_): whatPlaneProjectTrianglesTo(whatPlaneProjectTrianglesTo_), polyhedronOfOtherMeshWherePolygonIs(DONT_KNOW_ID) {}

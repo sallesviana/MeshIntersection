@@ -840,8 +840,13 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
     //cerr << "Orienting polygon.." << endl;
     //Now, we will reorient the polygons such that all polygons will be oriented clockwise
     //orientPolygonsClockwise(newPolygonsGeneratedFromRetesselation.begin()+numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes, 
-   //                        newPolygonsGeneratedFromRetesselation.end(),seedEdge,isSeedEdgeClockwisedOriented,
-    //                        isOrientationOfRetesselatedEqualToTriangle,meshWhereTriangleIs);
+               
+
+
+
+
+    
+
 
     if(!areInteriorPolygonsClockwiseOriented) {
       //we need to reverse the orientation of all polygons...
@@ -849,9 +854,7 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
         newPolygonsGeneratedFromRetesselation[i].reverseVerticesOrder();
     }
 
-    #ifdef SANITY_CHECKS
-
-    
+    #ifdef SANITY_CHECKS    
     for(int i=numberPolygonsFromRetesselationInVectorBeforeWeAddedNewOnes;i<numberPolygonsFromRetesselationNow;i++) {
       bool isOrientedCorrectly = newPolygonsGeneratedFromRetesselation[i].isInClockwiseDirection(vertices, meshWhereTriangleIs);
       if(!isOrientedCorrectly) {
@@ -918,7 +921,84 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
 
 
+//each boundary polygon stores the information about the polygons adjacent to each edge and the
+//polyhedra on each side of its edges from intersection. Let's update this information now!
+void updateBoundaryPolygonWithEdgeAdjacencyInformation( vector<BoundaryPolygon> &boundaryPolygonsFromThisTriangle , // the boundary polygons we will update
+                                                        const InputTriangle &triangleBeingRetesselated, // the triangle being retesselated...
+                                                        const vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection, //the edges from the intersection (all... we are interested only in the ones in edgesFromIntersectionThisTriangle)
+                                                        const vector< pair<InputTriangle *,InputTriangle *> > &intersectingTrianglesThatGeneratedEdges, //the pairs of triangles that generated each edge from intersection.
+                                                        const vector<int> &edgesFromIntersectionThisTriangle) // the positions (in the previous vectors) of the edges from intersection that are in this triangle...
+{
+  //we need to things in order to process the data:
+  //1) Given a pair of vertices pointers, we should be able to determine which boundary polygon contain it...
+  //2) Given an edge from the intersection, we should be able to determine which polyhedra from the other mesh bounds the (other) triangle that generated this edge...
 
+  map<pair<const Vertex *,const Vertex * >, BoundaryPolygon *, VertexPairPtrLessComparator> orientedEdgeToBoundaryPolygon;
+  for(BoundaryPolygon&bp:boundaryPolygonsFromThisTriangle) {
+    const auto &vertexSequence = bp.vertexSequence;
+    const int numEdges = vertexSequence.size()-1;
+    for(int i=0;i<numEdges;i++) { //edge i connects vertexSequence[i] to vertexSequence[i+1] (in the other polygon we will have [i+1] to [i])
+      orientedEdgeToBoundaryPolygon[make_pair(vertexSequence[i],vertexSequence[i+1])] = &bp;
+    }
+  }
+
+  //this map will not store oriented edges...
+  map<pair<const Vertex *,const Vertex * >, pair<ObjectId,ObjectId>, VertexPairPtrLessComparator > objectsOtherMeshBoundedByEachEdge;
+
+  for(int edgeId:edgesFromIntersectionThisTriangle) {
+    const pair<VertexFromIntersection, VertexFromIntersection> &pairVerticesOfEdge = edgesFromIntersection[edgeId];
+    const pair<InputTriangle *,InputTriangle *> &pairTrianglesGeneratedEdge = intersectingTrianglesThatGeneratedEdges[edgeId];
+
+    const InputTriangle* triangleFromOtherMeshGeneratedEdge = pairTrianglesGeneratedEdge.first;
+    if( (*triangleFromOtherMeshGeneratedEdge)!=triangleBeingRetesselated) {
+      triangleFromOtherMeshGeneratedEdge = pairTrianglesGeneratedEdge.second;
+      assert( (*triangleFromOtherMeshGeneratedEdge) == triangleBeingRetesselated );
+    }
+
+    const pair<const Vertex *,const Vertex *> edge(&pairVerticesOfEdge.first,&pairVerticesOfEdge.second);
+    objectsOtherMeshBoundedByEachEdge[edge] = make_pair(triangleFromOtherMeshGeneratedEdge->above,triangleFromOtherMeshGeneratedEdge->below);
+  }
+
+
+  //int nunNonNullNeighbors = 0, numEdgesFromIntersection = 0, numTotEdges = 0;
+  for(BoundaryPolygon &polygon:boundaryPolygonsFromThisTriangle) {
+    //  vector<BoundaryPolygon *> boundaryPolygonOtherSideEdge;
+    //vector<pair<ObjectId,ObjectId> > objectsOtherMeshBoundedByThisEdge;
+    const auto &vertexSequence = polygon.vertexSequence;
+    const int numEdges = vertexSequence.size()-1;
+    //numTotEdges+= numEdges;
+
+    polygon.boundaryPolygonOtherSideEdge.resize(numEdges, NULL);
+    polygon.objectsOtherMeshBoundedByThisEdge.resize(numEdges,make_pair(DONT_KNOW_ID,DONT_KNOW_ID));
+
+    for(int i=0;i<numEdges;i++) {
+       const pair<const Vertex *,const Vertex *> edgeVU(vertexSequence[i+1],vertexSequence[i]);
+      //if this boundary polygon has an edge (u,v) --> the neighbor one has an edge (v,u)
+      BoundaryPolygon *p = orientedEdgeToBoundaryPolygon[edgeVU];
+      polygon.boundaryPolygonOtherSideEdge[i] = p;
+      //nunNonNullNeighbors += (p!=NULL);
+
+      map<pair<const Vertex *,const Vertex * >, pair<ObjectId,ObjectId> >::iterator it;
+      it = objectsOtherMeshBoundedByEachEdge.find(edgeVU);
+      if(it==objectsOtherMeshBoundedByEachEdge.end()) {
+        it = objectsOtherMeshBoundedByEachEdge.find(make_pair(vertexSequence[i],vertexSequence[i+1])); //try to find other edge...
+      }
+      if(it!=objectsOtherMeshBoundedByEachEdge.end()) { //is uv (or vu) an edge from the intersection?
+         polygon.objectsOtherMeshBoundedByThisEdge[i] = it->second;
+         //numEdgesFromIntersection++;
+      }
+    }
+  }
+
+
+  /*#pragma omp critical
+  {
+    cerr << "Boundary polygons: " << boundaryPolygonsFromThisTriangle.size() << endl;
+    cerr << "Tot edges: " << numTotEdges << endl;
+    cerr << "Double edges from intersection: " << numEdgesFromIntersection << " " << 2*edgesFromIntersectionThisTriangle.size() << endl;
+    cerr << "nunNonNullNeighbors: " << nunNonNullNeighbors << endl << endl;
+  }*/
+}
 
 
 
@@ -1033,7 +1113,9 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 
         //retesselateTriangle(edges, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
         retesselateTriangleUsingWedgeSorting(meshIntersectionGeometry,edgesFromIntersection,edgesFromIntersectionThisTriangle,*polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].first, boundaryPolygonsFromThisTriangle, tempVars, statisticsAboutRetesseation);
-
+        //each boundary polygon stores the information about the polygons adjacent to each edge and the
+        //polyhedra on each side of its edges from intersection. Let's update this information now!
+        updateBoundaryPolygonWithEdgeAdjacencyInformation(boundaryPolygonsFromThisTriangle,*polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].first, edgesFromIntersection,intersectingTrianglesThatGeneratedEdges,edgesFromIntersectionThisTriangle);
       }
 
       
@@ -1046,6 +1128,9 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
       //assert(p.isInClockwiseDirection(vertices,meshIdToProcess));
     }*/
   }
+
+
+
 
 
   clock_gettime(CLOCK_REALTIME, &t1);

@@ -60,6 +60,58 @@ const Vertex* getNonSharedVertextFromPolygon(const Vertex * const*begin,const Ve
 }
 
 
+
+void locatePolygonsOtherMeshUsingDFS(const MeshIntersectionGeometry &geometry,
+                                    pair<const InputTriangle *,vector<BoundaryPolygon>> &tri) {
+  stack< BoundaryPolygon * > bpToProcess;
+
+  for(BoundaryPolygon&bp:tri.second) {
+    if(bp.getPolyhedronWherePolygonIs()!=DONT_KNOW_ID) { //do we know the location of this polygon?
+      bpToProcess.push(&bp);
+    }    
+  }
+
+  assert(!bpToProcess.empty()); //at least one polygon should be known (at least the polygons containing the input vertices of the triangle...)
+
+  while(!bpToProcess.empty()) {
+    BoundaryPolygon *bp = bpToProcess.top();
+    bpToProcess.pop();
+
+    //cerr << "Found one with id... " << bp->getPolyhedronWherePolygonIs() << endl;
+    //for each edge, let's add the neighbor (if it was not processed yet...)
+    const int numEdgesBp = bp->boundaryPolygonOtherSideEdge.size();
+    for(int i=0;i<numEdgesBp;i++) 
+      if(bp->boundaryPolygonOtherSideEdge[i]!=NULL) { //is there anything on the other side? (anything belonging to this triangle?)
+        ObjectId objectThisMesh = bp->getPolyhedronWherePolygonIs();
+        pair<ObjectId,ObjectId> &objectsBoundedByThisEdge = bp->objectsOtherMeshBoundedByThisEdge[i];
+
+        ObjectId objectOtherPolygon;
+        if(objectsBoundedByThisEdge.first==DONT_KNOW_ID) {
+          objectOtherPolygon = objectThisMesh; //the edge is not an edge from intersection --> both polygons are in the same object...
+        } else {
+          objectOtherPolygon = (objectThisMesh==objectsBoundedByThisEdge.first)?objectsBoundedByThisEdge.second:objectsBoundedByThisEdge.first;
+          assert(objectOtherPolygon!=objectThisMesh); //the edge should separate different objects...
+        }
+        BoundaryPolygon *bpOtherSide = bp->boundaryPolygonOtherSideEdge[i];
+        if(bpOtherSide->getPolyhedronWherePolygonIs()==DONT_KNOW_ID) { //not inserted into the stack yet...
+          //bpOtherSide->setPolyhedronWherePolygonIs(objectOtherPolygon);
+          //bpToProcess.push(bpOtherSide); //let's process it latter (DFS...)
+        } else {
+          //already labeled... should be already in the stack (or have already been processed...)
+          ObjectId objAlreadyOtherSide = bpOtherSide->getPolyhedronWherePolygonIs();
+          if(objAlreadyOtherSide!=objectOtherPolygon) {
+            cerr << "Processing triangle from meshid: " << tri.first->getMeshId() << endl;
+            cerr << "Objects bounded by this edge: " << objectsBoundedByThisEdge.first << " " << objectsBoundedByThisEdge.second << endl;
+            cerr << "Already other side, should be, this side: " << objAlreadyOtherSide << " " << objectOtherPolygon << " " << objectThisMesh << endl << endl;
+          }
+          //assert(bpOtherSide->getPolyhedronWherePolygonIs()==objectOtherPolygon);
+        }
+        
+      }
+    
+  }
+}
+
 void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
                                             MeshIntersectionGeometry &geometry, 
                                             const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
@@ -204,16 +256,21 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     //TODO: maybe parallelize...
     for(auto &tri:polygonsFromRetesselationOfEachTriangle[meshId]) {
       auto &boundaryPolygons = tri.second;
+
+      bool locatedAllPolygons = true;
       for(BoundaryPolygon &polygon:boundaryPolygons) {
         const Vertex *nonSharedVertex = getNonSharedVertextFromPolygon(&(*polygon.vertexSequence.begin()),&(*polygon.vertexSequence.end()));
         if(nonSharedVertex!=NULL) {
           int connectedComponentOfThisVertex = connectedComponentEachVertex[nonSharedVertex->getId()];
-          polygon.setPolyhedronWherePolygonIs(locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex]);
+          polygon.setPolyhedronWherePolygonIs(locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex]);          
         } else {
-          
+          locatedAllPolygons = false;
           //TODO: triangle with all vertices shared...
           ctOnlySharedVertices++;
         }
+      }
+      if(!locatedAllPolygons) {
+        locatePolygonsOtherMeshUsingDFS(geometry,tri);
       }
     }
 
