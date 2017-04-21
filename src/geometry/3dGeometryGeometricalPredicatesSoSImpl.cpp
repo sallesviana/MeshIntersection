@@ -325,6 +325,7 @@ bool MeshIntersectionGeometry::isOrientationPositiveSoSImpl(const Vertex &origV,
 }
 
 //we need to consider point on axis and the angle...
+//this function have to be complete... we will call it, for example, when we have degenerate edges.
 bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
   //TODO: check on what side of the "x" axis the vectors are (origV,v1V), (origV,v2V)...
 

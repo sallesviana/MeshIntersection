@@ -464,7 +464,11 @@ inline int compute_intervals_isectline(Point &VERT0,Point & VERT1,Point &VERT2,
 
 
 
-
+//Return flags:
+//1 : the triangles intersect
+//0 : coincidency (example: intersection in boundary)
+//-1 : the triangles do not intersect
+//-2 : coplanar triangles
 int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
              VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars)

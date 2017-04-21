@@ -299,7 +299,6 @@ class MeshIntersectionGeometry {
 		//we will have two vectors (v1V-origV) and (v2V-origV).
 		//Is the angle the second vector larger than the angle of the first one? (supposing the positive part of y=0 is the angle 0 (when the plane to project is the z=0) )
 		struct TempVarsIsAngleWith0Greater {VertCoord v1x,v2x,v1y,v2y;};
-		bool isAngleWith0Greater(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 
 		struct TempVarsIsTriangleClockwisedOriented { VertCoord tempCoords[0]; };
 		bool isTriangleClockwisedOriented(const InputTriangle &t,const int whatPlaneProjectTo, TempVarsIsTriangleClockwisedOriented &tempVarsIsTriangleClockwisedOriented) const;
@@ -339,6 +338,14 @@ class MeshIntersectionGeometry {
 		
 		
 		struct HeightPointInTriangleProjection {  private: VertCoord height; friend class MeshIntersectionGeometry;};
+		
+
+
+		// I think we do not need SoS here! if the point is exactly on the boundary we already consider it is in the cell above (never in the cell below)
+		// If after SoS it should be in the cell below --> no problem! the result will be still correct! (will only take slightly more time to be computed)
+		// Notice that the result of these functions may be wrong! the point may actually be in the cell below after SoS
+		// However, the wrong result never make the algorithm wrong (only may make it slower since these two functions are only employed to determine when
+		// PinMesh should stop when the cells are processed to find the lowest triangle above a point)
 		struct TempVarZCellGlobalFromProjectionOfPoint {VertCoord tempVertCoord; big_int tempVarsInt[2];};
 		int zCellGlobalFromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const;
 		

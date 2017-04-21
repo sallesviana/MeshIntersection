@@ -216,7 +216,7 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
             //return meshIntersectionGeometry.isAngleWith0Greater(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
         } );
 
- // cerr << "Aqui" << endl;
+
   //now, we have to sort edges sharing the first vertex by angle.
   vector<pair<const Vertex *,const Vertex *> >::iterator startSortingByAngle = raggedArraySortedEdges.begin();
   while(startSortingByAngle!=raggedArraySortedEdges.end()) {

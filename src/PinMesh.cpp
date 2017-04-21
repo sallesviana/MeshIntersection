@@ -570,6 +570,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
           if (!foundATriangleAboveP || heightComparisonWithBestHeight==1) {
             //highestCellZToProcess  = uniformGrid->z_cell_from_coord_level1(heightAbovePoint, tempVertCoord,tempBigInts) ;
             highestCellZToProcess  = geometry->zCellLevel1FromProjectionOfPoint(heightAbovePoint, triangle, p, *uniformGrid, tempVars.tempVarZCellFromProjectionOfPoint) ;
+            
             foundATriangleAboveP = true;
             bestTriangle = &triangle;
             heightAbovePointBestTriangle = heightAbovePoint;
