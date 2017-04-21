@@ -94,8 +94,8 @@ void locatePolygonsOtherMeshUsingDFS(const MeshIntersectionGeometry &geometry,
         }
         BoundaryPolygon *bpOtherSide = bp->boundaryPolygonOtherSideEdge[i];
         if(bpOtherSide->getPolyhedronWherePolygonIs()==DONT_KNOW_ID) { //not inserted into the stack yet...
-          //bpOtherSide->setPolyhedronWherePolygonIs(objectOtherPolygon);
-          //bpToProcess.push(bpOtherSide); //let's process it latter (DFS...)
+          bpOtherSide->setPolyhedronWherePolygonIs(objectOtherPolygon);
+          bpToProcess.push(bpOtherSide); //let's process it latter (DFS...)
         } else {
           //already labeled... should be already in the stack (or have already been processed...)
           ObjectId objAlreadyOtherSide = bpOtherSide->getPolyhedronWherePolygonIs();
@@ -104,12 +104,22 @@ void locatePolygonsOtherMeshUsingDFS(const MeshIntersectionGeometry &geometry,
             cerr << "Objects bounded by this edge: " << objectsBoundedByThisEdge.first << " " << objectsBoundedByThisEdge.second << endl;
             cerr << "Already other side, should be, this side: " << objAlreadyOtherSide << " " << objectOtherPolygon << " " << objectThisMesh << endl << endl;
           }
-          //assert(bpOtherSide->getPolyhedronWherePolygonIs()==objectOtherPolygon);
+          assert(bpOtherSide->getPolyhedronWherePolygonIs()==objectOtherPolygon);
         }
         
       }
     
   }
+
+  //cerr << "Checking if everything ok... " << endl;
+  int ctDontKnow = 0;
+  for(BoundaryPolygon&bp:tri.second) {
+    if(bp.getPolyhedronWherePolygonIs()==DONT_KNOW_ID || bp.getPolyhedronWherePolygonIs()==DONT_KNOW_FLAG) { //do we know the location of this polygon?
+      ctDontKnow++;
+    }    
+  }
+  assert(ctDontKnow==0); //the DFS should find all polygons and label them...
+
 }
 
 void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
@@ -212,7 +222,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 
     //First let's locate the triangles/polygons that contain at least one non-shared vertex.
     
-    //TODO: locate unique vertices???
+    
     vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
     //vertices of mesh "meshId" will be located in mesh "1-meshId"
 
@@ -253,8 +263,15 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     int ctOnlySharedVertices = 0;
     //locationOfPolygonsFromRetesselationInOtherMesh = vector<ObjectId>(numPolygonsFromRetesselation,DONT_KNOW_FLAG);
 
-    //TODO: maybe parallelize...
-    for(auto &tri:polygonsFromRetesselationOfEachTriangle[meshId]) {
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total copy triangle labels: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+    const int numPolygonsFromRetesselationToProcess = polygonsFromRetesselationOfEachTriangle[meshId].size();
+    #pragma omp parallel for
+    for(int i =0;i<numPolygonsFromRetesselationToProcess;i++) {
+      auto &tri= polygonsFromRetesselationOfEachTriangle[meshId][i];
       auto &boundaryPolygons = tri.second;
 
       bool locatedAllPolygons = true;
@@ -265,7 +282,6 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
           polygon.setPolyhedronWherePolygonIs(locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex]);          
         } else {
           locatedAllPolygons = false;
-          //TODO: triangle with all vertices shared...
           ctOnlySharedVertices++;
         }
       }
@@ -274,12 +290,13 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
       }
     }
 
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total locate polygons using DFS: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
     
     cerr << "Num polygons with only shared vertices: " << ctOnlySharedVertices << endl;
     cerr << "Num polygons with input vertices: " << numPolygonsFromRetesselation-ctOnlySharedVertices << endl;
      
-    clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total copy triangle labels: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    
 
 
     
@@ -287,55 +304,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     cerr << "Total entire location functions: " << convertTimeMsecs(diff(t0Function,t1))/1000 << endl;
 
 
-    //We still need to locate the polygons with all vertices shared...
-
-
-
-/*
-
-//Now, let's locate the triangles/polygons from retesselation in the other mesh
-    int numberPolygonsFromRetesselationWithNonSharedVertices =0;
-    int numberPolygonsFromRetesselationWithOnlySharedVertices =0;
-
-    vector<int> polygonFromRetesselationWithOnlySharedVertices;
-    for(int pid=0;pid<numPolygonsFromRetesselation;pid++) {
-        const BoundaryPolygon& polygon = polygonsFromRetesselation[meshId][pid];
-        if(getNonSharedVertextFromPolygon(&(*polygon.vertexSequence.begin()),&(*polygon.vertexSequence.end()))!=NULL)  {
-          numberPolygonsFromRetesselationWithNonSharedVertices++;
-        }
-        else {          
-          polygonFromRetesselationWithOnlySharedVertices.push_back(pid);     
-          numberPolygonsFromRetesselationWithOnlySharedVertices++;   
-        }
-    }
-
-    //Polygons with only shared vertices cannot be located by just locating one of its vertices (except SoS... TODO)
-    //Thus, we need to locate a vertex in its interior... TODO
-    cerr << "Number of polygons from retesselation with all vertices shared: " << polygonFromRetesselationWithOnlySharedVertices.size() << "\n";
-    cerr << "Number of polygons from retesselation with non shared vertices: " << numberPolygonsFromRetesselationWithNonSharedVertices << "\n";
-   
-
-    //Resize all vectors to fit the data related to the intersecting triangles...
-    global_x_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberPolygonsFromRetesselationWithOnlySharedVertices);
-    global_y_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberPolygonsFromRetesselationWithOnlySharedVertices);
-    global_z_coord_vertex_to_locate.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberPolygonsFromRetesselationWithOnlySharedVertices);
-    verticesToLocateInOtherMesh.resize(posStartVerticesOfIntersectingTrianglesInThisMesh+numberPolygonsFromRetesselationWithOnlySharedVertices);
-    vector<Point> centerOfIntersectingTriangles(numberPolygonsFromRetesselationWithOnlySharedVertices);
-
- */   
-
-
-/*
     
-    
-    
-
-
-    
-
-    
-
-    */
 }
 
 
@@ -343,7 +312,6 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 
 
 
-//TODO: if all the tree vertices of the original triangle are in the same grid cell --> the new triangles will also be!
 
 //----------------------------------------------------------------------------
 // TODO: not all vertices from the retesselated triangles will be in the output (?)... we do not need to store them!
@@ -372,7 +340,7 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid,
     vector<ObjectId> locationOfEachNonIntersectingTrianglesInOtherMesh;
 
     clock_gettime(CLOCK_REALTIME, &t0);
-    //TODO
+
     locateTrianglesAndPolygonsInOtherMesh(uniformGrid,geometry,trianglesThatIntersect,polygonsFromRetesselationOfEachTriangle,meshId,locationOfEachNonIntersectingTrianglesInOtherMesh);
      //TODO: remove this....
     
@@ -414,15 +382,14 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid,
             outputTrianglesFromRetesselation[meshId].push_back( RetesselationTriangle(*tris[0], *tris[1], *tris[2],p.above, p.below));
           }
         } 
-        if(objWhereTriangleIs==DONT_KNOW_FLAG) {
+        if(objWhereTriangleIs==DONT_KNOW_FLAG || objWhereTriangleIs==DONT_KNOW_ID) {
           hadTriangleDontKnow = true;
         }   
       }           
     }
 
-    if(hadTriangleDontKnow) {
-      cerr << "TODO: triangle with all vertices shared\n";
-    }
+    assert(!hadTriangleDontKnow); //this shouldn't happen...
+
 
     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "# Time to classify triangles vertices in other mesh: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;

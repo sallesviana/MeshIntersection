@@ -9,7 +9,7 @@ meshIntersection: pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.
 meshIntersection.o: src/meshIntersection.cpp
 	g++ src/meshIntersection.cpp  $(flags) -c  -o meshIntersection.o
 
-3dGeometry.o: src/3dGeometry.cpp src/3dGeometry.h src/3dGeometryGeometricalPart.cpp src/tritri_isectline.c  src/boundaryPolygon.cpp
+3dGeometry.o: src/3dGeometry.cpp src/3dGeometry.h src/3dGeometryGeometricalPart.cpp src/geometry/tritri_isectline.c  src/boundaryPolygon.cpp
 	g++ src/3dGeometry.cpp  $(flags) -c  -o 3dGeometry.o
 
 

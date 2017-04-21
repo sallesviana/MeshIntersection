@@ -333,6 +333,7 @@ class MeshIntersectionGeometry {
 		bool isTriangleNormalPointingPositiveZ(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const;
 
 		//Given two triangles above a point, where the height above point is equal for both triangles, decide which one is lower according after SoS
+		//the point may be even on the triangles (below, after SoS)
 		struct TempVarGetBestTrianglePointInObjectSoS {};
 		const InputTriangle * getBestTrianglePointInObjectSoS(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const;
 		

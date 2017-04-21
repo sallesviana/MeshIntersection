@@ -942,18 +942,20 @@ void updateBoundaryPolygonWithEdgeAdjacencyInformation( vector<BoundaryPolygon> 
     }
   }
 
+  int meshIdRetesselatedTriangle = triangleBeingRetesselated.getMeshId();
+
   //this map will not store oriented edges...
+  //for each edge from intersection, it will store the objects of the other mesh bounded by that edge...
   map<pair<const Vertex *,const Vertex * >, pair<ObjectId,ObjectId>, VertexPairPtrLessComparator > objectsOtherMeshBoundedByEachEdge;
 
   for(int edgeId:edgesFromIntersectionThisTriangle) {
     const pair<VertexFromIntersection, VertexFromIntersection> &pairVerticesOfEdge = edgesFromIntersection[edgeId];
     const pair<InputTriangle *,InputTriangle *> &pairTrianglesGeneratedEdge = intersectingTrianglesThatGeneratedEdges[edgeId];
 
-    const InputTriangle* triangleFromOtherMeshGeneratedEdge = pairTrianglesGeneratedEdge.first;
-    if( (*triangleFromOtherMeshGeneratedEdge)!=triangleBeingRetesselated) {
-      triangleFromOtherMeshGeneratedEdge = pairTrianglesGeneratedEdge.second;
-      assert( (*triangleFromOtherMeshGeneratedEdge) == triangleBeingRetesselated );
-    }
+    const InputTriangle* triangleFromOtherMeshGeneratedEdge = (meshIdRetesselatedTriangle==0)?pairTrianglesGeneratedEdge.second:pairTrianglesGeneratedEdge.first;
+    const InputTriangle* triangleThisMeshGeneratedEdge = (meshIdRetesselatedTriangle==1)?pairTrianglesGeneratedEdge.second:pairTrianglesGeneratedEdge.first;
+    assert( (*triangleThisMeshGeneratedEdge) == triangleBeingRetesselated );
+    
 
     const pair<const Vertex *,const Vertex *> edge(&pairVerticesOfEdge.first,&pairVerticesOfEdge.second);
     objectsOtherMeshBoundedByEachEdge[edge] = make_pair(triangleFromOtherMeshGeneratedEdge->above,triangleFromOtherMeshGeneratedEdge->below);

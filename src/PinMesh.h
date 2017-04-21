@@ -14,10 +14,6 @@ class PinMesh {
   // (p0,p1,p2) into the horizontal plane...
 
   //returns true if the point p is vertically directly above/below the point p...
-  //TODO special cases:
-  //- degenerate triangle?
-  //- point above/below vertex/edge?
-  //- vertical triangle?
   bool pointInTriangleProj(const Point &p0, const Point &p1, const Point &p2, const Point &p)  ;
 
   //Returns true iff the projection of the point p into a horizontal plane is inside of the projection of triangle
@@ -28,11 +24,7 @@ class PinMesh {
   // Uses SoS to treat the degenerate cases
   // We pretend the point (p) is sligtly translated translated: translation (epsilon, epsilon^2, epsilon^3) 
 
-  //TODO special cases:
-  //- degenerate triangle?
-  //- point above/below vertex/edge?
-  //- vertical triangle?
-
+  
   // a_epsilon = a + (epsilon(p1y-p2y) + epsilon^2 (p2x-p1x) )/den
   // b_epsilon = b + (epsilon(p2y-p0y) + epsilon^2 (p0x-p2x) )/den
   // c_epsilon = 1 - a_epsilon - b_epsilon = 1 - a - (epsilon(p1y-p2y) + epsilon^2 (p2x-p1x) )/den - b - (epsilon(p2y-p0y) + epsilon^2 (p0x-p2x) )/den
@@ -58,11 +50,8 @@ class PinMesh {
 
 
   //returns true if the point p is vertically directly above/below the point p...
-  //TODO special cases:
-  //- degenerate triangle?
-  //- point above/below vertex/edge?
-  //- vertical triangle?
   
+
   //p0,p1,p2 are the vertices of the triangle...
   // vec is a temporary matrix of coordinates
   // tempVertCoords is a temporary array with size at least 4
@@ -81,9 +70,7 @@ class PinMesh {
   //if p is outside the objects, returns OUTSIDE_OBJECT
   //meshId (0 or 1) represents the map that we want to verify 
 
-  //TODO:
-  //special cases.
-  //example of special case: vertical triangle, point below vertex of triangle, point below edge of triangle...
+
   //temp_big_ints should have size at least 2
   //tempVertCoords should have size at least 8
   struct TempVarsComputeObjectWherePointIs {

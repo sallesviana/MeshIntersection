@@ -563,7 +563,8 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
         int heightComparison = geometry->compareHeightWithPointHeightNoSoS(p,heightAbovePoint);
 
         //if the height of the point "above" (actually, above or below) is greater than the height of p --> the point is above p
-        if(heightComparison==1) {  
+        //if the height comparison is 0, we need SoS to make sure the triangle is above the point (after SoS)
+        if(heightComparison==1 || (heightComparison==0 && geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS)) ) {  
           int heightComparisonWithBestHeight = geometry->compareHeightWithBestHeightNoSoS(heightAbovePoint,heightAbovePointBestTriangle);   
           //1 if height is smaller than the best, 0 if equal...
           if (!foundATriangleAboveP || heightComparisonWithBestHeight==1) {
@@ -579,19 +580,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
             //cerr << "Same height" << endl;
             bestTriangle = geometry->getBestTrianglePointInObjectSoS(&triangle,bestTriangle,p, tempVars.tempVarGetBestTrianglePointInObjectSoS);
           }
-        } else if (heightComparison == 0) { //if the height is equal (the point is on the triangle) and it is the first time we see this height --> SoS
-          //Decide (with SoS) if we will consider that the point is above or below the triangle...
-          if (geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS)) {
-            highestCellZToProcess  = geometry->zCellLevel1FromProjectionOfPoint(heightAbovePoint, triangle, p, *uniformGrid,tempVars.tempVarZCellFromProjectionOfPoint) ;
-            foundATriangleAboveP = true;
-            bestTriangle = &triangle;
-            heightAbovePointBestTriangle = heightAbovePoint;
-
-            //What if the point is on two triangles simultaneously? we need to decide which one is lower!
-            //TODO...
-            //maybe use same idea used in function whichPointIsCloser? 
-          }
-        }
+        } 
       }
     } else { //we have a nested grid....
       const Nested3DGrid &childGrid = *gridFirstLevel.getChildGrid(xGridFirstLevel,yGridFirstLevel,cz);
@@ -640,7 +629,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
           int heightComparison = geometry->compareHeightWithPointHeightNoSoS(p,heightAbovePoint);
 
           //if the height of the point "above" (actually, above or below) is greater than the height of p --> the point is above p
-          if(heightComparison == 1) {        
+          if(heightComparison == 1 || (heightComparison == 0 && geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS))) {        
             //highestCellZToProcess =  min(highestCellZToProcess,uniformGrid->z_cell_from_coord(heightAbovePoint, tempVertCoord,tempBigInts) );
             int heightComparisonWithBestHeight = geometry->compareHeightWithBestHeightNoSoS(heightAbovePoint,heightAbovePointBestTriangle);   
             //1 if height is smaller than the best, 0 if equal...
@@ -668,16 +657,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
               //cerr << "Same height" << endl;
               bestTriangle = geometry->getBestTrianglePointInObjectSoS(&triangle,bestTriangle,p, tempVars.tempVarGetBestTrianglePointInObjectSoS);
             }         
-          } else if(heightComparison == 0)  {
-            //the point is on the triangle... we need SoS
-              //cerr << "On the triangle" << endl;
-            if (geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS)) {
-              highestCellZToProcess  = geometry->zCellLevel1FromProjectionOfPoint(heightAbovePoint, triangle, p,*uniformGrid, tempVars.tempVarZCellFromProjectionOfPoint) ;
-              foundATriangleAboveP = true;
-              bestTriangle = &triangle;
-              heightAbovePointBestTriangle = heightAbovePoint;
-            }
-          }
+          } 
 
         }
         if(foundATriangleAboveP && cz >= highestCellZToProcess  && zSubGrid >= highestCellZToProcessNestedSubGrid) {
@@ -693,52 +673,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
  // cerr << "Best height: " << heightAbovePointBestTriangle << endl;
 
   //cerr << "Found a triangle? " << foundATriangleAboveP << endl;
-  if (foundATriangleAboveP) {
-    //now we need to, basing on the orientation of the triangles vertices, find what is the object below the triangle
-    //if the angle between the vector from p (point in the z+ direction) and the normal of the triangle is < 90 --> the point is below the triangle
-    //if the angle is 90 --> error! the triangle is vertical (we should treat this... TODO)
-    /*const InputTriangle &triangle = *bestTriangle; //this is the first triangle directly above p...
-
-    const Point &p0 = vertices[meshId][triangle[0]];
-    const Point &p1 = vertices[meshId][triangle[1]];
-    const Point &p2 = vertices[meshId][triangle[2]];
-
-    VertCoord vec[2][3];  //First, lets compute the cross product between the vectors representing the triangle
-    vec[0][0] = p1[0]-p0[0];
-    vec[0][1] = p1[1]-p0[1];
-    //vec[0][2] = triangle[1][2]-triangle[0][2];
-
-    vec[1][0] = p2[0]-p0[0];
-    vec[1][1] = p2[1]-p0[1];
-    //vec[1][2] = triangle[2][2]-triangle[0][2];
-
-    //lets compute the values A,B,C basing on the two 3D vectors vec[0] and vec[1]
-    //  | i             j           k     |
-    //  | vec[0][0]  vec[0][1]  vec[0][2] |
-    //  | vec[1][0]  vec[1][1]  vec[1][2] |
-
-    //VertCoord A = vec[0][1]*vec[1][2] - vec[0][2]*vec[1][1];
-    //VertCoord B = vec[0][0]*vec[1][2] - vec[0][2]*vec[1][0];
-    VertCoord C = vec[0][0]*vec[1][1] - vec[0][1]*vec[1][0];
-
-    //Now we have the triangle normal (A,B,C) ... it points to the "positive" direction of the triangle (that is, it has the same orientation used to define
-    //what is above and below the triangle according to the right hand rule)
-
-    //If the dot product between the triangle's normal and the z+'s vector ( (0,0,1) ) is positive  --> the point is in the volume "below" the triangle
-    // if it is 0 --> error (the triangle is vertical -- TODO treat this... maybe with SoS)
-    //if is negative the point is in the volume above the triangle 
-    
-    //we actually only need to test if C is negative, 0 or positive...
-
-    if (C==0) {
-      cerr << "Error... vertical triangle (TODO: fix this)" << endl;
-      exit(1);
-    }
-    if (C<0) {
-      return triangle.above;
-    } else {
-      return triangle.below;
-    }*/
+  if (foundATriangleAboveP) {   
     if(geometry->isTriangleNormalPointingPositiveZ(*bestTriangle, tempVars.tempVarIsTriangleNormalPointingPositiveZ))  
       return bestTriangle->below;
     else 
