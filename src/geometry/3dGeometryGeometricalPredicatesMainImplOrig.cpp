@@ -321,11 +321,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionOrig(const InputTrian
 
 
 
-//Given a vertex p, is p below the triangle t ? (we know p projected to z=0 is on t projected to z=0...)
-bool MeshIntersectionGeometry::isTriangleAbovePointSoSOrig(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
-  cerr << "TODO: SoS is triangle above point" << endl;
-  return false;
-}
+
 
 
 

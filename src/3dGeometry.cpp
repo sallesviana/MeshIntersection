@@ -217,18 +217,23 @@ void MeshIntersectionGeometry::sortEdgesSharingStartingVertexByAngle(vector<pair
 
 
 MeshIntersectionGeometry::~MeshIntersectionGeometry() {
-  cerr << "\nCounts degenerate cases:\n";
-  geometryStatisticsDegenerateCases.printStats();
-  cerr << "\nCounts non-degenerate cases:\n";
-  geometryStatisticsNonDegenerateCases.printStats();
-  cerr << "\nCounts SoS calls: \n";
-  geometryStatisticsDegenerateCases.printStatsSoSCalls();
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    cerr << "\nCounts degenerate cases:\n";
+    geometryStatisticsDegenerateCases.printStats();
+    cerr << "\nCounts non-degenerate cases:\n";
+    geometryStatisticsNonDegenerateCases.printStats();
+    cerr << "\nCounts SoS calls: \n";
+    geometryStatisticsDegenerateCases.printStatsSoSCalls();
 
-  cerr << "\nFreeing memory..." << endl;
+    cerr << "\nFreeing memory..." << endl;
+  #endif
 }
 
 const MeshIntersectionGeometry::PlaneEquation &MeshIntersectionGeometry::getPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars) {
-	initPlaneEquationInputTriangle(meshId,triId,tempVars);
+	assert(meshId>=0 && meshId<=1);
+  assert(triId>=0 && triId<planeEquationsInputTriangles[meshId].size());
+  assert(isPlaneEquationInputTrianglesInitialized[meshId][triId]);
+  //initPlaneEquationInputTriangle(meshId,triId,tempVars);
 	return planeEquationsInputTriangles[meshId][triId];
 }
 
@@ -355,16 +360,21 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
     int numTri = inputTriangles[meshId].size();
     cerr << "Triangles to compute equations determined\n";
 
+  
     #pragma omp parallel
     {
       TempVarsComputePlaneEquation tempVars;
 
       #pragma omp for
-      for(int i=0;i<numTri;i++)
+      for(int i=0;i<numTri;i++) {
         initPlaneEquationInputTriangle(meshId, i,tempVars);
+      }
     }
+
   }
+  //for(int i:isPlaneEquationInputTrianglesInitialized[1]) cerr << i << " "; cerr << endl;
   cerr << "Computing the intersections...\n"; 
+
 
 
   vector<pair<Point,Point> > coordsVerticesOfEdges;
@@ -414,6 +424,8 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
     }
   }
 
+
+  cerr << "Registering new vertices" << endl;
   //After the intersections are computed, we need to "register" the coordinates of the new vertices and store their ids...
   storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(edgesFromIntersection,coordsVerticesOfEdges);
 
@@ -501,19 +513,23 @@ void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
     readLiumFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId);
 
   cerr << "Initializing bounding-boxes of triangles\n"; 
+  timespec t0,t1;
+  clock_gettime(CLOCK_REALTIME, &t0);
+
   for(int meshId=0;meshId<2;meshId++) {
   	const int numInputTrianglesThisMesh = inputTriangles[meshId].size();
 
   	inputTrianglesBoundingBox[meshId].resize(numInputTrianglesThisMesh);
-  	#pragma omp parallel
+  	#pragma omp parallel for
   	for(int tid=0;tid<numInputTrianglesThisMesh;tid++) {
   		initTriangleBoundingBox(meshId,tid);
   	}
 
   	planeEquationsInputTriangles[meshId].resize(numInputTrianglesThisMesh);
-  	isPlaneEquationInputTrianglesInitialized[meshId] = vector<bool>(numInputTrianglesThisMesh,false);
+  	isPlaneEquationInputTrianglesInitialized[meshId] = vector<int>(numInputTrianglesThisMesh,0);
   }
-  cerr << "Bunding-boxes of triangles initialized\n"; 
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to init bounding boxes: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 }
 
 void MeshIntersectionGeometry::initTriangleBoundingBox(int meshId, int triangleId) {

@@ -16,6 +16,8 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   //TODO
   //TODO: intersection at edge/vertex --> SoS...
   int ans = intersectTwoTrianglesMainImpl(triMesh0,triMesh1,coordsPt1,vertexThatCreatedPt1, coordsPt2, vertexThatCreatedPt2, tempVars);
+
+
   
   /*VertexFromIntersection p1SoS,p2SoS;
   bool ansSoS = intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,coordsPt1,p1SoS, coordsPt2, p2SoS, tempVars);
@@ -53,7 +55,33 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
     }
   #endif
 
-  return ans==1;
+  /*if(ans==1) { //TODO: remove this if ... this is just for debugging purposes.
+      VertexFromIntersection v1Temp, v2Temp;
+      bool ansSoS = intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,v1Temp, v2Temp, tempVars);
+
+      Point pOrig1 = computePointFromIntersectionVertex(vertexThatCreatedPt1);
+      Point pOrig2 = computePointFromIntersectionVertex(vertexThatCreatedPt2);
+      if(pOrig1>pOrig2) swap(pOrig1,pOrig2);
+
+      Point pSoS1 = computePointFromIntersectionVertex(v1Temp);
+      Point pSoS2 = computePointFromIntersectionVertex(v2Temp);
+      if(pSoS1>pSoS2) swap(pSoS1,pSoS2);
+
+      assert(pOrig1==pSoS1);
+      assert(pOrig2==pSoS2);
+  } */ 
+
+  if(ans==0) {
+    bool ansSoS = intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,vertexThatCreatedPt1, vertexThatCreatedPt2, tempVars);
+    if(ansSoS) {
+      coordsPt1 = computePointFromIntersectionVertex(vertexThatCreatedPt1);
+      coordsPt2 = computePointFromIntersectionVertex(vertexThatCreatedPt2);
+    }    
+    return ansSoS;
+  } else {
+
+    return ans==1;
+  }
 }
 
 
@@ -238,7 +266,7 @@ bool MeshIntersectionGeometry::isTriangleAbovePointSoS(const InputTriangle &t, c
     geometryStatisticsDegenerateCases.ctDegeneraciesIsTriangleAbovePointSoS++;
   #endif
 
-  return isTriangleAbovePointSoSOrig(t, p,tempVars);
+  return isTriangleAbovePointSoSImpl(t, p,tempVars);
 }
 
 //Given two triangles above a point, where the height above point is equal for both triangles, decide which one is lower according after SoS
@@ -249,7 +277,7 @@ const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoS(
     geometryStatisticsDegenerateCases.ctDegeneraciesGetBestTrianglePointInObjectSoS++;
   #endif
 
-  return getBestTrianglePointInObjectSoSOrig(candidateTriangle,bestTriangle, p,tempVars);
+  return getBestTrianglePointInObjectSoSImpl(candidateTriangle,bestTriangle, p,tempVars);
 }
 
 

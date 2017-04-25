@@ -34,7 +34,7 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 using namespace std;
 
 
-#define COLLECT_GEOMETRY_STATISTICS
+//#define COLLECT_GEOMETRY_STATISTICS
 
 
 
@@ -397,7 +397,7 @@ class MeshIntersectionGeometry {
 	private:
 		struct PlaneEquation {Point normal; VertCoord d;};
 		vector<PlaneEquation> planeEquationsInputTriangles[2];
-		vector<bool> isPlaneEquationInputTrianglesInitialized[2];
+		vector<int> isPlaneEquationInputTrianglesInitialized[2];
 
 		void storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges);
 		
@@ -489,7 +489,7 @@ class MeshIntersectionGeometry {
 		bool isVertexInTriangleProjectionOrig(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
 		bool isVertexConvexOrig(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
 		bool isVertexInTriangleProjectionOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const ;
-		bool isTriangleAbovePointSoSOrig(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const ;
+		//bool isTriangleAbovePointSoSOrig(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const ;
 		bool isTriangleNormalPointingPositiveZOrig(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const ;
 		int zCellGlobalFromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const ;
 		int zCellLevel1FromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) const ;
@@ -523,8 +523,7 @@ class MeshIntersectionGeometry {
 		bool isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const;
 		
 		bool intersectTwoTrianglesSoSImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
-				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
-             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) const;
+				     VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) const;
 
 		//does edge (p1,p2) intersect the triangle?
 		bool intersectEdgeWithTriangleSoSImpl(const InputTriangle &triangle, const InputVertex &p1, const InputVertex &p2, TempVarsComputeIntersections &tempVars) const;

@@ -353,7 +353,7 @@ int coplanar_tri_tri(VertCoord N[3],VertCoord *V0,VertCoord *V1,VertCoord *V2,
              else smallest=0;
 
 //tmpVars should have at least 5 rationals
-inline void isect2(Point &VTX0,Point & VTX1,Point & VTX2,const VertCoord &VV0, const VertCoord &VV1,const VertCoord &VV2,
+inline void isect2(const Point &VTX0,const Point & VTX1,const Point & VTX2,const VertCoord &VV0, const VertCoord &VV1,const VertCoord &VV2,
 	    const VertCoord &D0, const VertCoord &D1, const VertCoord &D2,VertCoord &isect0,VertCoord  &isect1,Point &isectpoint0,Point &isectpoint1, VertCoord *tmpVars) 
 {
   //VertCoord tmp=D0/(D0-D1);          
@@ -402,15 +402,17 @@ inline void isect2(Point &VTX0,Point & VTX1,Point & VTX2,const VertCoord &VV0, c
 
 
 // VV0, VV1 and VV2 are the coordinates of Vert0,Vert1,... considering the largest coordinate (projected..)
-inline int compute_intervals_isectline(Point &VERT0,Point & VERT1,Point &VERT2,
+inline void compute_intervals_isectline(const Point &VERT0,const Point & VERT1,const Point &VERT2,
 				       const VertCoord &VV0,const VertCoord &VV1,const VertCoord &VV2,const VertCoord &D0,const VertCoord &D1,const VertCoord &D2,
 				       const int D0D1,const int D0D2,VertCoord &isect0,VertCoord & isect1,
-				       Point &isectpoint0,Point & isectpoint1, pair<int,int> &edgeCreatedA0, pair<int,int> &edgeCreatedA1, VertCoord * tmpVars)
+				       Point &isectpoint0,Point & isectpoint1, pair<int,int> &edgeCreatedA0, pair<int,int> &edgeCreatedA1, 
+               const Point &v0, const Point &v1, const Point &v2, const Point &u0, const Point &u1, const Point &u2, //for debugging purposes..
+               VertCoord * tmpVars)
 {
 
   //TODO: SoS when triangles touch...
 
-  if(D0D1>0.0f)                                        
+  if(D0D1>0)                                        
   {                                                    
     /* here we know that D0D2<=0.0 */                  
     /* that is D0, D1 are on the same side, D2 on the other or on the plane */
@@ -422,7 +424,7 @@ inline int compute_intervals_isectline(Point &VERT0,Point & VERT1,Point &VERT2,
     edgeCreatedA1.first = 2;
     edgeCreatedA1.second = 1;
   } 
-  else if(D0D2>0.0f)                                   
+  else if(D0D2>0)                                   
     {                                                   
     /* here we know that d0d1<=0.0 */             
     isect2(VERT1,VERT0,VERT2,VV1,VV0,VV2,D1,D0,D2,isect0,isect1,isectpoint0,isectpoint1,tmpVars);
@@ -432,7 +434,7 @@ inline int compute_intervals_isectline(Point &VERT0,Point & VERT1,Point &VERT2,
     edgeCreatedA1.first = 1;
     edgeCreatedA1.second = 2;
   }                                                  
-  else if(sgn(D1)*sgn(D2)>0.0f || D0!=0.0f)  //TODO: use signal here instead of multiplication... 
+  else if(sgn(D1)*sgn(D2)>0 || sgn(D0)!=0)  //TODO: use signal here instead of multiplication... 
   {                                   
     /* here we know that d0d1<=0.0 or that D0!=0.0 */
     isect2(VERT0,VERT1,VERT2,VV0,VV1,VV2,D0,D1,D2,isect0,isect1,isectpoint0,isectpoint1,tmpVars);   
@@ -443,43 +445,68 @@ inline int compute_intervals_isectline(Point &VERT0,Point & VERT1,Point &VERT2,
     edgeCreatedA1.first = 0;
     edgeCreatedA1.second = 2;
   }                                                  
-  else if(D1!=0.0f)                                  
+  else if(sgn(D1)!=0)                                  
   {       
-    assert(false); //one of the edges touch the plane?                                       
+    //one of the edges touch the plane? (this is a coincidence...)                                 
     isect2(VERT1,VERT0,VERT2,VV1,VV0,VV2,D1,D0,D2,isect0,isect1,isectpoint0,isectpoint1,tmpVars); 
+
+    edgeCreatedA0.first = 1;
+    edgeCreatedA0.second = 0;
+
+    edgeCreatedA1.first = 1;
+    edgeCreatedA1.second = 2;
   }                                         
-  else if(D2!=0.0f)                                  
-  {        
-    assert(false);                                           
-    isect2(VERT2,VERT0,VERT1,VV2,VV0,VV1,D2,D0,D1,isect0,isect1,isectpoint0,isectpoint1,tmpVars);     
+  else if(sgn(D2)!=0)                                  
+  {                                                 
+    isect2(VERT2,VERT0,VERT1,VV2,VV0,VV1,D2,D0,D1,isect0,isect1,isectpoint0,isectpoint1,tmpVars);    
+
+    edgeCreatedA0.first = 2;
+    edgeCreatedA0.second = 0;
+
+    edgeCreatedA1.first = 2;
+    edgeCreatedA1.second = 1; 
   }                                                 
   else                                               
-  {                                                   
+  {     
+    #pragma omp critical
+    {
+      cerr << "Assertion failure in tri-tri intersection" << endl;
+      cerr << "D0,D1,D2 : " << endl;
+      cerr << D0.get_d() << endl;
+      cerr << D1.get_d() << endl;
+      cerr << D2.get_d() << endl;
+      cerr << "Triangles: " << endl;
+      for(int i=0;i<3;i++) cerr << v0[i].get_d() << endl; cerr << endl;     
+      for(int i=0;i<3;i++) cerr << v1[i].get_d() << endl; cerr << endl;           
+      for(int i=0;i<3;i++) cerr << v2[i].get_d() << endl; cerr << endl;           
+
+      for(int i=0;i<3;i++) cerr << u0[i].get_d() << endl; cerr << endl;           
+      for(int i=0;i<3;i++) cerr << u1[i].get_d() << endl; cerr << endl;           
+      for(int i=0;i<3;i++) cerr << u2[i].get_d() << endl; cerr << endl;                                                   
+      cerr << endl;
+    }
     /* triangles are coplanar */    
-    return 1;
+    assert(false); //we should've detected this before...
   }
-  return 0;
+  
 }
 
 
 
 
-//Return flags:
-//1 : the triangles intersect
-//0 : coincidency (example: intersection in boundary)
-//-1 : the triangles do not intersect
-//-2 : coplanar triangles
+
 int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
              VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars)
 {
-  Point &V0 = getCoordinates(*triMesh0.getInputVertex(0));
-  Point &V1 = getCoordinates(*triMesh0.getInputVertex(1));
-  Point &V2 = getCoordinates(*triMesh0.getInputVertex(2));
 
-  Point &U0 = getCoordinates(*triMesh1.getInputVertex(0));
-  Point &U1 = getCoordinates(*triMesh1.getInputVertex(1));
-  Point &U2 = getCoordinates(*triMesh1.getInputVertex(2));
+  const Point &V0 = getCoordinates(*triMesh0.getInputVertex(0));
+  const Point &V1 = getCoordinates(*triMesh0.getInputVertex(1));
+  const Point &V2 = getCoordinates(*triMesh0.getInputVertex(2));
+
+  const Point &U0 = getCoordinates(*triMesh1.getInputVertex(0));
+  const Point &U1 = getCoordinates(*triMesh1.getInputVertex(1));
+  const Point &U2 = getCoordinates(*triMesh1.getInputVertex(2));
 
   
   //VertCoord du0du1,du0du2,dv0dv1,dv0dv2;
@@ -539,11 +566,20 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
   //TODO: SoS here...
   //du0du1=du0; //TODO: remove this multiplication! we only need the sign!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   //du0du1*=du1;
-  du0du1 = sgn(tempVars.du0)*sgn(tempVars.du1);
+  int sgnDu0 = sgn(tempVars.du0);
+  int sgnDu1 = sgn(tempVars.du1);
+  
+  du0du1 = sgnDu0*sgnDu1;
+
+  int sgnDu2 = sgn(tempVars.du2);
+
+  bool isCoplanar = (sgnDu0==0) && (sgnDu1==0) && (sgnDu2==0);
+  if(isCoplanar) return -2;
+
   //du0du2=du0*du2;
   //du0du2=du0;
   //du0du2*=du2;
-  du0du2 = sgn(tempVars.du0)*sgn(tempVars.du2);
+  du0du2 = sgnDu0*sgnDu2;
 
   if(du0du1>0 && du0du2>0) /* same sign on all of them + not equal 0 ? */
     return -1;                    /* no intersection occurs */
@@ -582,14 +618,19 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
   //dv0,dv1,dv2 are the distances from v0 to the plane 2..
   //du0,du1,du2 are the distances from u0, ... to plane 1 
 
+  int sgnDv0 = sgn(tempVars.dv0);
+  int sgnDv1 = sgn(tempVars.dv1);
+
   //dv0dv1=dv0*dv1;
   //dv0dv1=dv0;
   //dv0dv1*=dv1;
-  dv0dv1 = sgn(tempVars.dv0)*sgn(tempVars.dv1);
+  dv0dv1 = sgnDv0*sgnDv1;
+
+  int sgnDv2 = sgn(tempVars.dv2);
   //dv0dv2=dv0*dv2;
   //dv0dv2=dv0;
   //dv0dv2*=dv2;
-  dv0dv2 = sgn(tempVars.dv0)*sgn(tempVars.dv2);
+  dv0dv2 = sgnDv0*sgnDv2;
         
   if(dv0dv1>0 && dv0dv2>0) /* same sign on all of them + not equal 0 ? */
     return -1;                    /* no intersection occurs */
@@ -617,26 +658,65 @@ int MeshIntersectionGeometry::intersectTwoTrianglesMainImpl(const InputTriangle 
   //TODO: no need to copy here: use reference...
   pair<int,int> edgeCreatedA1;
   pair<int,int> edgeCreatedA2;
-  /* compute interval for triangle 1 */
-  int coplanar=compute_intervals_isectline(V0,V1,V2,V0[index],V1[index],V2[index],tempVars.dv0,tempVars.dv1,tempVars.dv2,
-				       dv0dv1,dv0dv2,tempVars.isect1[0],tempVars.isect1[1],tempVars.isectpointA1,tempVars.isectpointA2,edgeCreatedA1,edgeCreatedA2,tempVars.tempRationals);
 
-  //SoS: will never happen...
-  if(coplanar) return -2;     
+
+
+
+  /* compute interval for triangle 1 */  
+  compute_intervals_isectline(V0,V1,V2,V0[index],V1[index],V2[index],tempVars.dv0,tempVars.dv1,tempVars.dv2,
+				       dv0dv1,dv0dv2,tempVars.isect1[0],tempVars.isect1[1],tempVars.isectpointA1,tempVars.isectpointA2,edgeCreatedA1,edgeCreatedA2,
+               V0,V1,V2,U0,U1,U2, tempVars.tempRationals);
+
+  
 
 
   pair<int,int> edgeCreatedB1;
   pair<int,int> edgeCreatedB2;
   /* compute interval for triangle 2 */
   compute_intervals_isectline(U0,U1,U2,U0[index],U1[index],U2[index],tempVars.du0,tempVars.du1,tempVars.du2,
-			      du0du1,du0du2,tempVars.isect2[0],tempVars.isect2[1],tempVars.isectpointB1,tempVars.isectpointB2,edgeCreatedB1,edgeCreatedB2,tempVars.tempRationals);
+			      du0du1,du0du2,tempVars.isect2[0],tempVars.isect2[1],tempVars.isectpointB1,tempVars.isectpointB2,edgeCreatedB1,edgeCreatedB2,
+            V0,V1,V2,U0,U1,U2, tempVars.tempRationals);
 
   SORT2(tempVars.isect1[0],tempVars.isect1[1],smallest1,tempVars.tmp); //smallest1 == 0 iff isect1[0] < isect1[1]
   SORT2(tempVars.isect2[0],tempVars.isect2[1],smallest2,tempVars.tmp);
 
+  
+  //Because of previous tests, we know that the triangle is not coplanar and the intersection of their planes is a line L
+  //Also, because of previous rejections, we know that both triangles intersect L and these intersections create intervals...
+  //We have a coincidence if: 
+  //1) the intersection of the two intervals is a point 
+  //2) L intersects a vertex of one of the triangles and this vertex is in the intersection of the intervals.
+  //3) The edges of the triangles intersect...
+
+
+  //if the intervals on L do not intersect... -1
+  //if the end of the interval of the first triangle is before the beginning of the interval of the second one --> no intersection
+  //if the end of the interval of the second triangle is before the beginning of the interval of the first one --> no intersection
   if(tempVars.isect1[1]<tempVars.isect2[0] || tempVars.isect2[1]<tempVars.isect1[0]) return -1;
 
-  /* at this point, we know that the triangles intersect */
+
+  /* at this point, we know that the triangles intersect (but there can be a coincidency...) */
+
+  //What are the coincidences?
+  //when there is an intersection and one vertex is on the plane of the other triangle (may be a coincidence or not...)
+  //when the intersection is a single point (ex: triangle just touch)
+  //coplanar (doesn't happen --> we treated before..)
+
+
+  //the triangles intersect, but a vertex of one triangle is on the plane of the other one...
+  //this MAY not be a coincidency (ex: when the vertex on the plane is not in the intersection)... but it is better to just return "coincidency" and let SoS treat it...
+  if(sgnDv0==0 || sgnDv1==0 || sgnDv2==0 || sgnDu0==0 || sgnDu1==0 || sgnDu2==0) return 0;
+
+  //the end of the interval of the first triangle touches and edge of the second triangle..
+  //-->edge-edge intersection --> coincidency...
+  if(tempVars.isect1[1]==tempVars.isect2[0] || tempVars.isect1[1]==tempVars.isect2[1]) return 0;
+
+  //the beginning of the interval of the first triangle touches and edge of the second triangle..
+  //-->edge-edge intersection --> coincidency...
+  if(tempVars.isect1[0]==tempVars.isect2[0] || tempVars.isect1[0]==tempVars.isect2[1]) return 0;
+
+  //now, we know the triangles intersect and that the intersection does not happen between edge-edge
+
 
   if(tempVars.isect2[0]<tempVars.isect1[0])
   {

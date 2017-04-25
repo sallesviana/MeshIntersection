@@ -20,8 +20,8 @@
 using namespace std;
 
 
-
-void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
+//returns the time to classify (without the time to write the output)
+double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
 																				MeshIntersectionGeometry &geometry, 
                                         const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
                                         vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],                                                                             

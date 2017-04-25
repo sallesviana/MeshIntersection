@@ -305,7 +305,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const InputTr
   return true;
 }
 
-
+//The input triangle should not be vertical (PinMesh does not use vertical triangles because of the perturbation!)
 //Given a vertex p, is p below the triangle t ? (we know p projected to z=0 is on t projected to z=0...)
 bool MeshIntersectionGeometry::isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
   int sideOfTriangle = orientation(t,p); //is p on the positive (1) or negative (-1) side of the triangle?
@@ -397,8 +397,7 @@ bool MeshIntersectionGeometry::intersectEdgeWithTriangleSoSImpl(const InputTrian
 //ex: maybe w/o SoS we would have edge-triangle, but with SoS the intersection is triangle-edge...
 //think a little more to make sure we really cannot compute the coordinates..
 bool MeshIntersectionGeometry::intersectTwoTrianglesSoSImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
-             Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
-             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) const {
+            VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) const {
   //because of SoS, we will have exactly two edge-triangle intersections
   //we need to test all 6 possibilities of edge-triangle intersections...
 
@@ -450,8 +449,74 @@ bool MeshIntersectionGeometry::intersectTwoTrianglesSoSImpl(const InputTriangle 
 
 //Given two triangles above a point, where the height above point is equal for both triangles, decide which one is lower according after SoS
 //Make sure the two triangles are not the same... (this could happen, but we avoid that by checkin in PinMesh... )
+/*
+Getting the best triangle by perturbing the triangles by epsV is equivalent to get the best one by perturbing the query point by -epsV
+
+Suppose there are two triangles t1, t2 with plane equations: a1 x + b1 y + c1 z = d1 and a2 x + b2 y + c2 z = d2
+
+Then, z1 = (d1 - (a1 x + b1 y))/c1  (c1 cannot be 0 otherwise the triangle would be vertical)
+And z2 =  (d2 - (a2 x + b2 y))/c2
+
+To check if t1 < t2, we have to check if: 
+z1  < z2 
+(d1 - (a1 x + b1 y))/c1 <  (d2 - (a2 x + b2 y))/c2 
+c2 d1 - c2(a1 x + b1 y) < c1d2 - c1 (a2 x + b2 y)
+
+Considering the query point q is perturbed (using a negative or positive epsilon), we have its coordinates equal to (x+ (2mesh-1)eps,  y +  (2mesh-1)eps^2).
+c2 d1 - c2(a1 x + a1 eps (2mesh-1) + b1 y + b1 eps^2  (2mesh-1)) < c1 d2 - c1(a2 x + a2 eps (2mesh-1) + b2 y + b2 eps^2  (2mesh-1)) 
+
+c2 d1 - c2(a1 x + b1 y) - c2 (a1 eps (2mesh-1) + b1 eps^2  (2mesh-1))  < c1 d2 - c1(a2 x + b2 y ) - c1(a2 eps (2mesh-1) + b2 eps^2  (2mesh-1))
+
+Since the heights are the same at (x,y), we can elliminate the non-epsilon terms (they sum to 0):
+ - c2 (a1 eps (2mesh-1) + b1 eps^2  (2mesh-1))  < - c1(a2 eps (2mesh-1) + b2 eps^2  (2mesh-1))
+ c2 (a1 eps (2mesh-1) + b1 eps^2  (2mesh-1))  > c1(a2 eps (2mesh-1) + b2 eps^2  (2mesh-1))
+ */
+const void computePlaneEquationsInputTriangle(const Point &t0,const Point &t1,const Point &t2, VertCoord &a, VertCoord &b, VertCoord &c) ;
 const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoSImpl(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const {
-  cerr << "TODO: SoS get best triangle point in object SoS" << endl;
-  return candidateTriangle;
+  //Let candidate triangle be triangle 1 and bestTriangle be triangle2...
+
+  cerr << "Getting best triangle" << endl;
+  //c2 (a1 eps (2mesh-1) + b1 eps^2  (2mesh-1))  > c1(a2 eps (2mesh-1) + b2 eps^2  (2mesh-1))
+  VertCoord a1,b1,c1; //plane equation of triangle 1 (triangle 1: a1 x + b1 y + c1 z = d1 -- we do not need the "D")
+  VertCoord a2,b2,c2; 
+
+  //Mesh 0 is unperturbed, mesh 1 is perturbed by (eps,eps^2, eps^3)
+  //if the query point is in mesh 1 --> the computation should be similar to PinMesh's
+  //otherwise, it is like translating the query point by -(eps,eps^2, eps^3) and keeping the triangles at the same place
+
+  int meshIdQueryPoint = p.getMeshId();
+  int epsSignal = (2*meshIdQueryPoint - 1); //1 if meshId is 1, -1 if 0
+
+
+  computePlaneEquationsInputTriangle(getCoordinates(*(candidateTriangle->getInputVertex(0))),getCoordinates(*(candidateTriangle->getInputVertex(1))),getCoordinates(*(candidateTriangle->getInputVertex(2))),a1,b1,c1);
+  computePlaneEquationsInputTriangle(getCoordinates(*(bestTriangle->getInputVertex(0))),getCoordinates(*(bestTriangle->getInputVertex(1))),getCoordinates(*(bestTriangle->getInputVertex(2))),a2,b2,c2);
+
+
+  //Because of SoS, let's first check the first epsilon coefficient (eps):
+  //c2 (a1 eps (2mesh-1))  > c1(a2 eps (2mesh-1) ) --> c2 (a1 eps (2mesh-1))  - c1(a2 eps (2mesh-1) ) > 0 --> (c2 (a1)  - c1(a2))*eps (2mesh-1) > 0
+  int signEps1Term = sgn( c2*a1 - c1*a2 )*epsSignal;
+  if(signEps1Term==1) return candidateTriangle;
+  else if(signEps1Term==0) {
+    int signEps2Term = sgn( c2*b1 - c1*b2 )*epsSignal; ////c2 (b1 ) - c1(b2) * (eps^2  (2mesh-1))
+    assert(signEps2Term!=0); //the triangle shouldn't be vertical...  both signals can't be 0...
+    if(signEps2Term==1) return candidateTriangle;
+  }
+  else return bestTriangle;
 }
 
+//we do not need the "d" of the plane equation
+const void computePlaneEquationsInputTriangle(const Point &t0,const Point &t1,const Point &t2, VertCoord &a, VertCoord &b, VertCoord &c)  {
+  Point vec[2];
+  for(int i=0;i<3;i++) {vec[0][i] = t1[i]-t0[i];} //t1-t0
+  for(int i=0;i<3;i++) {vec[1][i] = t2[i]-t0[i];} //t2-t0
+
+
+  //lets compute the values A,B,C basing on the two 3D vectors vec[0] and vec[1]
+  //  | i             j           k      i             j       
+  //  | vec[0][0]  vec[0][1]  vec[0][2]  vec[0][0]  vec[0][1]  
+  //  | vec[1][0]  vec[1][1]  vec[1][2]  vec[1][0]  vec[1][1] 
+
+  a = vec[0][1]*vec[1][2] - vec[0][2]*vec[1][1];
+  b = vec[0][2]*vec[1][0] - vec[0][0]*vec[1][2];
+  c = vec[0][0]*vec[1][1] - vec[0][1]*vec[1][0];    
+}

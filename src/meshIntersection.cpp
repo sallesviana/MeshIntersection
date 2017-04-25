@@ -47,7 +47,7 @@ using namespace std;
 //#define DEBUGGING_MODE
 
 //This may slow down the algorithm
-#define COLLECT_STATISTICS
+//#define COLLECT_STATISTICS
 //#define COLLECT_STATISTICS_PRINT_TRIANGLES_INTERSECTIONS
 
 //#define SANITY_CHECKS
@@ -349,15 +349,14 @@ int main(int argc, char **argv) {
   ofstream outputStream(argv[6]);
   assert(outputStream);
 
-  classifyTrianglesAndGenerateOutput(&uniformGrid, meshIntersectionGeometry, 
+  timeClassifyTriangles = classifyTrianglesAndGenerateOutput(&uniformGrid, meshIntersectionGeometry, 
                                         trianglesThatIntersect,
                                         polygonsFromRetesselationOfEachTriangle,                                                                               
                                         outputStream);
   
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  timeClassifyTriangles = convertTimeMsecs(diff(t0,t1))/1000;
-  cerr << "Total time to classify triangles and generate output: " << timeClassifyTriangles << endl;
+  cerr << "Total time to classify triangles and generate output: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
   Print_Current_Process_Memory_Used();
 
 
@@ -369,7 +368,7 @@ int main(int argc, char **argv) {
   cerr << "Time to retesselate trinagles : " << timeRetesselate << endl;
   cerr << "Time to classify the triangles: " << timeClassifyTriangles << endl;
   cerr << "----------------------------------------------------" << endl;
-
+  cerr << "Total time (excluding I/O)    : " << timeCreateGrid+timeDetectIntersections+timeRetesselate+timeClassifyTriangles << endl;
 
 
   }

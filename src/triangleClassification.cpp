@@ -320,7 +320,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 //Each vector represents a set of objects in the same layer
 //The objects are represented by a set of triangles (defining their boundaries)
 
-void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
+double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid, 
                                         MeshIntersectionGeometry &geometry, 
                                         const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
                                         vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],                                                                             
@@ -538,8 +538,8 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid,
   clock_gettime(CLOCK_REALTIME, &t0); 
 
   
-
-  cerr << "Total time before writing output: " << convertTimeMsecs(diff(t0ThisFunction,t1))/1000 << endl;
+  double timeWithoutIO =  convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
+  cerr << "Total time before writing output: " << timeWithoutIO << endl;
  
 
   //now, let's write everything in the output!
@@ -618,5 +618,8 @@ void classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid,
 		cerr << "Output edges            : " << totalNumberOutputEdges << endl;
 		cerr << "Output triangles non int: " << totalNumberOutputTriangles << endl;
 		//cerr << "Intersecting triangles  : " << ctIntersectingTrianglesTotal << endl;
+
+
+    return timeWithoutIO;
 
 }
