@@ -548,7 +548,7 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
         const InputTriangle &triangle = *(trianglesInCell[iTriangle]);
 
         if(&triangle==bestTriangle) continue; //the same triangle may be in different grid cells...
-        assert(triangle!=*bestTriangle);
+        assert(bestTriangle==NULL || triangle!=*bestTriangle);
 
         //assert(pointInTriangleProj(vertices[meshId][triangle[0]],vertices[meshId][triangle[1]],vertices[meshId][triangle[2]],p, tempVertCoords + 3) == pointInTriangleProj(vertices[meshId][triangle[0]],vertices[meshId][triangle[1]],vertices[meshId][triangle[2]],p));
         //if (!pointInTriangleProj(vertices[meshId][triangle[0]],vertices[meshId][triangle[1]],vertices[meshId][triangle[2]],p, tempVertCoords + 3) ) continue; //the triangle is not above/below p
