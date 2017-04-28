@@ -47,7 +47,7 @@ using namespace std;
 //#define DEBUGGING_MODE
 
 //This may slow down the algorithm
-//#define COLLECT_STATISTICS
+#define COLLECT_STATISTICS
 //#define COLLECT_STATISTICS_PRINT_TRIANGLES_INTERSECTIONS
 
 //#define SANITY_CHECKS

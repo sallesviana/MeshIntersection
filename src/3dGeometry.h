@@ -34,7 +34,7 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 using namespace std;
 
 
-//#define COLLECT_GEOMETRY_STATISTICS
+#define COLLECT_GEOMETRY_STATISTICS
 
 
 

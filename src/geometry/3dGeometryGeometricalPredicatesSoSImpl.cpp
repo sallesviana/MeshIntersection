@@ -78,6 +78,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
   //a.x * b.y - a.y * b.x;
   int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
   int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+
   assert(ans==0 || ans==ans2);
   return ans2;
 }
@@ -236,6 +237,10 @@ int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const I
   //signal vector coord(orig,dest) = -orientation(orig,dest)
   //
   //
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation1DOO++;
+  #endif
 
   const Point &p0 =  getCoordinates(orig);
   const Point &p1 =  getCoordinates(dest);
@@ -257,10 +262,20 @@ int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const I
 }
 
 int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation1DOI++;
+  #endif
+
   return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 }
 
 int MeshIntersectionGeometry::signalVectorCoord(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const {
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation1DII++;
+  #endif
+
   return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 }
 

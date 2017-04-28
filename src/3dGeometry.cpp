@@ -24,12 +24,17 @@ struct GeometryStatistics {
   //orientation2D_original_original_original
   //orientation2D_original_original_intersect
   //....
+  int orientation1DOO=0,orientation1DOI=0,orientation1DII=0;
   int orientation2DOOO = 0, orientation2DOOI = 0, orientation2DOII = 0, orientation2DIII = 0;
   int orientation3DOO = 0, orientation3DOI = 0 ;
   int signVector = 0;
 
   void printStatsSoSCalls() {
     cerr << "SoS calls: \n" ;
+    cerr << "Orientation 1D:" << "\n";
+    cerr << "OO :"  << orientation1DOO << "\n";
+    cerr << "OI :"  << orientation1DOI << "\n";
+    cerr << "II :"  << orientation1DII << "\n";
     cerr << "Orientation 2D:"  <<"\n";
     cerr << "OOO: " << orientation2DOOO <<"\n";
     cerr << "OOI: " << orientation2DOOI <<"\n";

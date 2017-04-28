@@ -5898,7 +5898,7 @@ VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 /*****************************************************/
 /*****************************************************/
 VertCoord ans_1 = -(coeffV1ePower0y*coeffV2ePower0x) + coeffV1ePower0x*coeffV2ePower0y + coeffV1ePower0y*iv0x - coeffV2ePower0y*iv0x - coeffV1ePower0x*iv0y + coeffV2ePower0x*iv0y;
- 
+
 if(sgn(ans_1) != 0) return sgn(ans_1);
 
 /*****************************************************/
