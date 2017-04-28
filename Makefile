@@ -2,8 +2,8 @@ flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc
 
 all: meshIntersection
 
-meshIntersection: pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o utils.o triangleRetesselation.o triangleClassification.o
-		g++ pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o triangleRetesselation.o triangleClassification.o utils.o $(flags) -o  meshIntersection
+meshIntersection: pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o utils.o triangleRetesselation.o triangleClassification.o sosPredicatesImpl.o sosPredicatesImplPublicPredicates.o getEpsCoefficientsVertex.o
+		g++ pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o triangleRetesselation.o triangleClassification.o utils.o sosPredicatesImpl.o sosPredicatesImplPublicPredicates.o getEpsCoefficientsVertex.o $(flags) -o  meshIntersection
 
 
 meshIntersection.o: src/meshIntersection.cpp
@@ -31,3 +31,12 @@ pinMesh.o: src/PinMesh.h src/PinMesh.cpp src/3dGeometry.h src/nested3DGrid.h
 
 floodFillScanline.o: src/floodFillScanline.h src/floodFillScanline.cpp
 		g++ src/floodFillScanline.cpp $(flags) -c -o floodFillScanline.o
+
+sosPredicatesImpl.o: src/geometry/sosPredicatesImpl.cpp src/geometry/sosPredicatesImpl.h 
+	g++  src/geometry/sosPredicatesImpl.cpp  $(flags) -c 
+
+sosPredicatesImplPublicPredicates.o: src/geometry/sosPredicatesImpl.h src/geometry/sosPredicatesImplPublicPredicates.cpp
+	g++ src/geometry/sosPredicatesImplPublicPredicates.cpp $(flags) -c 
+
+getEpsCoefficientsVertex.o: src/geometry/getEpsCoefficientsVertex.cpp src/geometry/sosPredicatesImpl.h
+	g++ src/geometry/getEpsCoefficientsVertex.cpp $(flags) -c 

@@ -314,14 +314,14 @@ bool MeshIntersectionGeometry::onSegment(const Vertex & p, const Vertex & q, con
       return true;
     */
 
-    bool p1GEr1 = signalVectorCoordCanBe0(p, r, coord1)<=0; //p[coord1] >= r[coord1] ? iff r[coord1]-p[coord1] <= 0
-    bool p2GEr2 = signalVectorCoordCanBe0(p, r, coord2)<=0; //p[coord2] >= r[coord2]
+    bool p1GEr1 = signalVectorCoord(p, r, coord1)<=0; //p[coord1] >= r[coord1] ? iff r[coord1]-p[coord1] <= 0
+    bool p2GEr2 = signalVectorCoord(p, r, coord2)<=0; //p[coord2] >= r[coord2]
 
-    int sgnQminusR1 = signalVectorCoordCanBe0(r, q, coord1);
-    int sgnQminusP1 = signalVectorCoordCanBe0(p, q, coord1);
+    int sgnQminusR1 = signalVectorCoord(r, q, coord1);
+    int sgnQminusP1 = signalVectorCoord(p, q, coord1);
 
-    int sgnQminusR2 = signalVectorCoordCanBe0(r, q, coord2);
-    int sgnQminusP2 = signalVectorCoordCanBe0(p, q, coord2);
+    int sgnQminusR2 = signalVectorCoord(r, q, coord2);
+    int sgnQminusP2 = signalVectorCoord(p, q, coord2);
 
     bool q1Lp1 = sgnQminusP1<0;
     bool q1LEp1 = sgnQminusP1<=0;

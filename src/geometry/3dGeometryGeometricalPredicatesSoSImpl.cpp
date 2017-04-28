@@ -1,4 +1,6 @@
 
+#include "sosPredicatesImpl.h"
+
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo) const { 
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
@@ -20,7 +22,10 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
   }
 
   //a.x * b.y - a.y * b.x;
-  return sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  assert(ans==0 || ans==ans2);
+  return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVertex &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
@@ -44,7 +49,10 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
   }
 
   //a.x * b.y - a.y * b.x;
-  return sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  assert(ans==0 || ans==ans2);
+  return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
@@ -68,7 +76,10 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
   }
 
   //a.x * b.y - a.y * b.x;
-  return sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  assert(ans==0 || ans==ans2);
+  return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
@@ -93,7 +104,10 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
   }
 
   //a.x * b.y - a.y * b.x;
-  return sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  assert(ans==0 || ans==ans2);
+  return ans2;
 }
 
 int cts[20] = {0};
@@ -185,7 +199,11 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
     geometryStatisticsDegenerateCases.orientation3DOO++;
   #endif
 
-  return signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+
+  int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);
+  assert(ans==0 || ans==ans2);
+  return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const {
@@ -193,7 +211,12 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation3DOI++;
   #endif
-  return signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+
+  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+
+  int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);
+  assert(ans==0 || ans==ans2);
+  return ans2;
 }
 
 
@@ -210,26 +233,35 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
 
 
 int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const InputVertex &dest, int coord) const {
+  //signal vector coord(orig,dest) = -orientation(orig,dest)
+  //
+  //
+
   const Point &p0 =  getCoordinates(orig);
   const Point &p1 =  getCoordinates(dest);
   int ans = sgn(p1[coord]-p0[coord]);
-  if(ans!=0) return ans;
-  int meshId0 = orig.getMeshId();
-  int meshId1 = dest.getMeshId();
-  if(meshId0!=meshId1) {
-    if(meshId0==0) return 1;
-    return -1;
+  if(ans!=0) {
+    int meshId0 = orig.getMeshId();
+    int meshId1 = dest.getMeshId();
+    if(meshId0!=meshId1) {
+      if(meshId0==0) ans = 1; // orig is in mesh 0 --> non perturbed , dest is in 1--> positive perturb, dest-orig = positive perturb.
+      else ans = -1;
+    }
   }
+  int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+
+  assert(ans==0 || ans==ans2);
+  
   //if they are in the same mesh, there is no perturbation between them --> we should return ans;
-  return ans;
+  return ans2;
 }
 
 int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const {
-
+  return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 }
 
 int MeshIntersectionGeometry::signalVectorCoord(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const {
-
+  return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 }
 
 
@@ -263,6 +295,7 @@ int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex
   }
 }
 
+/*
 //TODO: review this...
 int MeshIntersectionGeometry::signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const {
   #ifdef COLLECT_GEOMETRY_STATISTICS
@@ -275,7 +308,7 @@ int MeshIntersectionGeometry::signalVectorCoordCanBe0(const Vertex &orig, const 
   int ans = sgn(p1[coord]-p0[coord]);
   return  ans;
 }
-
+*/
 
 /*
 Predicates and functions using SoS

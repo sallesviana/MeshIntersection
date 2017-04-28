@@ -511,13 +511,17 @@ class MeshIntersectionGeometry {
 		int orientation(const InputTriangle&t, const InputVertex &v) const;
 		int orientation(const InputTriangle&t, const VertexFromIntersection &v) const;
 		int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const;
-  		int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const;
+  	int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const;
   
 
 		//what is the signal of each coordinate the vector from orig to dest
 		//cannot be 0 (SoS)
 		int signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const;
-		int signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const;
+		int signalVectorCoord(const InputVertex &orig, const InputVertex &dest, int coord) const;
+		int signalVectorCoord(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const;
+		int signalVectorCoord(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const;
+		//int signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const;
+
 
 		bool isCloserSoSImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
 		

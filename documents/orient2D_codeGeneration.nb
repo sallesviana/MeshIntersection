@@ -1,0 +1,2074 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     80524,       2066]
+NotebookOptionsPosition[     75308,       1904]
+NotebookOutlinePosition[     75668,       1920]
+CellTagsIndexPosition[     75625,       1917]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetOptions", "[", 
+   RowBox[{
+    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+    RowBox[{"CellContext", "\[Rule]", "Notebook"}]}], "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "We", " ", "want", " ", "to", " ", "compute", " ", "the", " ", "2", "D", 
+     " ", "orientation", " ", "of", " ", "three", " ", "3", "D", " ", 
+     "points", " ", "when", " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+         "projected", " ", "onto", " ", "a", " ", "given", " ", "plane", " ", 
+          "z"}], "=", "0"}], ",", 
+        RowBox[{"x", "=", 
+         RowBox[{
+          RowBox[{"0", " ", "or", " ", "y"}], "=", "0"}]}]}], ")"}], ".", 
+      "\[IndentingNewLine]", "The"}], " ", "first", " ", "and", " ", "second",
+      " ", "points", " ", 
+     RowBox[{"(", 
+      RowBox[{"p0", ",", "p1"}], ")"}], " ", "will", " ", "always", " ", "be",
+      " ", "input", " ", "points", " ", "while", " ", "the", " ", "third", 
+     " ", "one", " ", "will", " ", "be", " ", "a", " ", "point", " ", 
+     "generated", " ", "from", " ", "an", " ", "InputRay"}], "-", 
+    RowBox[{"InputTriangle", " ", "intersection"}]}], "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.6966147709107647`*^9, 3.696614771115386*^9}, {
+   3.6966907373667307`*^9, 3.696690793227466*^9}, 3.696690858695306*^9, 
+   3.6966908907043552`*^9, {3.6966909646233892`*^9, 3.6966909661506233`*^9}, {
+   3.698505959316092*^9, 3.698506053252136*^9}, {3.698506087327484*^9, 
+   3.6985060890149813`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Input", " ", "points"}], "*)"}]}]], "Input",
+ CellChangeTimes->{{3.696690966994157*^9, 3.6966910202067947`*^9}, {
+   3.6966911164326773`*^9, 3.696691132456724*^9}, 3.696691189150613*^9, {
+   3.696691288104912*^9, 3.6966912936507587`*^9}, {3.696691331446783*^9, 
+   3.696691332205495*^9}, {3.69669241816604*^9, 3.696692423014667*^9}, {
+   3.698505961732585*^9, 3.698505967298622*^9}, 3.698506636444682*^9, 
+   3.698514510823886*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"inputPoint", "[", "pid_", "]"}], " ", ":=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<ip\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<x\>\""}], 
+     " ", "]"}], ",", 
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<ip\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<y\>\""}], 
+     " ", "]"}], ",", 
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<ip\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<z\>\""}], 
+     " ", "]"}]}], " ", "}"}]}]], "Input",
+ CellChangeTimes->{{3.696690809876727*^9, 3.696690813767083*^9}, {
+   3.696691110002777*^9, 3.696691140839088*^9}, {3.696692641005129*^9, 
+   3.696692641731373*^9}, {3.696692676311051*^9, 3.696692693653672*^9}, {
+   3.696692844377891*^9, 3.696692897691113*^9}, 3.6985059222894487`*^9, {
+   3.698683430757172*^9, 3.698683587629222*^9}, {3.6986836257997627`*^9, 
+   3.6986836422770042`*^9}, {3.698683683840233*^9, 3.698683691464323*^9}, {
+   3.6986837388174677`*^9, 3.698683741596448*^9}, {3.698683820091929*^9, 
+   3.6986838492316027`*^9}, {3.698683965978726*^9, 3.698683971083068*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"inputPointInTriangle", "[", 
+   RowBox[{"tid_", ",", "pid_"}], "]"}], " ", ":=", "  ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<t\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "tid", "]"}], " ", "<>", " ", "\"\<p\>\"", " ",
+       "<>", " ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<x\>\""}], 
+     " ", "]"}], ",", 
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<t\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "tid", "]"}], " ", "<>", " ", "\"\<p\>\"", " ",
+       "<>", " ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<y\>\""}], 
+     " ", "]"}], ",", " ", 
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<t\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "tid", "]"}], " ", "<>", " ", "\"\<p\>\"", " ",
+       "<>", " ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<z\>\""}], 
+     " ", "]"}]}], " ", "}"}]}]], "Input",
+ CellChangeTimes->{{3.696692695617378*^9, 3.69669270456702*^9}, 
+   3.698683498594912*^9, {3.698683695689*^9, 3.698683735209646*^9}, {
+   3.698683897732852*^9, 3.698683992682393*^9}, {3.69868412722047*^9, 
+   3.698684131942298*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\<\"abc\"\>", "<>", "2"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.696692705148863*^9, 3.698506780318314*^9, 3.6985145907554398`*^9, 
+   3.6985156845882998`*^9, 3.698517031992259*^9, 3.6985170662032003`*^9, 
+   3.69851749589168*^9, 3.698521361075799*^9, 3.6985350575358553`*^9, 
+   3.6985763867405853`*^9, 3.6985766726864653`*^9, 3.6985771428053083`*^9, 
+   3.69868298098025*^9, {3.6986837020124807`*^9, 3.6986837051846457`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"inputPointInRay", "[", 
+   RowBox[{"rid_", ",", "pid_"}], "]"}], " ", ":=", "  ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<r\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "rid", "]"}], " ", "<>", " ", "\"\<p\>\"", " ",
+       "<>", " ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<x\>\""}], 
+     " ", "]"}], ",", 
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<r\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "rid", "]"}], " ", "<>", " ", "\"\<p\>\"", " ",
+       "<>", " ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<y\>\""}], 
+     " ", "]"}], ",", " ", 
+    RowBox[{"Symbol", "[", 
+     RowBox[{"\"\<r\>\"", "  ", "<>", "  ", 
+      RowBox[{"ToString", "[", "rid", "]"}], " ", "<>", " ", "\"\<p\>\"", " ",
+       "<>", " ", 
+      RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<z\>\""}], 
+     " ", "]"}]}], " ", "}"}]}]], "Input",
+ CellChangeTimes->{{3.698682985261458*^9, 3.698682989364709*^9}, 
+   3.6986834999680853`*^9, {3.698684010694482*^9, 3.6986840486746273`*^9}, {
+   3.698684149352537*^9, 3.6986841644879837`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"Point", " ", 
+   RowBox[{"(", "p", ")"}], " ", "from", " ", "intersection", " ", "of", " ", 
+   "ray", " ", 
+   RowBox[{"(", 
+    RowBox[{"r0", ",", "r1"}], ")"}], " ", "from", " ", "mesh", " ", "0", " ",
+    "and", " ", "triangle", " ", 
+   RowBox[{"(", 
+    RowBox[{"t0", ",", "t1", ",", "t2"}], ")"}], " ", "from", " ", "mesh", 
+   " ", "1"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.696693110062709*^9, 3.696693115015854*^9}, 
+   3.698505946547078*^9, {3.698506059318953*^9, 3.6985060783755608`*^9}, {
+   3.6985065980128937`*^9, 3.698506610090542*^9}, {3.698514565793376*^9, 
+   3.698514570140389*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698683198314229*^9, 3.698683198316283*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPointInTriangle", "[", 
+  RowBox[{"0", ",", "1"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6985060736239223`*^9, 3.6985060736261797`*^9}, {
+   3.698506633607738*^9, 3.698506668436358*^9}, 3.6986831966698723`*^9, {
+   3.6986840734331627`*^9, 3.6986841122120447`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"t0p1x", ",", "t0p1y", ",", "t0p1z"}], "}"}]], "Output",
+ CellChangeTimes->{{3.698684078504381*^9, 3.698684113016488*^9}, 
+   3.6986842061907997`*^9, 3.698762975629366*^9, 3.6987750882376966`*^9, 
+   3.698836292119081*^9, 3.698919588402141*^9, {3.698921250580326*^9, 
+   3.6989212706984653`*^9}, 3.698923007262393*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPointInTriangle", "[", 
+  RowBox[{"1", ",", "2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6986831996164303`*^9, 3.698683199619067*^9}, {
+  3.698684171796015*^9, 3.698684174619557*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"t1p2x", ",", "t1p2y", ",", "t1p2z"}], "}"}]], "Output",
+ CellChangeTimes->{{3.69868418140125*^9, 3.698684206238617*^9}, 
+   3.6987629756649227`*^9, 3.698775088280658*^9, 3.698836292307523*^9, 
+   3.698919588506024*^9, {3.698921250610936*^9, 3.698921270715021*^9}, 
+   3.6989230072872257`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPointInRay", "[", 
+  RowBox[{"0", ",", "1"}], "]"}]], "Input",
+ CellChangeTimes->{{3.696694062494177*^9, 3.69669409729604*^9}, {
+   3.6985066826307297`*^9, 3.69850668662202*^9}, {3.698506717289319*^9, 
+   3.698506728964375*^9}, 3.69851458267327*^9, 3.69868319580408*^9, {
+   3.6986841830770187`*^9, 3.698684189750111*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"r0p1x", ",", "r0p1y", ",", "r0p1z"}], "}"}]], "Output",
+ CellChangeTimes->{{3.698684191001073*^9, 3.69868420624937*^9}, 
+   3.698762975702014*^9, 3.698775088309567*^9, 3.698836292477283*^9, 
+   3.69891958861607*^9, {3.698921250635379*^9, 3.69892127073352*^9}, 
+   3.698923007310089*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPointInRay", "[", 
+  RowBox[{"1", ",", "2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.698683200590705*^9, 3.698683200612742*^9}, {
+  3.698684192290344*^9, 3.698684194834978*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"r1p2x", ",", "r1p2y", ",", "r1p2z"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.698684206285264*^9, 3.698762975732726*^9, 3.698775088337812*^9, 
+   3.69883629260502*^9, 3.698919588721266*^9, {3.698921250658742*^9, 
+   3.698921270750123*^9}, 3.698923007332518*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPoint", "[", "0", "]"}]], "Input",
+ CellChangeTimes->{{3.698506730627977*^9, 3.69850673801698*^9}, 
+   3.6985145833166637`*^9, 3.698683194775476*^9, {3.698684198498255*^9, 
+   3.698684199496201*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"ip0x", ",", "ip0y", ",", "ip0z"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.698684206315136*^9, 3.698762975762179*^9, 3.69877508836517*^9, 
+   3.6988362927251177`*^9, 3.698919588824916*^9, {3.698921250681342*^9, 
+   3.698921270771491*^9}, 3.698923007354802*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPoint", "[", "1", "]"}]], "Input",
+ CellChangeTimes->{{3.6986832016894207`*^9, 3.6986832016922913`*^9}, {
+  3.6986842007495813`*^9, 3.698684201937942*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"ip1x", ",", "ip1y", ",", "ip1z"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.698684206342819*^9, 3.6987629757941008`*^9, 3.698775088402521*^9, 
+   3.698836292844439*^9, 3.698919589012814*^9, {3.6989212507009706`*^9, 
+   3.698921270790345*^9}, 3.698923007377158*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"inputPoint", "[", "2", "]"}]], "Input",
+ CellChangeTimes->{{3.696694062494177*^9, 3.69669409729604*^9}, {
+   3.6985066826307297`*^9, 3.6985066909739923`*^9}, {3.698506744328306*^9, 
+   3.69850674885681*^9}, 3.698514584400271*^9, 3.698683193911169*^9, {
+   3.698684202807623*^9, 3.698684203422227*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"ip2x", ",", "ip2y", ",", "ip2z"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6986842063698673`*^9, 3.6987629758272257`*^9, 3.698775088436747*^9, 
+   3.698836292990363*^9, 3.698919589121333*^9, {3.698921250719776*^9, 
+   3.698921270810668*^9}, 3.698923007399499*^9}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698683202470845*^9, 3.6986832024735928`*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6985067569587*^9, 3.698506767857974*^9}, 
+   3.6985145870388527`*^9, 3.698683192813119*^9, {3.6986850510066566`*^9, 
+   3.698685104176765*^9}, 3.698685136803932*^9}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6986832036006804`*^9, 3.698683203603654*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.696694062494177*^9, 3.69669409729604*^9}, {
+   3.6985066826307297`*^9, 3.6985067006435432`*^9}, {3.6985067858266993`*^9, 
+   3.698506791920588*^9}, 3.698514588106139*^9, 3.698683191914551*^9}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698683204376349*^9, 3.698683204378668*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"epsV", "[", "meshId_", "]"}], " ", ":=", " ", 
+  RowBox[{"{", "  ", 
+   RowBox[{
+    RowBox[{"meshId", "*", "\[Epsilon]"}], ",", " ", 
+    RowBox[{"meshId", "*", 
+     RowBox[{"\[Epsilon]", "^", "2"}]}], ",", " ", 
+    RowBox[{"meshId", "*", 
+     RowBox[{"\[Epsilon]", "^", "3"}]}]}], " ", "}"}]}]], "Input",
+ CellChangeTimes->{{3.698683024784333*^9, 3.698683024785184*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"From", " ", "Wolfram", " ", "Alpha", " ", 
+    RowBox[{"website", ":", " ", 
+     RowBox[{
+     "4", " ", "and", " ", "5", " ", "are", " ", "the", " ", "line", " ", 
+      "points"}]}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"PointPlaneIntersection", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"x1_", ",", "y1_", ",", "z1_"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x2_", ",", "y2_", ",", "z2_"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x3_", ",", "y3_", ",", "z3_"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"x4_", ",", "y4_", ",", "z4_"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x5_", ",", "y5_", ",", "z5_"}], "}"}]}], "}"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"t", "=", 
+       RowBox[{
+        RowBox[{"-", 
+         RowBox[{"Det", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"1", ",", "1", ",", "1", ",", "1"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"x1", ",", "x2", ",", "x3", ",", "x4"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"y1", ",", "y2", ",", "y3", ",", "y4"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"z1", ",", "z2", ",", "z3", ",", "z4"}], "}"}]}], "}"}], 
+          "]"}]}], "/", 
+        RowBox[{"Det", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"1", ",", "1", ",", "1", ",", "0"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"x1", ",", "x2", ",", "x3", ",", 
+             RowBox[{"x5", "-", "x4"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"y1", ",", "y2", ",", "y3", ",", 
+             RowBox[{"y5", "-", "y4"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"z1", ",", "z2", ",", "z3", ",", 
+             RowBox[{"z5", "-", "z4"}]}], "}"}]}], "}"}], "]"}]}]}], "}"}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"x4", "+", 
+        RowBox[{"t", 
+         RowBox[{"(", 
+          RowBox[{"x5", "-", "x4"}], ")"}]}]}], ",", 
+       RowBox[{"y4", "+", 
+        RowBox[{"t", 
+         RowBox[{"(", 
+          RowBox[{"y5", "-", "y4"}], ")"}]}]}], ",", 
+       RowBox[{"z4", "+", 
+        RowBox[{"t", 
+         RowBox[{"(", 
+          RowBox[{"z5", "-", "z4"}], ")"}]}]}]}], "}"}]}], 
+    "\[IndentingNewLine]", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.696694062494177*^9, 3.69669409729604*^9}, {
+   3.6985066826307297`*^9, 3.6985067006435432`*^9}, {3.698510527667519*^9, 
+   3.698510592119035*^9}, 3.698510763033514*^9, {3.698510902333727*^9, 
+   3.698510914564867*^9}, {3.69851094669786*^9, 3.698510950964829*^9}, {
+   3.6985109972601633`*^9, 3.6985110050279284`*^9}, {3.698511068670083*^9, 
+   3.6985110776960983`*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.696694062494177*^9, 3.69669409729604*^9}, {
+   3.6985066826307297`*^9, 3.6985067006435432`*^9}, {3.698510527667519*^9, 
+   3.698510592119035*^9}, 3.698510763033514*^9, {3.698510902333727*^9, 
+   3.698510914564867*^9}, {3.69851094669786*^9, 3.698510950964829*^9}, {
+   3.6985109972601633`*^9, 3.6985110050279284`*^9}, {3.698511068670083*^9, 
+   3.698511168712281*^9}, 3.6986829144467907`*^9}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698682915748159*^9, 3.698682916570487*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"p", "[", 
+   RowBox[{"tt0_", ",", "tt1_", ",", "tt2_", ",", "rt0_", ",", "rt1_"}], 
+   "]"}], "  ", ":=", " ", 
+  RowBox[{"PointPlaneIntersection", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"tt0", ",", "tt1", ",", "tt2"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"rt0", ",", "rt1"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6985113225779*^9, 3.698511370709341*^9}, {
+  3.69851677660014*^9, 3.698516831479063*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698511319246687*^9, 3.698511319249073*^9}}],
+
+Cell[BoxData[""], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511105271657*^9}}],
+
+Cell[BoxData[""], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511107265932*^9}}],
+
+Cell[BoxData[""], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511107590042*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"Now", ",", " ", 
+   RowBox[{
+   "we", " ", "can", " ", "compute", " ", "the", " ", 
+    "orientationEpsilon"}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.6985133653010883`*^9, 3.6985133759811907`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"orientation2D", "[", " ", 
+   RowBox[{"p0_", ",", "p1_", ",", "p2_", ",", 
+    RowBox[{"{", 
+     RowBox[{"coordX_", ",", "coordY_"}], "}"}]}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"p1", "[", 
+       RowBox[{"[", "coordX", "]"}], "]"}], "-", 
+      RowBox[{"p0", "[", 
+       RowBox[{"[", "coordX", "]"}], "]"}]}], " ", ")"}], "*", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"p2", "[", 
+       RowBox[{"[", "coordY", "]"}], "]"}], "-", 
+      RowBox[{"p0", "[", 
+       RowBox[{"[", "coordY", "]"}], "]"}]}], " ", ")"}]}], " ", "-", " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"p1", "[", 
+       RowBox[{"[", "coordY", "]"}], "]"}], "-", 
+      RowBox[{"p0", "[", 
+       RowBox[{"[", "coordY", "]"}], "]"}]}], " ", ")"}], "*", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"p2", "[", 
+       RowBox[{"[", "coordX", "]"}], "]"}], "-", 
+      RowBox[{"p0", "[", 
+       RowBox[{"[", "coordX", "]"}], "]"}]}], " ", ")"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.698513409259533*^9, 3.6985134105543528`*^9}, {
+  3.6985171024862757`*^9, 3.698517217853902*^9}, {3.698533887347719*^9, 
+  3.698534071762167*^9}, {3.698685284757278*^9, 3.698685441577751*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"coordsProjection", " ", "=", " ", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "3"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"3", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.698513428797649*^9, 3.6985134317595253`*^9}, 
+   3.698517099672503*^9, 3.698767782990159*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9, 
+   3.698775088596768*^9, 3.69883629321966*^9, 3.69891959012075*^9, {
+   3.6989212508054667`*^9, 3.698921270927573*^9}, 3.698923007479519*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9, 
+   3.698775088596768*^9, 3.69883629321966*^9, 3.69891959012075*^9, {
+   3.6989212508054667`*^9, 3.698921270927573*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9, 
+   3.698775088596768*^9, 3.69883629321966*^9, 3.69891959012075*^9, 
+   3.6989212508054667`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9, 
+   3.698775088596768*^9, 3.69883629321966*^9, 3.69891959012075*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9, 
+   3.698775088596768*^9, 3.69883629321966*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9, 
+   3.698775088596768*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], "}"}]], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9, 3.698767783626297*^9}],
+
+Cell[BoxData[""], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, 3.698513499930773*^9}],
+
+Cell[BoxData[""], "Output",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.6985110057562323`*^9, {3.698511080415476*^9, 3.698511108770543*^9}, 
+   3.698513446821618*^9, {3.698513499930773*^9, 3.6985135001553164`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+   RowBox[{"For", " ", "example"}], ",", " ", 
+   RowBox[{
+    RowBox[{
+    "supposing", " ", "the", " ", "projection", " ", "is", " ", "to", " ", 
+     "z"}], "=", "0"}], ",", " ", 
+   RowBox[{"we", " ", 
+    RowBox[{"have", ":", " ", "\[IndentingNewLine]", 
+     RowBox[{
+     "planeProj", " ", "can", " ", "be", " ", "either", " ", "1"}]}]}], ",", 
+   "2", ",", 
+   RowBox[{"3", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"x", "=", "0"}], ",", 
+      RowBox[{
+       RowBox[{"y", "\[Equal]", 
+        RowBox[{"0", " ", "or", " ", "z"}]}], "=", "0"}]}], ")"}]}]}], 
+  "*)"}]], "Input",
+ CellChangeTimes->{{3.698513501448949*^9, 3.698513520133381*^9}, {
+  3.698767898909011*^9, 3.698767931964837*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"orientationEps", "[", 
+   RowBox[{
+   "meshIdt0_", ",", "meshIdt1_", ",", "meshIdt2_", ",", " ", "planeProj_"}], 
+   "]"}], " ", ":=", 
+  RowBox[{"orientation2D", "[", "     ", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"PointPlaneIntersection", "[", 
+     RowBox[{
+      RowBox[{"{", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t00x", ",", "t00y", ",", "t00z"}], "}"}], "  ", "+", 
+         RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t01x", ",", "t01y", ",", "t01z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t02x", ",", "t02y", ",", "t02z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt0", "]"}]}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"r00x", ",", "r00y", ",", "r00z"}], "}"}], "+", 
+         RowBox[{"epsV", "[", 
+          RowBox[{"1", "-", "meshIdt0"}], "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"r01x", ",", "r01y", ",", "r01z"}], "}"}], "+", 
+         RowBox[{"epsV", "[", 
+          RowBox[{"1", "-", "meshIdt0"}], "]"}]}]}], " ", "}"}]}], "]"}], " ",
+     ",", " ", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"PointPlaneIntersection", "[", 
+     RowBox[{
+      RowBox[{"{", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t10x", ",", "t10y", ",", "t10z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t11x", ",", "t11y", ",", "t11z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t12x", ",", "t12y", ",", "t12z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt1", "]"}]}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"r10x", ",", "r10y", ",", "r10z"}], "}"}], "+", 
+         RowBox[{"epsV", "[", 
+          RowBox[{"1", "-", "meshIdt1"}], "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"r11x", ",", "r11y", ",", "r11z"}], "}"}], "+", 
+         RowBox[{"epsV", "[", 
+          RowBox[{"1", "-", "meshIdt1"}], "]"}]}]}], "}"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", "         ", 
+    RowBox[{"PointPlaneIntersection", "[", 
+     RowBox[{
+      RowBox[{"{", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t20x", ",", "t20y", ",", "t20z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t21x", ",", "t21y", ",", "t21z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t22x", ",", "t22y", ",", "t22z"}], "}"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt2", "]"}]}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"r20x", ",", "r20y", ",", "r20z"}], "}"}], "+", 
+         RowBox[{"epsV", "[", 
+          RowBox[{"1", "-", "meshIdt2"}], "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"r21x", ",", "r21y", ",", "r21z"}], "}"}], "+", 
+         RowBox[{"epsV", "[", 
+          RowBox[{"1", "-", "meshIdt2"}], "]"}]}]}], "}"}]}], "]"}], " ", ",",
+     " ", 
+    RowBox[{"coordsProjection", "[", 
+     RowBox[{"[", "planeProj", "]"}], "]"}]}], " ", "]"}]}]], "Input",
+ CellChangeTimes->{{3.698517249167478*^9, 3.698517351119667*^9}, {
+   3.6985186189069023`*^9, 3.698518627870596*^9}, {3.6985187563102922`*^9, 
+   3.698518784782525*^9}, {3.698518819064509*^9, 3.698518827695017*^9}, {
+   3.698519648307375*^9, 3.6985196544647007`*^9}, {3.6985197005513067`*^9, 
+   3.698519721144943*^9}, {3.698519801248555*^9, 3.69851980537339*^9}, {
+   3.6985206366118517`*^9, 3.698520730703702*^9}, {3.69853417353174*^9, 
+   3.6985342088980722`*^9}, {3.6985342567577667`*^9, 3.698534518159747*^9}, 
+   3.69853470575331*^9, {3.6985347919136667`*^9, 3.698534793894762*^9}, {
+   3.698534918496689*^9, 3.698535021049336*^9}, {3.698535086863559*^9, 
+   3.698535107026773*^9}, {3.698535157753396*^9, 3.698535160294211*^9}, {
+   3.698535420385071*^9, 3.698535428354784*^9}, {3.6985766103414297`*^9, 
+   3.69857662310765*^9}, {3.6986827083747787`*^9, 3.698682780201056*^9}, {
+   3.6986880359847307`*^9, 3.698688108436042*^9}, {3.698688241066289*^9, 
+   3.698688246711488*^9}, {3.698688278176757*^9, 3.6986883386186047`*^9}, {
+   3.698688500594757*^9, 3.6986886305700197`*^9}, 3.698688683767293*^9, {
+   3.6987625932874804`*^9, 3.69876263232166*^9}, {3.698767799884457*^9, 
+   3.698767812364606*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  
+  RowBox[{
+   RowBox[{"orientation2Diii", "[", 
+    RowBox[{
+    "meshIdt0_", ",", "meshIdt1_", ",", "meshIdt2_", ",", " ", "planeProj_"}],
+     "]"}], " ", ":=", " ", 
+   RowBox[{"CoefficientList", "[", " ", 
+    RowBox[{
+     RowBox[{"Collect", "[", " ", 
+      RowBox[{
+       RowBox[{"orientation2D", "[", "     ", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"PointPlaneIntersection", "[", 
+          RowBox[{
+           RowBox[{"{", " ", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"0", ",", "0"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"0", ",", "1"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"0", ",", "2"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt0", "]"}]}]}], "}"}], ",", 
+           RowBox[{"{", " ", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"inputPointInRay", "[", 
+               RowBox[{"0", ",", "0"}], "]"}], "+", 
+              RowBox[{"epsV", "[", 
+               RowBox[{"1", "-", "meshIdt0"}], "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInRay", "[", 
+               RowBox[{"0", ",", "1"}], "]"}], "+", 
+              RowBox[{"epsV", "[", 
+               RowBox[{"1", "-", "meshIdt0"}], "]"}]}]}], " ", "}"}]}], "]"}],
+          " ", ",", " ", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"PointPlaneIntersection", "[", 
+          RowBox[{
+           RowBox[{"{", "  ", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"1", ",", "0"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"1", ",", "1"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"1", ",", "2"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt1", "]"}]}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"inputPointInRay", "[", 
+               RowBox[{"1", ",", "0"}], "]"}], "+", 
+              RowBox[{"epsV", "[", 
+               RowBox[{"1", "-", "meshIdt1"}], "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInRay", "[", 
+               RowBox[{"1", ",", "1"}], "]"}], "+", 
+              RowBox[{"epsV", "[", 
+               RowBox[{"1", "-", "meshIdt1"}], "]"}]}]}], "}"}]}], "]"}], ",",
+          "\[IndentingNewLine]", "\[IndentingNewLine]", "         ", 
+         RowBox[{"PointPlaneIntersection", "[", 
+          RowBox[{
+           RowBox[{"{", "  ", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"2", ",", "0"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", " ", 
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"2", ",", "1"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", " ", 
+             RowBox[{
+              RowBox[{"inputPointInTriangle", "[", 
+               RowBox[{"2", ",", "2"}], "]"}], " ", "+", 
+              RowBox[{"epsV", "[", "meshIdt2", "]"}]}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"inputPointInRay", "[", 
+               RowBox[{"2", ",", "0"}], "]"}], "+", 
+              RowBox[{"epsV", "[", 
+               RowBox[{"1", "-", "meshIdt2"}], "]"}]}], ",", 
+             RowBox[{
+              RowBox[{"inputPointInRay", "[", 
+               RowBox[{"2", ",", "1"}], "]"}], "+", 
+              RowBox[{"epsV", "[", 
+               RowBox[{"1", "-", "meshIdt2"}], "]"}]}]}], "}"}]}], "]"}], " ",
+          ",", 
+         RowBox[{"coordsProjection", "[", 
+          RowBox[{"[", "planeProj", "]"}], "]"}]}], "  ", "]"}], ",", 
+       "\[Epsilon]"}], "]"}], ",", "\[Epsilon]"}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.698520780433835*^9, 3.6985207999619637`*^9}, {
+   3.698520867735547*^9, 3.6985208749022837`*^9}, {3.698521013588552*^9, 
+   3.6985210230993433`*^9}, {3.6985211119139347`*^9, 3.698521113271656*^9}, {
+   3.698521392788001*^9, 3.698521426791493*^9}, {3.698534537579376*^9, 
+   3.6985345391668367`*^9}, {3.6985354427427073`*^9, 3.698535444674453*^9}, {
+   3.698576635924563*^9, 3.698576640873557*^9}, 3.6986827008997707`*^9, {
+   3.698762672012026*^9, 3.698762884457569*^9}, 3.698762958911674*^9, {
+   3.698763277537549*^9, 3.698763281988056*^9}, {3.698763326318055*^9, 
+   3.69876333122758*^9}, {3.698767828418195*^9, 3.698767844358646*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"orientation2Doii", "[", 
+   RowBox[{
+   "meshIdt0_", ",", "meshIdt1_", ",", "meshIdt2_", ",", "  ", "planeProj_"}],
+    "]"}], " ", ":=", " ", 
+  RowBox[{"CoefficientList", "[", " ", 
+   RowBox[{
+    RowBox[{"Collect", "[", " ", 
+     RowBox[{
+      RowBox[{"orientation2D", "[", "     ", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"inputPoint", "[", "0", "]"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", " ", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"PointPlaneIntersection", "[", 
+         RowBox[{
+          RowBox[{"{", "  ", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"1", ",", "0"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", 
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"1", ",", "1"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", 
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"1", ",", "2"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt1", "]"}]}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPointInRay", "[", 
+              RowBox[{"1", ",", "0"}], "]"}], "+", 
+             RowBox[{"epsV", "[", 
+              RowBox[{"1", "-", "meshIdt1"}], "]"}]}], ",", 
+            RowBox[{
+             RowBox[{"inputPointInRay", "[", 
+              RowBox[{"1", ",", "1"}], "]"}], "+", 
+             RowBox[{"epsV", "[", 
+              RowBox[{"1", "-", "meshIdt1"}], "]"}]}]}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "         ", 
+        RowBox[{"PointPlaneIntersection", "[", 
+         RowBox[{
+          RowBox[{"{", "  ", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"2", ",", "0"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", " ", 
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"2", ",", "1"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", " ", 
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"2", ",", "2"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt2", "]"}]}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPointInRay", "[", 
+              RowBox[{"2", ",", "0"}], "]"}], "+", 
+             RowBox[{"epsV", "[", 
+              RowBox[{"1", "-", "meshIdt2"}], "]"}]}], ",", 
+            RowBox[{
+             RowBox[{"inputPointInRay", "[", 
+              RowBox[{"2", ",", "1"}], "]"}], "+", 
+             RowBox[{"epsV", "[", 
+              RowBox[{"1", "-", "meshIdt2"}], "]"}]}]}], "}"}]}], "]"}], " ", 
+        ",", " ", 
+        RowBox[{"coordsProjection", "[", 
+         RowBox[{"[", "planeProj", "]"}], "]"}]}], " ", "]"}], ",", 
+      "\[Epsilon]"}], "]"}], ",", "\[Epsilon]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.698688184251375*^9, 3.698688197491543*^9}, 
+   3.6987643126379223`*^9, 3.698764344218952*^9, {3.698764376311975*^9, 
+   3.698764395159342*^9}, {3.6987678597108107`*^9, 3.698767888495174*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698688757413124*^9, 3.698688773842904*^9}, {
+   3.698762912871718*^9, 3.698762936343375*^9}, {3.698762966513319*^9, 
+   3.698762989569728*^9}, 3.6987643163347263`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"orientation2Dooi", "[", 
+   RowBox[{
+   "meshIdt0_", ",", "meshIdt1_", ",", "meshIdt2_", ",", "  ", "planeProj_"}],
+    "]"}], " ", ":=", " ", 
+  RowBox[{"CoefficientList", "[", " ", 
+   RowBox[{
+    RowBox[{"Collect", "[", " ", 
+     RowBox[{
+      RowBox[{"orientation2D", "[", "     ", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"inputPoint", "[", "0", "]"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", " ", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"inputPoint", "[", "1", "]"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", " ", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "         ", 
+        RowBox[{"PointPlaneIntersection", "[", 
+         RowBox[{
+          RowBox[{"{", "  ", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"2", ",", "0"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", " ", 
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"2", ",", "1"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", " ", 
+            RowBox[{
+             RowBox[{"inputPointInTriangle", "[", 
+              RowBox[{"2", ",", "2"}], "]"}], " ", "+", 
+             RowBox[{"epsV", "[", "meshIdt2", "]"}]}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPointInRay", "[", 
+              RowBox[{"2", ",", "0"}], "]"}], "+", 
+             RowBox[{"epsV", "[", 
+              RowBox[{"1", "-", "meshIdt2"}], "]"}]}], ",", 
+            RowBox[{
+             RowBox[{"inputPointInRay", "[", 
+              RowBox[{"2", ",", "1"}], "]"}], "+", 
+             RowBox[{"epsV", "[", 
+              RowBox[{"1", "-", "meshIdt2"}], "]"}]}]}], "}"}]}], "]"}], " ", 
+        ",", " ", 
+        RowBox[{"coordsProjection", "[", 
+         RowBox[{"[", "planeProj", "]"}], "]"}]}], " ", "]"}], ",", 
+      "\[Epsilon]"}], "]"}], ",", "\[Epsilon]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.698764415478114*^9, 3.6987644218906927`*^9}, {
+  3.69876786635242*^9, 3.698767884528226*^9}, {3.6989226530824423`*^9, 
+  3.698922659450734*^9}, {3.698922726242025*^9, 3.698922732002912*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6986889304513903`*^9, 3.6986889388310328`*^9}, 
+   3.69876431732119*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"orientation2Dooo", "[", 
+   RowBox[{
+   "meshIdt0_", ",", "meshIdt1_", ",", "meshIdt2_", ",", " ", "planeProj_"}], 
+   "]"}], " ", ":=", " ", 
+  RowBox[{"CoefficientList", "[", " ", 
+   RowBox[{
+    RowBox[{"Collect", "[", " ", 
+     RowBox[{
+      RowBox[{"orientation2D", "[", "     ", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"inputPoint", "[", "0", "]"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt0", "]"}]}], ",", " ", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"inputPoint", "[", "1", "]"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt1", "]"}]}], ",", " ", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"inputPoint", "[", "2", "]"}], " ", "+", 
+         RowBox[{"epsV", "[", "meshIdt2", "]"}]}], ",", "  ", 
+        RowBox[{"coordsProjection", "[", 
+         RowBox[{"[", "planeProj", "]"}], "]"}]}], " ", "]"}], ",", 
+      "\[Epsilon]"}], "]"}], ",", "\[Epsilon]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.698689058097734*^9, 3.698689068879611*^9}, 
+   3.6987641801460543`*^9, {3.698764430546274*^9, 3.698764458537135*^9}, {
+   3.698767766900033*^9, 3.69876777390784*^9}, {3.698767876564879*^9, 
+   3.698767880588065*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698689077862228*^9, 3.698689093710464*^9}, {
+   3.698699833371015*^9, 3.698699838298009*^9}, 3.698764179328875*^9}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.69869642315841*^9, 3.6986964241438847`*^9}, {
+   3.698764471157906*^9, 3.698764540373311*^9}, {3.698764571489295*^9, 
+   3.6987645716087112`*^9}, {3.698767474027788*^9, 3.698767526186267*^9}, {
+   3.698767593042713*^9, 3.6987675974609623`*^9}, 3.698767777625741*^9}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6987679200902433`*^9, 3.6987679201046467`*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{3.698767918497007*^9},
+ NumberMarks->False],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+   RowBox[{"Generating", " ", 
+    RowBox[{"C", "++"}], " ", "code", " ", "to", " ", "evaluate", " ", 
+    "these", " ", "functions"}], "..."}], " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.698696432878708*^9, 3.6986964340877743`*^9}, {
+   3.6986964832136593`*^9, 3.6986965220475683`*^9}, 3.6986966072854633`*^9, {
+   3.698768474120042*^9, 3.698768483352756*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"separatorStr", " ", "=", " ", 
+  "\"\</*****************************************************/\\n\>\""}]], \
+"Input",
+ CellChangeTimes->{{3.698696528102786*^9, 3.6986965328423853`*^9}, 
+   3.698696605965117*^9, {3.698696639231567*^9, 3.6986966410196743`*^9}, {
+   3.698767922847569*^9, 3.698767949051477*^9}, 3.698768027687728*^9, {
+   3.6987685919880667`*^9, 3.698768634706388*^9}}],
+
+Cell[BoxData["\<\"/*****************************************************/\\n\"\
+\>"], "Output",
+ CellChangeTimes->{
+  3.698775088751156*^9, 3.698836293453597*^9, 3.698919591163516*^9, {
+   3.698921250899856*^9, 3.6989212710552673`*^9}, 3.6989230075660677`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{" ", 
+  RowBox[{
+   RowBox[{"codeForTestingExpr", "[", 
+    RowBox[{"expressionId_", ",", " ", "expression_"}], "]"}], " ", ":=", " ", 
+   RowBox[{
+   "separatorStr", " ", "<>", " ", "separatorStr", " ", "<>", " ", 
+    "\"\<VertCoord ans_\>\"", " ", "<>", " ", 
+    RowBox[{"ToString", "[", "expressionId", "]"}], " ", "<>", " ", 
+    "\"\< = \>\"", " ", "<>", " ", 
+    RowBox[{"ExportString", "[", 
+     RowBox[{"expression", ",", "\"\<Text\>\""}], "]"}], " ", "<>", " ", 
+    "\"\< ; \\n\\nif(sgn(\>\"", " ", "<>", " ", "\"\<ans_\>\"", " ", "<>", 
+    " ", 
+    RowBox[{"ToString", "[", "expressionId", "]"}], " ", "<>", " ", 
+    "\"\<) != 0) return sgn(\>\"", " ", "<>", " ", "\"\<ans_\>\"", " ", "<>", 
+    " ", 
+    RowBox[{"ToString", "[", "expressionId", "]"}], " ", "<>", " ", 
+    "\"\<);\\n\\n\>\"", " ", "<>", " ", "separatorStr", " ", "<>", " ", 
+    "separatorStr", " "}]}]}]], "Input",
+ CellChangeTimes->{{3.698768117375783*^9, 3.6987681327474613`*^9}, {
+   3.698768202497444*^9, 3.698768395452311*^9}, {3.6987686283511753`*^9, 
+   3.698768735225494*^9}, {3.69876883596522*^9, 3.69876884361598*^9}, {
+   3.698769028360664*^9, 3.698769030521379*^9}, 3.698769318471498*^9, 
+   3.698836961856431*^9, 3.698866866804523*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+  "generateCodeForListOfEpsCoefficients", "[", "coefficientList_", "]"}], " ",
+   ":=", " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"out", "=", "\"\<\>\""}], ";", " ", 
+    RowBox[{"Do", "[", " ", 
+     RowBox[{
+      RowBox[{"out", " ", "=", " ", 
+       RowBox[{"out", " ", "<>", " ", 
+        RowBox[{"codeForTestingExpr", "[", 
+         RowBox[{"i", ",", 
+          RowBox[{"coefficientList", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", 
+        RowBox[{"Length", "[", "coefficientList", "]"}]}], "}"}]}], "]"}], 
+    ";", " ", "out"}], " ", ")"}]}]], "Input",
+ CellChangeTimes->{{3.69876910858632*^9, 3.698769206439698*^9}, {
+   3.6987692384165916`*^9, 3.698769257282386*^9}, {3.698769288092195*^9, 
+   3.698769293037842*^9}, {3.6987734448562603`*^9, 3.698773477051169*^9}, 
+   3.6987735244619217`*^9, {3.698773592762764*^9, 3.698773609627583*^9}, {
+   3.698773775717065*^9, 3.698773820512411*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Now", ",", " ", 
+    RowBox[{
+    "we", " ", "will", " ", "define", " ", "functions", " ", "used", " ", 
+     "to", " ", "extract", " ", "the", " ", "coordinates", " ", "from", " ", 
+     "the", " ", "arguments", " ", 
+     RowBox[{"(", 
+      RowBox[{"vertices", ",", " ", 
+       RowBox[{"labeled", " ", "v0"}], ",", " ", "v1", ",", " ", "v2"}], 
+      ")"}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"extractCoordFromOriginalVertex", "[", 
+    RowBox[{"v_", ",", "coord_"}], "]"}], " ", ":=", " ", 
+   RowBox[{"\"\<const VertCoord &\>\"", " ", "<>", " ", 
+    RowBox[{"ToString", "[", 
+     RowBox[{
+      RowBox[{"inputPoint", "[", "v", "]"}], "[", 
+      RowBox[{"[", "coord", "]"}], "]"}], "]"}], "<>", " ", 
+    "\"\< = getCoordinates(v\>\"", " ", "<>", " ", 
+    RowBox[{"ToString", "[", "v", "]"}], " ", "<>", " ", "\"\<)[\>\"", "  ", "<>",
+     " ", 
+    RowBox[{"ToString", "[", 
+     RowBox[{"coord", "-", "1"}], "]"}], "<>", "\"\<];\>\""}]}]}]], "Input",
+ CellChangeTimes->{{3.698769177646439*^9, 3.698769179589929*^9}, {
+  3.698773832881899*^9, 3.698773833270927*^9}, {3.698774751467574*^9, 
+  3.698774801197383*^9}, {3.698774840113147*^9, 3.698774967406488*^9}, {
+  3.698775027097164*^9, 3.698775054299363*^9}, {3.6987751037511377`*^9, 
+  3.698775167248681*^9}, {3.698775274831636*^9, 3.698775293335079*^9}, {
+  3.698775330504086*^9, 3.698775370235818*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extractRayCoordFromIntersectionVertex", "[", 
+   RowBox[{"v_", ",", " ", "pid_", ",", "coord_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"\"\<const VertCoord &\>\"", " ", "<>", " ", 
+   RowBox[{"ToString", "[", " ", 
+    RowBox[{
+     RowBox[{"inputPointInRay", "[", 
+      RowBox[{"v", ",", "pid"}], "]"}], "[", 
+     RowBox[{"[", "coord", "]"}], "]"}], " ", "]"}], "  ", "<>", " ", 
+   "\"\< = getCoordinates(v\>\"", " ", "<>", " ", 
+   RowBox[{"ToString", "[", "v", "]"}], " ", " ", "<>", " ", "\"\<.edge[\>\"",
+    " ", "<>", " ", 
+   RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<])[\>\"", "  ",
+    "<>", " ", 
+   RowBox[{"ToString", "[", 
+    RowBox[{"coord", "-", "1"}], "]"}], "<>", "\"\<];\>\""}]}]], "Input",
+ CellChangeTimes->{{3.698773836876461*^9, 3.6987738389509077`*^9}, {
+  3.698775234787816*^9, 3.6987752428177423`*^9}, {3.698775463995758*^9, 
+  3.698775532927886*^9}, {3.6987756088877907`*^9, 3.6987756385995092`*^9}, {
+  3.698775673496242*^9, 3.6987756852541723`*^9}, {3.698775716035754*^9, 
+  3.698775719564309*^9}, {3.698922920710483*^9, 3.6989229307831497`*^9}, {
+  3.69892296297079*^9, 3.698922963442222*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extractTriangleCoordFromIntersectionVertex", "[", 
+   RowBox[{"v_", ",", " ", "pid_", ",", "coord_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"\"\<const VertCoord &\>\"", " ", "<>", " ", 
+   RowBox[{"ToString", "[", " ", 
+    RowBox[{
+     RowBox[{"inputPointInTriangle", "[", 
+      RowBox[{"v", ",", "pid"}], "]"}], "[", 
+     RowBox[{"[", "coord", "]"}], "]"}], " ", "]"}], "  ", "<>", " ", 
+   "\"\< = getCoordinates( *(v\>\"", " ", "<>", " ", 
+   RowBox[{"ToString", "[", "v", "]"}], " ", " ", "<>", " ", 
+   "\"\<.triangle.getInputVertex(\>\"", " ", "<>", " ", 
+   RowBox[{"ToString", "[", "pid", "]"}], " ", "<>", " ", "\"\<)) )[\>\"", 
+   "  ", "<>", " ", 
+   RowBox[{"ToString", "[", 
+    RowBox[{"coord", "-", "1"}], "]"}], "<>", "\"\<];\>\""}]}]], "Input",
+ CellChangeTimes->{{3.698774952957036*^9, 3.698774976834235*^9}, {
+  3.6987750755322857`*^9, 3.6987751223987827`*^9}, {3.698775378893224*^9, 
+  3.698775383138695*^9}, {3.698775523891934*^9, 3.698775526756287*^9}, {
+  3.698835654705453*^9, 3.6988357704096317`*^9}, {3.698835808695669*^9, 
+  3.698835827657688*^9}, {3.698836378215423*^9, 3.698836400621661*^9}, {
+  3.698922969591847*^9, 3.698922983888028*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extractCoordFromIntersectionVertex", "[", 
+   RowBox[{"v_", ",", "coord_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"extractTriangleCoordFromIntersectionVertex", "[", 
+    RowBox[{"v", ",", " ", "0", ",", "coord"}], "]"}], " ", "<>", " ", 
+   "\"\<\\n\>\"", " ", "<>", " ", 
+   RowBox[{"extractTriangleCoordFromIntersectionVertex", "[", 
+    RowBox[{"v", ",", " ", "1", ",", "coord"}], "]"}], " ", "<>", " ", 
+   "\"\<\\n\>\"", " ", "<>", 
+   RowBox[{"extractTriangleCoordFromIntersectionVertex", "[", 
+    RowBox[{"v", ",", " ", "2", ",", "coord"}], "]"}], " ", "<>", " ", 
+   "\"\<\\n\>\"", "  ", "<>", 
+   RowBox[{"extractRayCoordFromIntersectionVertex", "[", 
+    RowBox[{"v", ",", " ", "0", ",", "coord"}], "]"}], " ", "<>", " ", 
+   "\"\<\\n\>\"", " ", "<>", 
+   RowBox[{"extractRayCoordFromIntersectionVertex", "[", 
+    RowBox[{"v", ",", "1", ",", "coord"}], "]"}], "  "}]}]], "Input",
+ CellChangeTimes->{{3.698835834524207*^9, 3.698835855302746*^9}, 
+   3.6988360142577047`*^9, 3.6988360448392467`*^9, {3.698836101953718*^9, 
+   3.698836206933495*^9}, {3.698836314923224*^9, 3.698836346699956*^9}, {
+   3.6988365819956207`*^9, 3.698836586271583*^9}, 3.698836650623616*^9}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6988365832661543`*^9, 3.698836583485815*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extractCoordFromIntersectionVertex", "[", "v_", "]"}], " ", ":=", 
+  " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"out", "=", "\"\<\>\""}], ";", " ", 
+    RowBox[{"Do", "[", " ", 
+     RowBox[{
+      RowBox[{"out", " ", "=", " ", 
+       RowBox[{"out", " ", "<>", " ", 
+        RowBox[{"extractCoordFromIntersectionVertex", "[", 
+         RowBox[{"v", ",", "i"}], "]"}], " ", "<>", " ", "\"\<\\n\>\""}]}], 
+      " ", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "3"}], "}"}]}], "]"}], " ", ";", " ", "out"}], " ", 
+   ")"}]}]], "Input",
+ CellChangeTimes->{{3.698836214315481*^9, 3.698836216555159*^9}, {
+  3.698836264299108*^9, 3.6988362647899427`*^9}, {3.698836305410368*^9, 
+  3.6988363197716103`*^9}, {3.698836445845435*^9, 3.698836515559083*^9}, {
+  3.6988365532543383`*^9, 3.69883656351005*^9}, {3.6988366266475697`*^9, 
+  3.698836638427219*^9}, {3.69883862005123*^9, 3.698838620294895*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698836512399584*^9, 3.6988365306833*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extractCoordFromOriginalVertex", "[", "v_", "]"}], " ", ":=", " ", 
+  
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"out", "=", "\"\<\>\""}], ";", " ", 
+    RowBox[{"Do", "[", " ", 
+     RowBox[{
+      RowBox[{"out", " ", "=", " ", 
+       RowBox[{"out", " ", "<>", " ", 
+        RowBox[{"extractCoordFromOriginalVertex", "[", 
+         RowBox[{"v", ",", "i"}], "]"}], " ", "<>", " ", "\"\<\\n\>\""}]}], 
+      " ", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "3"}], "}"}]}], "]"}], " ", ";", " ", "out"}], " ", 
+   ")"}]}]], "Input",
+ CellChangeTimes->{{3.6988362671961527`*^9, 3.698836276393147*^9}, {
+  3.698836498282105*^9, 3.698836499739812*^9}, {3.6988366921429243`*^9, 
+  3.6988366991289186`*^9}, {3.698838621475029*^9, 3.698838621638995*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698836604918399*^9, 3.69883661603017*^9}, {
+   3.698836702658646*^9, 3.698836704140727*^9}, 3.6988367633935328`*^9}],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{"Generating", " ", "the", " ", "function", " ", "header"}], " ", 
+  "*)"}]], "Input",
+ CellChangeTimes->{{3.698836758804063*^9, 3.698836766163801*^9}, {
+  3.6988368052471333`*^9, 3.698836812641696*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"functionName", "[", 
+    RowBox[{"meshId0_", ",", "meshId1_", ",", "meshId2_", ",", "planeId_"}], 
+    "]"}], " ", ":=", " ", 
+   RowBox[{"\"\<orient2D_\>\"", " ", "<>", " ", 
+    RowBox[{"ToString", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<x\>\"", ",", "\"\<y\>\"", ",", "\"\<z\>\""}], "}"}], "[", 
+      
+      RowBox[{"[", "planeId", "]"}], "]"}], "]"}], " ", "<>", " ", 
+    "\"\<0_\>\"", " ", "<>", " ", 
+    RowBox[{"ToString", "[", "meshId0", "]"}], "  ", "<>", " ", 
+    RowBox[{"ToString", "[", "meshId1", "]"}], " ", "<>", " ", 
+    RowBox[{"ToString", "[", "meshId2", "]"}], "  "}]}]}]], "Input",
+ CellChangeTimes->{{3.698837070822114*^9, 3.698837157777005*^9}, {
+  3.69883722247479*^9, 3.698837303930129*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"vertexTypeList", " ", "=", " ", 
+  RowBox[{"{", 
+   RowBox[{"\"\<InputVertex\>\"", ",", "\"\<VertexFromIntersection\>\""}], 
+   "}"}]}]], "Input",
+ CellChangeTimes->{{3.698837162790607*^9, 3.698837184992391*^9}, {
+  3.698837398510529*^9, 3.6988374285381947`*^9}, {3.6988375981441813`*^9, 
+  3.698837598480713*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"InputVertex\"\>", ",", "\<\"VertexFromIntersection\"\>"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.6988375993094683`*^9, 3.698919592422276*^9, {3.698921251036042*^9, 
+   3.69892127116499*^9}, 3.698923007685193*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"functionHeader", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"meshId0_", ",", "meshId1_", ",", "meshId2_"}], "}"}], ",", 
+    "planeId_", ",", 
+    RowBox[{"{", 
+     RowBox[{"vertexType0_", ",", "vertexType1_", ",", "vertexType2_"}], 
+     "}"}]}], "]"}], ":=", " ", 
+  RowBox[{"\"\<int SosPredicatesImpl::\>\"", " ", "<>", " ", 
+   RowBox[{"functionName", "[", 
+    RowBox[{"meshId0", ",", "meshId1", ",", "meshId2", ",", "planeId"}], 
+    "]"}], " ", "<>", " ", "\"\<(const \>\"", " ", "<>", " ", 
+   RowBox[{"vertexTypeList", "[", 
+    RowBox[{"[", "vertexType0", "]"}], "]"}], " ", "<>", " ", 
+   "\"\< &v0, const \>\"", " ", "<>", " ", 
+   RowBox[{"vertexTypeList", "[", 
+    RowBox[{"[", "vertexType1", "]"}], "]"}], " ", "<>", " ", 
+   "\"\< &v1, const \>\"", "<>", " ", 
+   RowBox[{"vertexTypeList", "[", 
+    RowBox[{"[", "vertexType2", "]"}], "]"}], " ", "<>", " ", 
+   "\"\< &v2) const\>\""}]}]], "Input",
+ CellChangeTimes->{{3.698837268709281*^9, 3.698837291770914*^9}, {
+  3.698837440147255*^9, 3.698837551849045*^9}, {3.698837609109824*^9, 
+  3.698837697912408*^9}, {3.698864466480842*^9, 3.698864467333839*^9}, {
+  3.698919562085259*^9, 3.69891956854249*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"functionHeaderForHFile", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"meshId0_", ",", "meshId1_", ",", "meshId2_"}], "}"}], ",", 
+    "planeId_", ",", 
+    RowBox[{"{", 
+     RowBox[{"vertexType0_", ",", "vertexType1_", ",", "vertexType2_"}], 
+     "}"}]}], "]"}], ":=", " ", 
+  RowBox[{"\"\<int \>\"", " ", "<>", " ", 
+   RowBox[{"functionName", "[", 
+    RowBox[{"meshId0", ",", "meshId1", ",", "meshId2", ",", "planeId"}], 
+    "]"}], " ", "<>", " ", "\"\<(const \>\"", " ", "<>", " ", 
+   RowBox[{"vertexTypeList", "[", 
+    RowBox[{"[", "vertexType0", "]"}], "]"}], " ", "<>", " ", 
+   "\"\< &v0, const \>\"", " ", "<>", " ", 
+   RowBox[{"vertexTypeList", "[", 
+    RowBox[{"[", "vertexType1", "]"}], "]"}], " ", "<>", " ", 
+   "\"\< &v1, const \>\"", "<>", " ", 
+   RowBox[{"vertexTypeList", "[", 
+    RowBox[{"[", "vertexType2", "]"}], "]"}], " ", "<>", " ", 
+   "\"\< &v2) const;\>\""}]}]], "Input",
+ CellChangeTimes->{{3.698837290337137*^9, 3.698837290343841*^9}, {
+  3.698837554526379*^9, 3.698837575793742*^9}, {3.698837702378447*^9, 
+  3.698837707109664*^9}, {3.6988645066582212`*^9, 3.6988645343927107`*^9}, {
+  3.6989195772970963`*^9, 3.698919577890521*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Now", ",", " ", 
+    RowBox[{
+     RowBox[{"let", "'"}], "s", " ", "generate", " ", "the", " ", "complete", 
+     " ", "function"}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "Vertex", " ", "type", " ", "1", " ", "is", " ", "an", " ", "original", 
+     " ", 
+     RowBox[{"(", "input", ")"}], " ", "vertex"}], ",", " ", 
+    RowBox[{
+    "type", " ", "2", " ", "is", " ", "vertex", " ", "from", " ", "the", " ", 
+     "intersection"}]}], " ", "*)"}]}]], "Input",
+ CellChangeTimes->{{3.698837722088264*^9, 3.698837732263134*^9}, {
+  3.698838238678629*^9, 3.698838255037838*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"possibleCombinationVertexTypes", " ", "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+   "\"\<ooo\>\"", ",", "\"\<ooi\>\"", ",", "\"\<oii\>\"", ",", 
+    "\"\<iii\>\""}], " ", "}"}]}]], "Input",
+ CellChangeTimes->{{3.698837780245432*^9, 3.69883780809274*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"ooo\"\>", ",", "\<\"ooi\"\>", ",", "\<\"oii\"\>", 
+   ",", "\<\"iii\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6988378097741632`*^9, 3.698919592951817*^9, {3.6989212511159763`*^9, 
+   3.6989212712020273`*^9}, 3.698923007767191*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"possibleCombinationVertexTypescodes", " ", "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "2"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", "2", ",", "2"}], "}"}]}], " ", "}"}]}]], "Input",
+ CellChangeTimes->{{3.698837816141417*^9, 3.698837849303515*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "1", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "2", ",", "2"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.698837850768775*^9, 3.698919593209709*^9, {3.698921251149167*^9, 
+   3.6989212712231283`*^9}, 3.698923007772718*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"functionsToExtractVertexCoordinates", " ", "=", " ", 
+  RowBox[{"{", 
+   RowBox[{
+   "extractCoordFromOriginalVertex", ",", 
+    "extractCoordFromIntersectionVertex"}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.69883785903537*^9, 3.6988378987728863`*^9}, 
+   3.6988382150575323`*^9, {3.698838257344851*^9, 3.698838282694995*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "extractCoordFromOriginalVertex", ",", 
+   "extractCoordFromIntersectionVertex"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.698838284295465*^9, 3.698919593464093*^9, {3.698921251178957*^9, 
+   3.698921271243445*^9}, 3.6989230078080273`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"functionsToGenerateSoSListOfCoefficients", " ", "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+   "orientation2Dooo", ",", " ", "orientation2Dooi", ",", " ", 
+    "orientation2Doii", ",", " ", "orientation2Diii"}], " ", "}"}]}]], "Input",\
+
+ CellChangeTimes->{{3.69883785903537*^9, 3.6988378987728863`*^9}, 
+   3.6988382150575323`*^9, {3.698839019605105*^9, 3.69883902385389*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "orientation2Dooo", ",", "orientation2Dooi", ",", "orientation2Doii", ",", 
+   "orientation2Diii"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6988379000139637`*^9, 3.6988390244205847`*^9, 3.69891959366059*^9, {
+   3.6989212511857033`*^9, 3.6989212712656927`*^9}, 3.698923007840187*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"orientation2Dooo", "[", 
+  RowBox[{"0", ",", "0", ",", "1", ",", " ", "1"}], "]"}]], "Input",
+ CellChangeTimes->{{3.698837950146331*^9, 3.698837961104113*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "ip0z"}], " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"-", "ip0y"}], "+", "ip1y"}], ")"}]}], "-", 
+    RowBox[{"ip0y", " ", 
+     RowBox[{"(", 
+      RowBox[{"ip0z", "-", "ip1z"}], ")"}]}], "+", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"ip0z", "-", "ip1z"}], ")"}], " ", "ip2y"}], "+", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"-", "ip0y"}], "+", "ip1y"}], ")"}], " ", "ip2z"}]}], ",", "0",
+    ",", 
+   RowBox[{"ip0z", "-", "ip1z"}], ",", 
+   RowBox[{
+    RowBox[{"-", "ip0y"}], "+", "ip1y"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.698837962010952*^9, 3.698919593759144*^9, {3.69892125121624*^9, 
+   3.698921271287223*^9}, 3.69892300787426*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{"meshId", " ", "can", " ", "be", " ", "0", " ", "or", " ", "1"}], 
+   ",", " ", 
+   RowBox[{"planeToProject", " ", "may", " ", "be", " ", "1", 
+    RowBox[{"(", 
+     RowBox[{"x", "=", "0"}], ")"}]}], ",", 
+   RowBox[{"2", 
+    RowBox[{"(", 
+     RowBox[{"y", "=", "0"}], ")"}]}], ",", 
+   RowBox[{"3", 
+    RowBox[{"(", 
+     RowBox[{"z", "=", "0"}], ")"}], " ", "and", " ", "vertexTypeCombination",
+     " ", "may", " ", "be", " ", "1", " ", 
+    RowBox[{"(", "ooo", ")"}]}], ",", 
+   RowBox[{"2", 
+    RowBox[{"(", "ooi", ")"}]}], ",", "3", ",", "4"}], " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.6988379780151863`*^9, 3.698837987659925*^9}, {
+  3.698838069346521*^9, 3.698838107075795*^9}, {3.698838658093265*^9, 
+  3.698838667007739*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"generateCompleteFunction", "[", " ", 
+   RowBox[{"vertexTypeCombination_", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"meshId0_", ",", "meshId1_", ",", "meshId2_"}], "}"}], ",", " ", 
+    "planeToProjectId_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+  "\"\<#include \\\"sosPredicatesImpl.h\\\"\\n\\n\>\"", " ", "<>", " ", 
+   RowBox[{"functionHeader", "[", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"meshId0", ",", "meshId1", ",", "meshId2"}], "}"}], ",", " ", 
+     "planeToProjectId", ",", " ", 
+     RowBox[{"possibleCombinationVertexTypescodes", "[", 
+      RowBox[{"[", "vertexTypeCombination", "]"}], "]"}]}], " ", "]"}], " ", "<>",
+    " ", "\"\<{\\n\\n\\n\>\"", " ", "<>", " ", "separatorStr", " ", "<>", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"functionsToExtractVertexCoordinates", "[", 
+     RowBox[{"[", 
+      RowBox[{
+       RowBox[{"possibleCombinationVertexTypescodes", "[", 
+        RowBox[{"[", "vertexTypeCombination", "]"}], "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "[", "0", "]"}], " ", "<>",
+    " ", "\"\<\\n\>\"", " ", "<>", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"functionsToExtractVertexCoordinates", "[", 
+     RowBox[{"[", 
+      RowBox[{
+       RowBox[{"possibleCombinationVertexTypescodes", "[", 
+        RowBox[{"[", "vertexTypeCombination", "]"}], "]"}], "[", 
+       RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "[", "1", "]"}], " ", "<>",
+    " ", "\"\<\\n\>\"", " ", "<>", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"functionsToExtractVertexCoordinates", "[", 
+     RowBox[{"[", 
+      RowBox[{
+       RowBox[{"possibleCombinationVertexTypescodes", "[", 
+        RowBox[{"[", "vertexTypeCombination", "]"}], "]"}], "[", 
+       RowBox[{"[", "3", "]"}], "]"}], "]"}], "]"}], "[", "2", "]"}], " ", "<>",
+    " ", "\"\<\\n\>\"", " ", "<>", " ", "separatorStr", " ", "<>", 
+   "\[IndentingNewLine]", 
+   RowBox[{"generateCodeForListOfEpsCoefficients", "[", 
+    RowBox[{
+     RowBox[{"functionsToGenerateSoSListOfCoefficients", "[", 
+      RowBox[{"[", "vertexTypeCombination", "]"}], "]"}], "[", 
+     RowBox[{
+     "meshId0", ",", "meshId1", ",", "meshId2", ",", "planeToProjectId"}], 
+     "]"}], " ", "]"}], " ", "<>", " ", "\"\<\\n\>\"", " ", "<>", " ", 
+   "\[IndentingNewLine]", "\"\<\\n return 0; \\n\\n } \\n\>\""}]}]], "Input",
+ CellChangeTimes->{{3.698837989963285*^9, 3.698838059019136*^9}, {
+   3.698838116515329*^9, 3.6988381900739202`*^9}, {3.6988382979266653`*^9, 
+   3.698838376633266*^9}, {3.6988384304641533`*^9, 3.698838431849206*^9}, {
+   3.698838461905579*^9, 3.698838471941667*^9}, {3.6988385362821293`*^9, 
+   3.6988385754770613`*^9}, {3.698838671562252*^9, 3.698838698634861*^9}, {
+   3.69883879011482*^9, 3.698838830768284*^9}, {3.698838862014604*^9, 
+   3.698838919384117*^9}, {3.6988390264138117`*^9, 3.698839084176862*^9}, {
+   3.698864593486918*^9, 3.698864594873311*^9}, 3.698864688811005*^9, {
+   3.698919654778666*^9, 3.698919654957747*^9}, {3.698919881929764*^9, 
+   3.698919918547862*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"generateFunctionForHeader", "[", " ", 
+   RowBox[{"vertexTypeCombination_", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"meshId0_", ",", "meshId1_", ",", "meshId2_"}], "}"}], ",", " ", 
+    "planeToProjectId_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"functionHeaderForHFile", "[", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"meshId0", ",", "meshId1", ",", "meshId2"}], "}"}], ",", " ", 
+     "planeToProjectId", ",", " ", 
+     RowBox[{"possibleCombinationVertexTypescodes", "[", 
+      RowBox[{"[", "vertexTypeCombination", "]"}], "]"}]}], " ", "]"}], " ", 
+   " ", "<>", " ", "\"\<\\n\>\""}]}]], "Input",
+ CellChangeTimes->{{3.698838382929936*^9, 3.698838396352088*^9}, {
+   3.69883843456073*^9, 3.698838435993763*^9}, {3.698838474371344*^9, 
+   3.698838476233704*^9}, 3.6988387118220043`*^9, {3.698838941205309*^9, 
+   3.698838941350363*^9}, {3.698839113190507*^9, 3.698839113581706*^9}, {
+   3.698864604296459*^9, 3.6988646620542173`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"generateFileName", "[", 
+   RowBox[{"vertexTypeCombination_", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"meshId0_", ",", "meshId1_", ",", "meshId2_"}], "}"}], ",", " ", 
+    "planeToProjectId_"}], "]"}], " ", ":=", "  ", 
+  RowBox[{
+   RowBox[{"functionName", "[", 
+    RowBox[{
+    "meshId0", ",", "meshId1", ",", "meshId2", ",", "planeToProjectId"}], 
+    "]"}], " ", "<>", " ", "\"\<_\>\"", " ", "<>", " ", 
+   RowBox[{"possibleCombinationVertexTypes", "[", 
+    RowBox[{"[", "vertexTypeCombination", "]"}], "]"}], " ", "<>", " ", 
+   "\"\<.cpp\>\""}]}]], "Input",
+ CellChangeTimes->{{3.6988646427057323`*^9, 3.698864651043899*^9}, {
+  3.698919722729931*^9, 3.698919859050815*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"generateFunctionForHeader", "[", 
+  RowBox[{"1", ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}], ",", "3"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6988646427057323`*^9, 3.698864651043899*^9}, 
+   3.698919722729931*^9}],
+
+Cell[BoxData["\<\"int orient2D_z0_010(const InputVertex &v0, const \
+InputVertex &v1, const InputVertex &v2) const;\\n\"\>"], "Output",
+ CellChangeTimes->{{3.6988646518225183`*^9, 3.698864664935684*^9}, 
+   3.698919594421803*^9, {3.698921251274778*^9, 3.698921271408119*^9}, 
+   3.69892300792525*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"generateFileName", "[", 
+  RowBox[{"1", ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}], ",", "3"}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.6988646925169363`*^9, {3.698864724001195*^9, 3.6988647334926977`*^9}, {
+   3.6989198374360027`*^9, 3.698919849047056*^9}}],
+
+Cell[BoxData["\<\"orient2D_z0_010_ooo.cpp\"\>"], "Output",
+ CellChangeTimes->{{3.698919849723391*^9, 3.698919863081607*^9}, {
+   3.698921251299427*^9, 3.6989212714398537`*^9}, 3.698923007952764*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"generateCompleteFunction", "[", 
+  RowBox[{"1", ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}], ",", "3"}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.6988646925169363`*^9, {3.698864724001195*^9, 3.6988647334926977`*^9}, {
+   3.6989198374360027`*^9, 3.6989198421228724`*^9}}],
+
+Cell[BoxData["\<\"#include \\\"sosPredicatesImpl.h\\\"\\n\\nint \
+SosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const InputVertex \
+&v1, const InputVertex &v2) \
+const{\\n\\n\\n/*****************************************************/\\\
+nconst VertCoord &ip0x = getCoordinates(v0)[0];\\nconst VertCoord &ip0y = \
+getCoordinates(v0)[1];\\nconst VertCoord &ip0z = \
+getCoordinates(v0)[2];\\n\\nconst VertCoord &ip1x = \
+getCoordinates(v1)[0];\\nconst VertCoord &ip1y = \
+getCoordinates(v1)[1];\\nconst VertCoord &ip1z = \
+getCoordinates(v1)[2];\\n\\nconst VertCoord &ip2x = \
+getCoordinates(v2)[0];\\nconst VertCoord &ip2y = \
+getCoordinates(v2)[1];\\nconst VertCoord &ip2z = \
+getCoordinates(v2)[2];\\n\\n/*************************************************\
+****/\\n/*****************************************************/\\n/***********\
+******************************************/\\nVertCoord ans_1 = -(ip0y*(ip0x \
+- ip2x)) + ip1y*(ip0x - ip2x) - ip0x*(-ip0y + ip2y) + ip1x*(-ip0y + ip2y) ; \
+\\n\\nif(sgn(ans_1) != 0) return \
+sgn(ans_1);\\n\\n/*****************************************************/\\n/**\
+***************************************************/\\n/**********************\
+*******************************/\\n/******************************************\
+***********/\\nVertCoord ans_2 = -ip0y + ip2y ; \\n\\nif(sgn(ans_2) != 0) \
+return sgn(ans_2);\\n\\n/*****************************************************\
+/\\n/*****************************************************/\\n/***************\
+**************************************/\\n/***********************************\
+******************/\\nVertCoord ans_3 = ip0x - ip2x ; \\n\\nif(sgn(ans_3) != \
+0) return \
+sgn(ans_3);\\n\\n/*****************************************************/\\n/**\
+***************************************************/\\n\\n\\n return 0; \
+\\n\\n } \\n\"\>"], "Output",
+ CellChangeTimes->{
+  3.698864693167012*^9, {3.698864725781513*^9, 3.698864735153516*^9}, 
+   3.69886687672119*^9, 3.698919594583496*^9, 3.698919660363592*^9, {
+   3.698919909934651*^9, 3.698919921597951*^9}, {3.6989212513356533`*^9, 
+   3.698921271487685*^9}, 3.698923008037372*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"WriteString", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"NotebookDirectory", "[", "]"}], " ", "<>", " ", 
+    "\"\<generatedCode/test.txt\>\""}], ",", "\"\<test!\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.698920042167047*^9, 3.698920050918996*^9}, {
+  3.698920166340693*^9, 3.6989201927646646`*^9}, {3.6989214559643183`*^9, 
+  3.6989214564673233`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"WriteString", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"NotebookDirectory", "[", "]"}], " ", "<>", " ", 
+    "\"\<generatedCode/functionList.h\>\""}], ",", 
+   RowBox[{
+    RowBox[{"functionListStr", "=", "\"\<\>\""}], ";", " ", 
+    RowBox[{"Do", " ", "[", "  ", 
+     RowBox[{
+      RowBox[{"functionListStr", " ", "=", " ", 
+       RowBox[{"functionListStr", " ", "<>", " ", 
+        RowBox[{"generateFunctionForHeader", "[", " ", 
+         RowBox[{"vertexTypeCombination", ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"meshId0", ",", "meshId1", ",", "meshId2"}], "}"}], ",", 
+          " ", "planeToProjectId"}], "]"}]}]}], "  ", ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"vertexTypeCombination", ",", "4"}], "}"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"meshId0", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"meshId1", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"meshId2", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"planeToProjectId", ",", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "2", ",", "3"}], "}"}]}], "}"}]}], "]"}], " ", ";",
+     " ", "functionListStr"}]}], " ", "]"}]], "Input",
+ CellChangeTimes->{{3.698920161473318*^9, 3.6989201614740353`*^9}, 
+   3.6989202012191772`*^9, {3.698920236142584*^9, 3.698920257611538*^9}, {
+   3.6989202985835752`*^9, 3.698920426724272*^9}, {3.6989204983039227`*^9, 
+   3.698920513736334*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698920199533277*^9, 3.6989201995354424`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Do", " ", "[", " ", 
+   RowBox[{
+    RowBox[{"WriteString", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], " ", "<>", " ", 
+       "\"\<generatedCode/\>\"", " ", "<>", " ", 
+       RowBox[{"generateFileName", "[", 
+        RowBox[{"vertexTypeCombination", ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"meshId0", ",", "meshId1", ",", "meshId2"}], "}"}], ",", 
+         " ", "planeToProjectId"}], "]"}]}], ",", 
+      RowBox[{"generateCompleteFunction", "[", " ", 
+       RowBox[{"vertexTypeCombination", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"meshId0", ",", "meshId1", ",", "meshId2"}], "}"}], ",", " ",
+         "planeToProjectId"}], "]"}]}], " ", "]"}], " ", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"vertexTypeCombination", ",", "4"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"meshId0", ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"meshId1", ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"meshId2", ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"planeToProjectId", ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2", ",", "3"}], "}"}]}], "}"}]}], "]"}], 
+  "  "}]], "Input",
+ CellChangeTimes->{{3.698920547788802*^9, 3.6989206116407948`*^9}, {
+  3.698920669875173*^9, 3.6989206771612473`*^9}, {3.6989210958703012`*^9, 
+  3.698921106987547*^9}}],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{
+  3.698921199774219*^9, {3.698921239420435*^9, 3.698921256768866*^9}, 
+   3.698921296347823*^9, 3.6989230732641497`*^9}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698921443510281*^9, 3.698921454111437*^9}}]
+},
+WindowSize->{1594, 846},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+CellContext->Notebook,
+FrontEndVersion->"10.4 for Linux x86 (64-bit) (February 25, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1605, 36, 121, "Input"],
+Cell[2166, 58, 530, 9, 77, "Input"],
+Cell[2699, 69, 1245, 24, 32, "Input"],
+Cell[CellGroupData[{
+Cell[3969, 97, 1226, 27, 55, "Input"],
+Cell[5198, 126, 498, 9, 32, "Output"]
+}, Open  ]],
+Cell[5711, 138, 1182, 26, 55, "Input"],
+Cell[6896, 166, 647, 14, 32, "Input"],
+Cell[7546, 182, 92, 1, 32, "Input"],
+Cell[CellGroupData[{
+Cell[7663, 187, 294, 5, 32, "Input"],
+Cell[7960, 194, 357, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8354, 205, 213, 4, 32, "Input"],
+Cell[8570, 211, 332, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8939, 222, 351, 6, 32, "Input"],
+Cell[9293, 230, 326, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9656, 241, 206, 4, 32, "Input"],
+Cell[9865, 247, 303, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10205, 258, 228, 4, 32, "Input"],
+Cell[10436, 264, 302, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10775, 275, 184, 3, 32, "Input"],
+Cell[10962, 280, 305, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11304, 291, 325, 5, 32, "Input"],
+Cell[11632, 298, 305, 6, 32, "Output"]
+}, Open  ]],
+Cell[11952, 307, 94, 1, 32, "Input"],
+Cell[12049, 310, 214, 3, 32, "Input"],
+Cell[12266, 315, 94, 1, 32, "Input"],
+Cell[12363, 318, 241, 3, 32, "Input"],
+Cell[12607, 323, 92, 1, 32, "Input"],
+Cell[12702, 326, 410, 10, 32, "Input"],
+Cell[13115, 338, 2957, 78, 121, "Input"],
+Cell[16075, 418, 440, 6, 32, "Input"],
+Cell[16518, 426, 92, 1, 32, "Input"],
+Cell[16613, 429, 474, 12, 32, "Input"],
+Cell[CellGroupData[{
+Cell[17112, 445, 92, 1, 32, "Input"],
+Cell[17207, 448, 170, 4, 32, "Output"],
+Cell[17380, 454, 170, 4, 32, "Output"],
+Cell[17553, 460, 170, 4, 32, "Output"]
+}, Open  ]],
+Cell[17738, 467, 242, 6, 32, "Input"],
+Cell[17983, 475, 1265, 35, 55, "Input"],
+Cell[CellGroupData[{
+Cell[19273, 514, 400, 11, 32, "Input"],
+Cell[19676, 527, 585, 15, 32, "Output"],
+Cell[20264, 544, 563, 15, 32, "Output"],
+Cell[20830, 561, 539, 15, 32, "Output"],
+Cell[21372, 578, 511, 14, 32, "Output"],
+Cell[21886, 594, 490, 14, 32, "Output"],
+Cell[22379, 610, 469, 14, 32, "Output"],
+Cell[22851, 626, 443, 13, 32, "Output"],
+Cell[23297, 641, 218, 5, 32, "Output"],
+Cell[23518, 648, 244, 5, 32, "Output"]
+}, Open  ]],
+Cell[23777, 656, 757, 22, 55, "Input"],
+Cell[24537, 680, 4888, 113, 209, "Input"],
+Cell[29428, 795, 5116, 112, 297, "Input"],
+Cell[34547, 909, 3421, 79, 209, "Input"],
+Cell[37971, 990, 216, 3, 32, "Input"],
+Cell[38190, 995, 2371, 54, 187, "Input"],
+Cell[40564, 1051, 121, 2, 32, "Input"],
+Cell[40688, 1055, 1306, 29, 143, "Input"],
+Cell[41997, 1086, 164, 2, 32, "Input"],
+Cell[42164, 1090, 315, 4, 32, "Input"],
+Cell[42482, 1096, 96, 1, 32, "Input"],
+Cell[42581, 1099, 89, 2, 32, "Input"],
+Cell[42673, 1103, 409, 8, 32, "Input"],
+Cell[CellGroupData[{
+Cell[43107, 1115, 406, 7, 32, "Input"],
+Cell[43516, 1124, 260, 4, 55, "Output"]
+}, Open  ]],
+Cell[43791, 1131, 1259, 24, 77, "Input"],
+Cell[45053, 1157, 1009, 24, 32, "Input"],
+Cell[46065, 1183, 1452, 30, 77, "Input"],
+Cell[47520, 1215, 1177, 22, 77, "Input"],
+Cell[48700, 1239, 1206, 22, 77, "Input"],
+Cell[49909, 1263, 1223, 22, 99, "Input"],
+Cell[51135, 1287, 94, 1, 32, "Input"],
+Cell[51232, 1290, 939, 21, 32, "Input"],
+Cell[52174, 1313, 90, 1, 32, "Input"],
+Cell[52267, 1316, 787, 19, 32, "Input"],
+Cell[53057, 1337, 165, 2, 32, "Input"],
+Cell[53225, 1341, 247, 5, 32, "Input"],
+Cell[53475, 1348, 810, 18, 77, "Input"],
+Cell[CellGroupData[{
+Cell[54310, 1370, 338, 7, 32, "Input"],
+Cell[54651, 1379, 263, 6, 32, "Output"]
+}, Open  ]],
+Cell[54929, 1388, 1215, 26, 77, "Input"],
+Cell[56147, 1416, 1212, 26, 77, "Input"],
+Cell[57362, 1444, 714, 17, 99, "Input"],
+Cell[CellGroupData[{
+Cell[58101, 1465, 279, 6, 32, "Input"],
+Cell[58383, 1473, 282, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[58702, 1484, 485, 12, 32, "Input"],
+Cell[59190, 1498, 470, 13, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[59697, 1516, 352, 7, 32, "Input"],
+Cell[60052, 1525, 283, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[60372, 1537, 401, 8, 32, "Input"],
+Cell[60776, 1547, 328, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[61141, 1559, 183, 3, 32, "Input"],
+Cell[61327, 1564, 773, 25, 32, "Output"]
+}, Open  ]],
+Cell[62115, 1592, 796, 20, 32, "Input"],
+Cell[62914, 1614, 3047, 60, 187, "Input"],
+Cell[65964, 1676, 994, 20, 55, "Input"],
+Cell[66961, 1698, 719, 16, 55, "Input"],
+Cell[CellGroupData[{
+Cell[67705, 1718, 264, 6, 32, "Input"],
+Cell[67972, 1726, 300, 4, 55, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[68309, 1735, 308, 7, 32, "Input"],
+Cell[68620, 1744, 198, 2, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[68855, 1751, 318, 7, 32, "Input"],
+Cell[69176, 1760, 2153, 33, 1089, "Output"]
+}, Open  ]],
+Cell[71344, 1796, 382, 9, 32, "Input"],
+Cell[71729, 1807, 1620, 39, 77, "Input"],
+Cell[73352, 1848, 94, 1, 32, "Input"],
+Cell[CellGroupData[{
+Cell[73471, 1853, 1547, 40, 77, "Input"],
+Cell[75021, 1895, 176, 3, 65, "Output"]
+}, Open  ]],
+Cell[75212, 1901, 92, 1, 32, "Input"]
+}
+]
+*)
+
