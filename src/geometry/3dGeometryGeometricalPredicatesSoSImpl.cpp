@@ -177,6 +177,8 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
   return sgn(det);
 }
 
+
+//3d orientation...
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const {
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
@@ -194,6 +196,8 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
   return signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
 }
 
+
+//3d orientation.
 int MeshIntersectionGeometry::orientation(const InputTriangle&t, const InputVertex &v) const {
   return orientation(*(t.getInputVertex(0)),*(t.getInputVertex(1)),*(t.getInputVertex(2)),v);
 }
@@ -203,11 +207,37 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
 }  
 
 
+
+
+int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const InputVertex &dest, int coord) const {
+  const Point &p0 =  getCoordinates(orig);
+  const Point &p1 =  getCoordinates(dest);
+  int ans = sgn(p1[coord]-p0[coord]);
+  if(ans!=0) return ans;
+  int meshId0 = orig.getMeshId();
+  int meshId1 = dest.getMeshId();
+  if(meshId0!=meshId1) {
+    if(meshId0==0) return 1;
+    return -1;
+  }
+  //if they are in the same mesh, there is no perturbation between them --> we should return ans;
+  return ans;
+}
+
+int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const {
+
+}
+
+int MeshIntersectionGeometry::signalVectorCoord(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const {
+
+}
+
+
 //this is basically what we need for the "brute force" retesselation...
 //this is essentially a 1D orientation!!!!
 //TODO: implement this as 1D orientation...
 //what is the signal of each coordinate the vector from orig to dest
-//cannot be 0 (SoS)
+//can be 0 (SoS)
 //I think this could be 0... suppose the two vertices are from same mesh, for example...
 //TODO: review...
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const {
@@ -216,10 +246,21 @@ int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex
     geometryStatisticsDegenerateCases.signVector++;
   #endif
 
-  const Point &p0 =  getCoordinates(orig);
-  const Point &p1 =  getCoordinates(dest);
-  int ans = sgn(p1[coord]-p0[coord]);
-  return  (ans==0)?1:ans;
+  bool isV1InputVertex = (&orig)->isInputVertex();
+  bool isV2InputVertex = (&dest)->isInputVertex();  
+
+  if(isV1InputVertex) {
+    if(isV2InputVertex) //input,input
+      return signalVectorCoord(*static_cast<const InputVertex*>(&orig),*static_cast<const InputVertex*>(&dest),coord); 
+    else //input, intersection
+      return signalVectorCoord(*static_cast<const InputVertex*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
+  }
+  else { 
+    if(isV2InputVertex)
+      return -signalVectorCoord(*static_cast<const InputVertex*>(&dest),*static_cast<const VertexFromIntersection*>(&orig),coord);
+    else
+      return signalVectorCoord(*static_cast<const VertexFromIntersection*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
+  }
 }
 
 //TODO: review this...
@@ -324,6 +365,7 @@ bool MeshIntersectionGeometry::isOrientationPositiveSoSImpl(const Vertex &origV,
   return orientation(origV,v1V,v2V,planeToProject)>0;
 }
 
+//TODO
 //we need to consider point on axis and the angle...
 //this function have to be complete... we will call it, for example, when we have degenerate edges.
 bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {

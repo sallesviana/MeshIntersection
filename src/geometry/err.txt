@@ -1,0 +1,5 @@
+In file included from sosPredicatesImpl.cpp:1:0:
+sosPredicatesImpl.h: In member function ‘const Point& SosPredicatesImpl::getCoordinates(const InputVertex&) const’:
+sosPredicatesImpl.h:181:10: error: ‘geometrty’ was not declared in this scope
+   return geometrty->getCoordinates(iv);
+          ^

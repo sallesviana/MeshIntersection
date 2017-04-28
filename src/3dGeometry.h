@@ -68,6 +68,7 @@ const int PLANE_Y0 =1;
 const int PLANE_Z0 =2;
 
 //
+class SosPredicatesImpl;
 class MeshIntersectionGeometry;
 
 class Vertex {
@@ -248,6 +249,10 @@ class VertexFromIntersection: public Vertex {
 		int getMeshOfEdgeDefiningVertex() const {
 			return edge[0].getMeshId();
 		}
+
+		int getMeshOfTriangleDefiningVertex() const {
+			return 1-getMeshOfEdgeDefiningVertex();
+		}
 	//private:
 
 		//this vertex is the intersection between the edge and the input triangle triangle 
@@ -395,6 +400,8 @@ class MeshIntersectionGeometry {
 		void saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) const;
 
 	private:
+		friend class SosPredicatesImpl;
+
 		struct PlaneEquation {Point normal; VertCoord d;};
 		vector<PlaneEquation> planeEquationsInputTriangles[2];
 		vector<int> isPlaneEquationInputTrianglesInitialized[2];
@@ -504,7 +511,7 @@ class MeshIntersectionGeometry {
 		int orientation(const InputTriangle&t, const InputVertex &v) const;
 		int orientation(const InputTriangle&t, const VertexFromIntersection &v) const;
 		int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const;
-  	int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const;
+  		int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const;
   
 
 		//what is the signal of each coordinate the vector from orig to dest
