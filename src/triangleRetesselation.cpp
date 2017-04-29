@@ -1,32 +1,41 @@
 #include "triangleRetesselation.h"
 
 
+bool lessThan(const Vertex* const a, const Vertex* const b) {
+  //cerr << "Testing pointers for less than..." << endl;
+  //cerr << "Answer: " << endl;
+  //cerr << a->compare(*b) << endl;
+  return a->compare(*b)<0;
+}
+
+bool equalTo(const Vertex* const a, const Vertex* const b) {
+  return a->compare(*b)==0;
+}
+
+bool equalTo(const InputTriangle* const a, const InputTriangle* const b) {
+  return a->compare(*b)==0;
+}
+
 struct VertexPtrLessComparator {
     bool operator() (const Vertex* const a, const Vertex* const b) const{
-        return *a<*b;
+        return lessThan(a,b);
     }
 };
 
 struct VertexPairPtrLessComparator {
     bool operator() (const pair<const Vertex*,const Vertex*> &a, const pair<const Vertex*,const Vertex*> &b) const{
-        if( *a.first != *b.first ) return *a.first < *b.first;
-        return *a.second < *b.second;
+      if(!equalTo(a.first,b.first)) return lessThan(a.first,b.first);
+      return lessThan(a.second,b.second);
     }
 };
 
 struct VertexPtrEqualComparator {
     bool operator() (const Vertex* const a, const Vertex* const b) const{
-        return *a==*b;
+        return equalTo(a,b);
     }
 };
 
-bool lessThan(const Vertex* const a, const Vertex* const b) {
-        return *a<*b;
-}
 
-bool equalTo(const Vertex* const a, const Vertex* const b) {
-        return *a==*b;
-}
 
 long long ctEdgeIntersect  = 0; //how many of the intersection tests performed are true?
 long long ctEdgeDoNotIntersect = 0;
@@ -209,13 +218,14 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
   int x = 0;
   //now we need to sort the edges basing on the first vertex and, then, on the angle with horizon (considering whatPlaneProjectTo)
   
+  
   //edges sharing the first vertex will be together after this sorting...
   sort(raggedArraySortedEdges.begin(),raggedArraySortedEdges.end(), [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
             if(!equalTo(e1.first,e2.first)) return lessThan(e1.first,e2.first); //sort first by the first vertex..
             else return false;
             //return meshIntersectionGeometry.isAngleWith0Greater(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
         } );
-
+  
 
   //now, we have to sort edges sharing the first vertex by angle.
   vector<pair<const Vertex *,const Vertex *> >::iterator startSortingByAngle = raggedArraySortedEdges.begin();
@@ -225,11 +235,36 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
     while(endSortingByAngle != raggedArraySortedEdges.end() && equalTo(startSortingByAngle->first,endSortingByAngle->first))
       endSortingByAngle++;
 
+    cerr << "Edges by before sorting...: " << endl;
+    for(auto i=startSortingByAngle;i<endSortingByAngle;i++) {
+      auto a = *i;
+      a.first->print(); cerr << endl;
+      a.second->print(); cerr << endl;
+      cerr << endl; 
+    }
+
     meshIntersectionGeometry.sortEdgesSharingStartingVertexByAngle(startSortingByAngle,endSortingByAngle,planeProjectTriangleTo,tempVars.tempVarsSortEdgesByAngle);
+    
+    cerr << "Edges by after sorting...: " << endl;
+    for(auto i=startSortingByAngle;i<endSortingByAngle;i++) {
+      auto a = *i;
+      a.first->print();  cerr << endl;
+      a.second->print();  cerr << endl;
+      cerr << endl; 
+    }
+
+
     startSortingByAngle = endSortingByAngle;
   }
-  
 
+  cerr << "Edges by angle...: " << endl;
+  for(auto a:raggedArraySortedEdges) {
+    a.first->print(); cerr << endl;
+    a.second->print(); cerr << endl;
+    cerr << endl; 
+  }
+  
+  cerr << "Extracting wedges..." << endl;
   wedgesTemp.resize(0);
   int numWedgesFound = 0;
   //Now let's process the groups of edges (set of edges with the same first vertex..) to extract the wedges  
@@ -244,6 +279,8 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
       numWedgesFound++;
 
       array<const Vertex *,3> &wedgeToAdd = wedgesTemp.back();
+
+      //cerr << "Equal to? " << nextElement << " " << currElemnt << " " << equalTo(raggedArraySortedEdges[nextElement].first , raggedArraySortedEdges[currElemnt].first) << endl;
       //did we reach the end of a group?
       if(nextElement >= numDirectedEdges || !equalTo(raggedArraySortedEdges[nextElement].first , raggedArraySortedEdges[currElemnt].first)) {
         //if yes, we will create a wedge from currElement to the first one! (to complete the wedges from this group..)
@@ -252,6 +289,12 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
         wedgeToAdd[1] = raggedArraySortedEdges[firstElementGroup].first; //a
         wedgeToAdd[2] = raggedArraySortedEdges[currElemnt].second;  //b
 
+        cerr << "END: first group, curr, next: " << firstElementGroup << " " << currElemnt << " " << nextElement << endl;
+        wedgeToAdd[0]->print(); cerr << endl;
+        wedgeToAdd[1]->print(); cerr << endl;
+        wedgeToAdd[2]->print(); cerr << endl;
+        cerr << endl;
+
         firstElementGroup = currElemnt+1; //let's process the next group!
         break;
       } else {
@@ -259,8 +302,22 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
         wedgeToAdd[0] = raggedArraySortedEdges[nextElement].second; //c
         wedgeToAdd[1] = raggedArraySortedEdges[nextElement].first; //a
         wedgeToAdd[2] = raggedArraySortedEdges[currElemnt].second;  //b
+
+        cerr << "first group, curr, next: " << firstElementGroup << " " << currElemnt << " " << nextElement << endl;
+        wedgeToAdd[0]->print(); cerr << endl;
+        wedgeToAdd[1]->print(); cerr << endl;
+        wedgeToAdd[2]->print(); cerr << endl;
+        cerr << endl;
       }
     }
+  }
+
+  cerr << "Wedges before sorting...: " << endl;
+  for(auto a:wedgesTemp) {
+    a[0]->print(); cerr << endl;
+    a[1]->print(); cerr << endl;
+    a[2]->print(); cerr << endl;
+    cerr << endl; 
   }
 
   //Now, wedgesTemp contain all the wedges we need to extract the polygons!
@@ -288,6 +345,13 @@ void sortEdgesAndExtractPolygonsFromEdgeListUsingWedges(const MeshIntersectionGe
   //Let's use a ragged array for performance...
   polygons.resize(0);  
 
+  cerr << "Wedges: " << endl;
+  for(auto a:wedgesTemp) {
+    a[0]->print(); cerr << endl;
+    a[1]->print(); cerr << endl;
+    a[2]->print(); cerr << endl;
+    cerr << endl; 
+  }
 
 
   for(int wedgeStart=0;wedgeStart<numWedges;wedgeStart++) {
@@ -452,6 +516,13 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
     #endif
   }
 
+  cerr << "Adding edges from intersection" << endl;
+  for(auto i:edgesFromIntersectionThisTriangle) {
+    cerr << edgesFromIntersection[i].first.getMeshId() << " " << edgesFromIntersection[i].first.getId() << endl;
+    cerr << edgesFromIntersection[i].second.getMeshId() << " " << edgesFromIntersection[i].second.getId() << endl << endl;
+  }
+  cerr << "End print..." << endl;
+
 
   //Now, we need to add more edges to fill the parts of ts that still do not form triangle
   vector<const Vertex *> verticesToTesselate;
@@ -463,11 +534,11 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
   cerr << "Sorting..." << endl;
   sort(verticesToTesselate.begin(),verticesToTesselate.end(),[](const Vertex *a, const Vertex *b){
-                                return (*a)<(*b);
+                                return lessThan(a,b); // (*a)<(*b);
                               });
   cerr << "Unique..." << endl;
   auto newEnd = unique(verticesToTesselate.begin(),verticesToTesselate.end(),[](const Vertex *a, const Vertex *b){
-                                return (*a)==(*b);
+                                return equalTo(a,b); // (*a)==(*b)
                               });
   verticesToTesselate.resize(newEnd-verticesToTesselate.begin());
 
@@ -497,15 +568,18 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
     //now we know v is defined as the intersection of an edge of t with a triangle of the other mesh
 
-    if( (v.edge[0] == (*tv0) && v.edge[1]  == (*tv1)) || (v.edge[0]  == (*tv1) && v.edge[1]  == (*tv0)) ) {
+    //if( (v.edge[0] == (*tv0) && v.edge[1]  == (*tv1)) || (v.edge[0]  == (*tv1) && v.edge[1]  == (*tv0)) ) {
+    if(  (equalTo(&(v.edge[0]),tv0) && equalTo(&(v.edge[1]),tv1)) || (equalTo(&(v.edge[0]),tv1) && equalTo(&(v.edge[1]),tv0)) ) {
       verticesIncidentEachEdgeOriginalTriangle[0].push_back(&v);
       continue;
     }   
-    if( (v.edge[0]  == (*tv1) && v.edge[1]  == (*tv2)) || (v.edge[0]  == (*tv2) && v.edge[1]  == (*tv1)) ) {
+    //if( (v.edge[0]  == (*tv1) && v.edge[1]  == (*tv2)) || (v.edge[0]  == (*tv2) && v.edge[1]  == (*tv1)) ) {
+    if(  (equalTo(&(v.edge[0]),tv1) && equalTo(&(v.edge[1]),tv2)) || (equalTo(&(v.edge[0]),tv2) && equalTo(&(v.edge[1]),tv1)) ) {
       verticesIncidentEachEdgeOriginalTriangle[1].push_back(&v);
       continue;
     }
-    if( (v.edge[0]  == (*tv2) && v.edge[1]  == (*tv0)) || (v.edge[0]  == (*tv0) && v.edge[1]  == (*tv2)) ) {
+    //if( (v.edge[0]  == (*tv2) && v.edge[1]  == (*tv0)) || (v.edge[0]  == (*tv0) && v.edge[1]  == (*tv2)) ) {
+    if(  (equalTo(&(v.edge[0]),tv2) && equalTo(&(v.edge[1]),tv0)) || (equalTo(&(v.edge[0]),tv0) && equalTo(&(v.edge[1]),tv2)) ) {
       verticesIncidentEachEdgeOriginalTriangle[2].push_back(&v);
       continue;
     }
@@ -525,8 +599,14 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
 
 
   cerr << "Adding 3 edges" << endl;
+  for(auto e:edgesUsedInThisTriangle) {
+    cerr << e.first->getMeshId() << " " << e.first->getId() << endl;
+    cerr << e.second->getMeshId() << " " << e.second->getId() << endl << endl;
+  }
+  cerr << "End print..." << endl;
   
   set<pair<const Vertex *,const Vertex *>, VertexPairPtrLessComparator > edgesFromTriangleBoundary;
+
 
   bool allSimple = true;
   //no vertex intersect the edge t.p[0]-t.p[1] --> it will be in the triangulation!!!
@@ -554,7 +634,14 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
         const Vertex * v1 = t.getVertex(v1Pos);
         const Vertex * v2 = t.getVertex(v2Pos);
 
-        const Vertex * v =  *(verticesIncidentEachEdgeOriginalTriangle[edge].begin());          
+        const Vertex * v =  *(verticesIncidentEachEdgeOriginalTriangle[edge].begin());  
+
+        cerr << "We have 1 vertex in edge... " << endl;
+        cerr << v->getMeshId() << " " << v->getId() << endl;
+        cerr << v1->getMeshId() << " " << v1->getId() << endl;
+        cerr << v2->getMeshId() << " " << v2->getId() << endl << endl;
+
+                
         
         pair<const Vertex *,const Vertex *>  candidateEdge;    
 
@@ -581,6 +668,13 @@ void retesselateTriangleUsingWedgeSorting(MeshIntersectionGeometry & meshInterse
         assert(!equalTo(candidateEdge.first , candidateEdge.second));
         edgesUsedInThisTriangle.push_back(candidateEdge);
         edgesFromTriangleBoundary.insert(candidateEdge);
+
+        cerr << "After add more 1" << endl;
+        for(auto e:edgesUsedInThisTriangle) {
+          cerr << e.first->getMeshId() << " " << e.first->getId() << endl;
+          cerr << e.second->getMeshId() << " " << e.second->getId() << endl << endl;
+        }
+        cerr << "End print..." << endl;
       } else {
         allSimple= false;
       }
@@ -976,7 +1070,7 @@ void updateBoundaryPolygonWithEdgeAdjacencyInformation( vector<BoundaryPolygon> 
 
     const InputTriangle* triangleFromOtherMeshGeneratedEdge = (meshIdRetesselatedTriangle==0)?pairTrianglesGeneratedEdge.second:pairTrianglesGeneratedEdge.first;
     const InputTriangle* triangleThisMeshGeneratedEdge = (meshIdRetesselatedTriangle==1)?pairTrianglesGeneratedEdge.second:pairTrianglesGeneratedEdge.first;
-    assert( (*triangleThisMeshGeneratedEdge) == triangleBeingRetesselated );
+    assert( equalTo(triangleThisMeshGeneratedEdge,&triangleBeingRetesselated)); // (*triangleThisMeshGeneratedEdge) == triangleBeingRetesselated );
     
 
     const pair<const Vertex *,const Vertex *> edge(&pairVerticesOfEdge.first,&pairVerticesOfEdge.second);
@@ -1135,6 +1229,18 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
           }
         #endif
 
+        cerr << "Edges from intersection: " << endl;
+        for(auto e:edgesFromIntersection) {
+          cerr << e.first.getMeshId() << e.first.getId() << endl;
+          cerr << e.second.getMeshId() << e.second.getId() << endl << endl;
+        }
+
+        cerr << "Triangles intersecting this one: " << endl;
+        for(int i=0;i<intersectingTrianglesThatGeneratedEdges.size();i++) {
+          if(equalTo(intersectingTrianglesThatGeneratedEdges[i].first,ts.first))
+            intersectingTrianglesThatGeneratedEdges[i].second->print(); cerr << endl;
+        }
+
         cerr << "Wedge sorting... " << endl;
         //retesselateTriangle(edges, edgesFromIntersection,t, meshIdToProcess, myNewTrianglesFromRetesselation, tempVars, statisticsAboutRetesseation);
         retesselateTriangleUsingWedgeSorting(meshIntersectionGeometry,edgesFromIntersection,edgesFromIntersectionThisTriangle,*polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].first, boundaryPolygonsFromThisTriangle, tempVars, statisticsAboutRetesseation);
@@ -1181,9 +1287,9 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
       for(int i=0;i<numTriangles;i++) {
         //Let's triangulate the polygons on this triangle....
 
-        if((i%onePercentNumPolygons)==0) {
+        //if((i%onePercentNumPolygons)==0) {
           clog << "Triangulating " << i << " of " << numTriangles << " Percent= " << (i*100)/numTriangles << "\n";
-        }
+        //}
         for(BoundaryPolygon &polygon:polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].second)        
           polygon.triangulatePolygon(meshIntersectionGeometry,tempVarsTriangulatePolygon);
       }

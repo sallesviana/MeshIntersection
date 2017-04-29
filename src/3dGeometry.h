@@ -71,6 +71,9 @@ const int PLANE_Z0 =2;
 class SosPredicatesImpl;
 class MeshIntersectionGeometry;
 
+class VertexFromIntersection;
+class InputVertex;
+
 class Vertex {
 	public:
 		virtual bool isInputVertex() const = 0;
@@ -91,27 +94,15 @@ class Vertex {
 
 		friend class MeshIntersectionGeometry;
 
-		bool operator==(const Vertex &v) const {
-			return (id==v.id) && (meshId==v.meshId);
+		virtual int compare(const Vertex &v) const = 0;
+		virtual int compare(const InputVertex &v) const = 0;
+		virtual int compare(const VertexFromIntersection &v) const = 0;
+
+		virtual void print() const {
+			cerr << meshId << " " << id ;
 		}
 
-		bool operator!=(const Vertex &v) const {
-			return !(*this == v);
-		}
-		bool operator<(const Vertex &v) const {
-			if(getMeshId()!=v.getMeshId()) return getMeshId()<v.getMeshId();
-      return getId()<v.getId();
-		}
-
-		bool operator>=(const Vertex &v) const {
-			return !(*this < v);
-		}
-
-		void print() const {
-			cerr << meshId << " " << id << " ";
-		}
-
-	private:
+	protected:
 		int id;
 		int meshId;	
 };
@@ -123,6 +114,26 @@ class InputVertex: public Vertex {
 		InputVertex(int meshId_,int id_): Vertex(meshId_,id_) {}
 		InputVertex(): Vertex(-1,-1){}
 
+		//a.compare(b) returns 0 if equal, <0 if a<b, >0 if a>b
+		int compare(const InputVertex &v) const {
+			//cerr << "Comparing InputVertex with InputVertex vertex" << endl;
+
+			if(meshId!=v.meshId) return meshId-v.meshId;
+			return id-v.id;
+		}
+		//let's suppose that all input vertices are > vertices from intersection...
+		//vertices from intersection are smaller than input vertices...
+		int compare(const VertexFromIntersection &v) const {
+			//cerr << "Comparing InputVertex with VertexFromIntersection vertex" << endl;
+
+			return 1;
+		}
+		//let's use polymorphism to determine what type of vertex v is... (double dispatch)
+		int compare(const Vertex &v) const {
+			//cerr << "Comparing InputVertex with Vertex vertex" << endl;
+
+			return -v.compare(*this);
+		}
 	private:
 			
 };
@@ -154,6 +165,8 @@ public:
 	}
 	InputTriangle() {}
 
+
+	/*
 	//we assume the input triangles are unique
 	bool operator==(const InputTriangle &t) const {
 		if(above!=t.above || below!=t.below) return false;
@@ -175,7 +188,22 @@ public:
 
 	bool operator>=(const InputTriangle &t) const {
 		return !(*this < t);
+	}*/
+
+	int compare(const InputTriangle &t) const {
+		if(above!=t.above) return above-t.above;
+		if(below!=t.below) return below-t.below;
+
+		int compare0 = p[0].compare(t.p[0]);
+		if(compare0!=0) return compare0;
+
+		int compare1 = p[1].compare(t.p[1]);
+		if(compare1!=0) return compare1;
+
+		return p[2].compare(t.p[2]);
 	}
+
+
 
 	int getMeshId() const {
 		return p[0].getMeshId();
@@ -185,6 +213,10 @@ public:
   	return &p[i]; 
   }
   const Vertex* getVertex(const int i) const { return &p[i]; }
+
+  virtual void print() const {
+  	cerr << "Tri from: " << p[0].getMeshId() << " " << p[0].getId() << " "<< p[1].getId() << " "<< p[2].getId() << "";
+  }
 private:
 	InputVertex p[3];
 };
@@ -213,14 +245,14 @@ class VertexFromIntersection: public Vertex {
 		bool isInputVertex() const { return false; }
 
 		VertexFromIntersection(const InputVertex &edgeV1, const InputVertex &edgeV2, const InputTriangle triangleGeneratedVertex) {
-			edge[0] = edgeV1;
-			edge[1] = edgeV2;
-			if(edge[0].getId()>edge[1].getId()) swap(edge[0],edge[1]);
+			setEdges(edgeV1,edgeV2);
 			triangle = triangleGeneratedVertex;
 		}
-		VertexFromIntersection() {};
+		VertexFromIntersection() { };
 
+		/*
 		bool operator==(const VertexFromIntersection &v) const {
+			cerr << "Using operator ==..." << endl;
 			bool sameGeometry = Vertex::operator==(v);
 			if(!sameGeometry) return false;
 			return (edge[0]==v.edge[0] && edge[1]==v.edge[1]) && (triangle==v.triangle);
@@ -238,11 +270,52 @@ class VertexFromIntersection: public Vertex {
 
 		bool operator>=(const VertexFromIntersection &v) const {
 			return !(*this < v);
+		}*/
+		
+
+		//let's suppose that all input vertices are > vertices from intersection...
+		int compare(const InputVertex &v) const {
+			//cerr << "Comparing vertex inter with input vertex" << endl;
+			return -1;
+		}		
+		//a.compare(b) returns 0 if equal, <0 if a<b, >0 if a>b
+		int compare(const VertexFromIntersection &v) const {
+			//cerr << "Comparing vertex inter with VertexFromIntersection vertex" << endl;
+
+			if(getMeshOfTriangleDefiningVertex()!=v.getMeshOfTriangleDefiningVertex()) 
+				return getMeshOfTriangleDefiningVertex()-v.getMeshOfTriangleDefiningVertex();
+			
+      if(getId()!=v.getId()) return getId()-v.getId();
+
+
+      int edgeCompare = (edge[0].compare(v.edge[0]));
+      if(edgeCompare!=0) return edgeCompare;
+
+      edgeCompare = (edge[1].compare(v.edge[1]));
+      if(edgeCompare!=0) return edgeCompare;
+
+      return triangle.compare(v.triangle);
+		}
+
+
+		//let's use polymorphism to determine what type of vertex v is...
+		int compare(const Vertex &v) const {
+			//cerr << "Comparing vertex inter with Vertex vertex, meshId: " << v.getMeshId() << endl;
+			const VertexFromIntersection &thisObj = *this;
+			return -v.compare(thisObj);
 		}
 
 		void print() const {
+			assert(edge[0].getId()<=edge[1].getId());
+			cerr << "Intersection: { (";
 			Vertex::print();
-			cerr << " edgeDef " << getMeshOfEdgeDefiningVertex();
+			cerr << ") ";
+			triangle.print();
+			cerr << " -- ";
+			edge[0].print();
+			cerr << ",";
+			edge[1].print();
+			cerr << "} ";
 		}
 
 
@@ -253,6 +326,15 @@ class VertexFromIntersection: public Vertex {
 		int getMeshOfTriangleDefiningVertex() const {
 			return 1-getMeshOfEdgeDefiningVertex();
 		}
+
+		void setEdges(const InputVertex &edgeV1, const InputVertex &edgeV2) {
+			edge[0] = edgeV1;
+			edge[1] = edgeV2;
+			if(edge[0].getId()>edge[1].getId()) swap(edge[0],edge[1]);
+			assert(edge[0].getId()<=edge[1].getId());
+		}
+
+
 	//private:
 
 		//this vertex is the intersection between the edge and the input triangle triangle 

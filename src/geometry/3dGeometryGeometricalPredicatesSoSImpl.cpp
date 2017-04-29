@@ -437,18 +437,22 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
   if(sgnV1y>0 && sgnV2y<0) return true; //check if the two vectors are in different sides of the x axis...
   if(sgnV1y<0 && sgnV2y>0) return false;
 
-  //they are in the same side of the x axis...
+  //they are in the same side of the x axis... (or exactly on the x axis...)
   const int sgnV1x = signalVectorCoord(origV,v1V,xCoord);
   const int sgnV2x = signalVectorCoord(origV,v2V,xCoord);
 
-  if(sgnV1y>0) { //are both at the positive y?
+  if(sgnV1y>0) { //are both at the non-negative y?
     //check if their x is different...
     if(sgnV1x > 0 && sgnV2x < 0) return true;
     if(sgnV1x < 0 && sgnV2x > 0) return false;
-  } else { //are they both at the negative y?
+  } else if(sgnV1y<0) { //are they both at the negative y?
     if(sgnV1x > 0 && sgnV2x < 0) return false;
     if(sgnV1x < 0 && sgnV2x > 0) return true;
   }
+
+  //is one of them on the x+ axis?
+  if(sgnV1y==0 && sgnV1x>0) return true; // v1 is on x+ --> angle is 0
+  if(sgnV2y==0 && sgnV2x>0) return false; //v2 is on x+ --> angle of v2 is 0 --> v2 < v1..
 
   
   //same side of the x-axis --> use vector orientation...
@@ -499,12 +503,14 @@ bool MeshIntersectionGeometry::intersectTwoTrianglesSoSImpl(const InputTriangle 
     if(intersectEdgeWithTriangleSoSImpl(triMesh0 ,v0,v1,tempVars)) {
       if(numIntersectionsFound==0) {
         vertexThatCreatedPt1.triangle = triMesh0;
-        vertexThatCreatedPt1.edge[0] = v0;
-        vertexThatCreatedPt1.edge[1] = v1;
+        vertexThatCreatedPt1.setEdges(v0,v1);
+        //vertexThatCreatedPt1.edge[0] = v0;
+        //vertexThatCreatedPt1.edge[1] = v1;
       } else {
         vertexThatCreatedPt2.triangle = triMesh0;
-        vertexThatCreatedPt2.edge[0] = v0;
-        vertexThatCreatedPt2.edge[1] = v1;
+        vertexThatCreatedPt2.setEdges(v0,v1);
+        //vertexThatCreatedPt2.edge[0] = v0;
+        //vertexThatCreatedPt2.edge[1] = v1;
       }
       numIntersectionsFound++;
     }
@@ -515,12 +521,14 @@ bool MeshIntersectionGeometry::intersectTwoTrianglesSoSImpl(const InputTriangle 
     if(intersectEdgeWithTriangleSoSImpl(triMesh1 ,v0,v1,tempVars)) {
       if(numIntersectionsFound==0) {
         vertexThatCreatedPt1.triangle = triMesh1;
-        vertexThatCreatedPt1.edge[0] = v0;
-        vertexThatCreatedPt1.edge[1] = v1;
+        vertexThatCreatedPt1.setEdges(v0,v1);
+        //vertexThatCreatedPt1.edge[0] = v0;
+        //vertexThatCreatedPt1.edge[1] = v1;
       } else {
         vertexThatCreatedPt2.triangle = triMesh1;
-        vertexThatCreatedPt2.edge[0] = v0;
-        vertexThatCreatedPt2.edge[1] = v1;
+        vertexThatCreatedPt2.setEdges(v0,v1);
+        //vertexThatCreatedPt2.edge[0] = v0;
+        //vertexThatCreatedPt2.edge[1] = v1;
       }
       numIntersectionsFound++;
     }
