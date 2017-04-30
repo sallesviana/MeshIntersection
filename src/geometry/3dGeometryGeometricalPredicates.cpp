@@ -247,6 +247,7 @@ bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZ(const InputTria
   if(ans==0) {
     bool ansSoS = isTriangleNormalPointingPositiveZSoSImpl(t, tempVars);
     cerr << "@@@@ Coincidency in isTriangleNormalPoitingPositiveZ...: " << ans << " " << ansSoS << endl;
+    assert(false); //we should never process a vertical triangle (because of SoS) in the steps of the algorithm that uses this function...
     return ansSoS;
   } else {
     //test disabled because SoS not implemented yet...

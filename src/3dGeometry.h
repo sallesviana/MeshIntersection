@@ -481,6 +481,10 @@ class MeshIntersectionGeometry {
 		void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) const;
 		void saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) const;
 
+		void printPointForDebugging(const Vertex &v) const {
+			array<double,3> coords = getCoordinatesForDebugging(v);
+			cerr << "[" << coords[0] << "," << coords[1] << "," << coords[2] << "]";
+		}
 	private:
 		friend class SosPredicatesImpl;
 

@@ -167,7 +167,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoS(const Vertex &v1,
 
 //SOS ORIENTATION of vertex with respect to a triangle and other basic geometric operations...
 
-int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point &p) {
+int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point &p4) {
   const VertCoord &p1x = p1[0];
   const VertCoord &p1y = p1[1];
   const VertCoord &p1z = p1[2];
@@ -180,15 +180,15 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
   const VertCoord &p3y = p3[1];
   const VertCoord &p3z = p3[2];
 
-  const VertCoord &px = p[0];
-  const VertCoord &py = p[1];
-  const VertCoord &pz = p[2];
+  const VertCoord &p4x = p4[0];
+  const VertCoord &p4y = p4[1];
+  const VertCoord &p4z = p4[2];
 
   const VertCoord det = -p1z*p2y*p3x + p1y*p2z*p3x + p1z*p2x*p3y - p1x*p2z*p3y - p1y*p2x*p3z +
-                         p1x*p2y*p3z + p1z*p2y*px -  p1y*p2z*px -  p1z*p3y*px +  p2z*p3y*px + 
-                         p1y*p3z*px -  p2y*p3z*px -  p1z*p2x*py +  p1x*p2z*py +  p1z*p3x*py - 
-                         p2z*p3x*py -  p1x*p3z*py +  p2x*p3z*py +  p1y*p2x*pz -  p1x*p2y*pz - 
-                         p1y*p3x*pz +  p2y*p3x*pz +  p1x*p3y*pz -  p2x*p3y*pz;
+                         p1x*p2y*p3z + p1z*p2y*p4x - p1y*p2z*p4x - p1z*p3y*p4x + p2z*p3y*p4x + 
+                         p1y*p3z*p4x - p2y*p3z*p4x - p1z*p2x*p4y + p1x*p2z*p4y + p1z*p3x*p4y - 
+                         p2z*p3x*p4y - p1x*p3z*p4y + p2x*p3z*p4y + p1y*p2x*p4z - p1x*p2y*p4z - 
+                         p1y*p3x*p4z + p2y*p3x*p4z + p1x*p3y*p4z - p2x*p3y*p4z;
   return sgn(det);
 }
 
@@ -200,10 +200,13 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
     geometryStatisticsDegenerateCases.orientation3DOO++;
   #endif
 
+
   int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+
 
   int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);
   assert(ans==0 || ans==ans2);
+
   return ans2;
 }
 
@@ -397,10 +400,12 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const InputTr
 //The input triangle should not be vertical (PinMesh does not use vertical triangles because of the perturbation!)
 //Given a vertex p, is p below the triangle t ? (we know p projected to z=0 is on t projected to z=0...)
 bool MeshIntersectionGeometry::isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
-  int sideOfTriangle = orientation(t,p); //is p on the positive (1) or negative (-1) side of the triangle?
+  //The orientation(t,p) < 0 iff the point is on the side pointed by the normal
+  int sideOfTriangle = -orientation(t,p); //is p on the positive (1) or negative (-1) side of the triangle?
 
   TempVarIsTriangleNormalPointingPositiveZ temp;
 
+  cerr << "Which side? " << sideOfTriangle << endl;
   //if the point is on the positive side, it will be below the triangle if it points down
   if(sideOfTriangle==1) return !isTriangleNormalPointingPositiveZSoSImpl(t,temp);
   else return isTriangleNormalPointingPositiveZSoSImpl(t,temp);

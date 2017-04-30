@@ -111,8 +111,8 @@ void MeshIntersectionGeometry::sortEdgesSharingStartingVertexByAngle(vector<pair
     //a degenerate edge may be anywhere...
 
     //if this happens, let's just call the SoS implementation
-    cerr << "Degenerate" << endl;
-    cerr << "Plane: " << planeProjectTriangleTo << endl;
+    //cerr << "Degenerate" << endl;
+    //cerr << "Plane: " << planeProjectTriangleTo << endl;
     sort(begin,end, [&](const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2) {
       return 1==isAngleWith0GreaterSoSImpl(*e1.first, *e1.second, *e2.second, planeProjectTriangleTo, tempVars.tempVarsIsAngleWith0Greater);
     } );

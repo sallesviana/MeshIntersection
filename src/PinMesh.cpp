@@ -563,6 +563,9 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
         //0 if equal
         int heightComparison = geometry->compareHeightWithPointHeightNoSoS(p,heightAbovePoint);
 
+        p.print(); cerr << endl;
+        cerr << "Height comparison... " << endl;
+
         //if the height of the point "above" (actually, above or below) is greater than the height of p --> the point is above p
         //if the height comparison is 0, we need SoS to make sure the triangle is above the point (after SoS)
         if(heightComparison==1 || (heightComparison==0 && geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS)) ) {  
@@ -630,6 +633,12 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
           //0 if equal
           int heightComparison = geometry->compareHeightWithPointHeightNoSoS(p,heightAbovePoint);
 
+          //cerr << endl;
+          //triangle.print(); cerr << endl;
+          //cerr << "Height comparison... " << heightComparison << endl;
+          //cerr << "Is above point?  " << geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS) << endl;
+         // cerr << "Positive or negative Z? " <<geometry->isTriangleNormalPointingPositiveZ(triangle, tempVars.tempVarIsTriangleNormalPointingPositiveZ) << endl;
+
           //if the height of the point "above" (actually, above or below) is greater than the height of p --> the point is above p
           if(heightComparison == 1 || (heightComparison == 0 && geometry->isTriangleAbovePointSoS(triangle,p,tempVars.tempVarIsTriangleAbovePointSoS))) {        
             //highestCellZToProcess =  min(highestCellZToProcess,uniformGrid->z_cell_from_coord(heightAbovePoint, tempVertCoord,tempBigInts) );
@@ -672,9 +681,13 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
     if (foundATriangleAboveP && cz >= highestCellZToProcess) break;
   }
 
- // cerr << "Best height: " << heightAbovePointBestTriangle << endl;
-
-  //cerr << "Found a triangle? " << foundATriangleAboveP << endl;
+  //cerr << "Best height: " << heightAbovePointBestTriangle << endl;
+  /*cerr << "Found a triangle? " << foundATriangleAboveP << endl;
+  if(foundATriangleAboveP) {
+    bestTriangle->print(); cerr << endl;
+    cerr << "Positive z? : " << geometry->isTriangleNormalPointingPositiveZ(*bestTriangle, tempVars.tempVarIsTriangleNormalPointingPositiveZ) << endl;
+    cerr << "Above, below: " << bestTriangle->above << " , "<< bestTriangle->below << endl;
+  }*/
   if (foundATriangleAboveP) {   
     if(geometry->isTriangleNormalPointingPositiveZ(*bestTriangle, tempVars.tempVarIsTriangleNormalPointingPositiveZ))  
       return bestTriangle->below;
@@ -933,7 +946,11 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
       ObjectId id2 = computeObjectWherePointIsTwoLevel(p,gx,gy,gz,meshIdToLocate, tempVarsLocate ,cellsLabels,foundUsingGrid);
       numVerticesFoundUsingGridLocal += foundUsingGrid;
 
-     
+      /*cerr << "Vertex from mesh: " << 1-meshIdToLocate << endl;
+      cerr << "Point from mesh: " << p.getMeshId() << endl;
+      cerr << "Locating... "; geometry->printPointForDebugging(p); cerr << endl;
+      cerr << "Location: " << id2 << endl;
+      cerr << "Ouside object is: "<< OUTSIDE_OBJECT << endl << endl;;*/
 
       verticesIds[i] = id2;
     }
