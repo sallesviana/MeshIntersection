@@ -563,8 +563,8 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
         //0 if equal
         int heightComparison = geometry->compareHeightWithPointHeightNoSoS(p,heightAbovePoint);
 
-        p.print(); cerr << endl;
-        cerr << "Height comparison... " << endl;
+        //p.print(); cerr << endl;
+        //cerr << "Height comparison... " << endl;
 
         //if the height of the point "above" (actually, above or below) is greater than the height of p --> the point is above p
         //if the height comparison is 0, we need SoS to make sure the triangle is above the point (after SoS)
