@@ -1,52 +1,4 @@
-#include "sosPredicatesImpl.h"
-
-
-//alternative impl. for orientation 1d...
-int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const int coord) const {
-
-	int sngDiff1 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 0, coord) , getEpsCoefficientsVertexFromIntersection(v1, 0, coord) );
-	 
-	if(sngDiff1 != 0) return sngDiff1;
-
-
-	int sngDiff2 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 1, coord) , getEpsCoefficientsVertexFromIntersection(v1, 1, coord) );
-	 
-	if(sngDiff2 != 0) return sngDiff2;
-
-
-	int sngDiff3 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 2, coord) , getEpsCoefficientsVertexFromIntersection(v1, 2, coord) );
-	 
-	if(sngDiff3 != 0) return sngDiff3;
-
-
-	int sngDiff4 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 3, coord) , getEpsCoefficientsVertexFromIntersection(v1, 3, coord) );
-	 
-	return sngDiff4;
-	
-
-
-/*
-	VertCoord ans_1 = getEpsCoefficientsVertexFromIntersection(v0, 0, coord) - getEpsCoefficientsVertexFromIntersection(v1, 0, coord);
-	 
-	if(sgn(ans_1) != 0) return sgn(ans_1);
-
-
-	VertCoord ans_2 = getEpsCoefficientsVertexFromIntersection(v0, 1, coord) - getEpsCoefficientsVertexFromIntersection(v1, 1, coord);
-	 
-	if(sgn(ans_2) != 0) return sgn(ans_2);
-
-
-	VertCoord ans_3 = getEpsCoefficientsVertexFromIntersection(v0, 2, coord) - getEpsCoefficientsVertexFromIntersection(v1, 2, coord);
-	 
-	if(sgn(ans_3) != 0) return sgn(ans_3);
-
-	VertCoord ans_4 = getEpsCoefficientsVertexFromIntersection(v0, 3, coord) - getEpsCoefficientsVertexFromIntersection(v1, 3, coord);
-	 
-	if(sgn(ans_4) != 0) return sgn(ans_4);
-	return 0;
-
-*/
-}
+#include "originalAlgFromMathematicaSosPredicatesImpl.h"
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,7 +8,7 @@ int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const Ver
 
 
 
-int SosPredicatesImpl::orient1D_x_00(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_00(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -91,7 +43,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient1D_y_00(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_00(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -126,7 +78,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient1D_z_00(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_00(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -161,7 +113,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient1D_x_01(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_01(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -204,7 +156,7 @@ if(sgn(ans_2) != 0) return sgn(ans_2);
 
 
 
-int SosPredicatesImpl::orient1D_y_01(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_01(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -255,7 +207,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient1D_z_01(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_01(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -314,7 +266,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_10(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_10(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -357,7 +309,7 @@ if(sgn(ans_2) != 0) return sgn(ans_2);
 
 
 
-int SosPredicatesImpl::orient1D_y_10(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_10(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -408,7 +360,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient1D_z_10(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_10(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -467,7 +419,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_11(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_11(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -502,7 +454,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient1D_y_11(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_11(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -537,7 +489,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient1D_z_11(const InputVertex &v0, const InputVertex &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_11(const InputVertex &v0, const InputVertex &v1) const{
 
 
 /*****************************************************/
@@ -572,7 +524,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient1D_x_00(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_00(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -642,7 +594,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_00(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_00(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -712,7 +664,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_00(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_00(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -782,7 +734,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_01(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_01(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -852,7 +804,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_01(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_01(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -922,7 +874,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_01(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_01(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -992,7 +944,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_10(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_10(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1062,7 +1014,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_10(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_10(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1132,7 +1084,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_10(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_10(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1202,7 +1154,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_11(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_11(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1272,7 +1224,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_11(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_11(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1342,7 +1294,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_11(const InputVertex &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_11(const InputVertex &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1412,7 +1364,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_00(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_00(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1421,11 +1373,28 @@ VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
 VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
 VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
 VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+
 
 VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
 VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
 VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
 VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1476,20 +1445,37 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_00(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_00(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
 VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
 VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
 VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
+
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
 VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
 VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
 VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1540,16 +1526,33 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_00(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_00(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
 VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
 VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
 VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
+
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
 VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
 VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
@@ -1604,7 +1607,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_01(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_01(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1613,11 +1616,29 @@ VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
 VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
 VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
 VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+
 
 VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
 VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
 VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
 VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+
 
 /*****************************************************/
 /*****************************************************/
@@ -1667,20 +1688,38 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_01(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_01(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
 VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
 VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
 VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
+
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
 VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
 VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
 VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+
 
 /*****************************************************/
 /*****************************************************/
@@ -1730,16 +1769,33 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_01(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_01(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
 VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
 VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
 VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
+
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
 VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
 VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
@@ -1794,7 +1850,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_10(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_10(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1803,12 +1859,28 @@ VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
 VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
 VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
 VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
 VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
 VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
 VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
 VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1859,21 +1931,37 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_10(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_10(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
 VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
 VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
 VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
 VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
 VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
 VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1924,17 +2012,33 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_10(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_10(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
 VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
 VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
 VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
 VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
 VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
@@ -1989,7 +2093,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_x_11(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_x_11(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
@@ -1998,12 +2102,29 @@ VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
 VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
 VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
 VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
 VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
 VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
 VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
 VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+
 
 /*****************************************************/
 /*****************************************************/
@@ -2053,21 +2174,37 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_y_11(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_y_11(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
 VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
 VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
 VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
 VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
 VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
 VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -2118,17 +2255,33 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient1D_z_11(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient1D_z_11(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const{
 
 
 /*****************************************************/
 /*****************************************************/
+VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
 VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
 VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
 VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
 VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
 VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
@@ -2183,7 +2336,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_x0_000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2221,7 +2374,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient2D_y0_000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2259,7 +2412,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient2D_z0_000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2297,7 +2450,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient2D_x0_001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2359,7 +2512,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2421,7 +2574,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2475,7 +2628,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient2D_x0_010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2537,7 +2690,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2599,7 +2752,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2653,7 +2806,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient2D_x0_011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2715,7 +2868,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2777,7 +2930,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2831,7 +2984,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient2D_x0_100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2893,7 +3046,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -2955,7 +3108,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3009,7 +3162,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient2D_x0_101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3071,7 +3224,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3133,7 +3286,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3187,7 +3340,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient2D_x0_110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3249,7 +3402,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3311,7 +3464,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3365,7 +3518,7 @@ if(sgn(ans_3) != 0) return sgn(ans_3);
 
 
 
-int SosPredicatesImpl::orient2D_x0_111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3403,7 +3556,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient2D_y0_111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3441,7 +3594,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient2D_z0_111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const{
 
 
 /*****************************************************/
@@ -3479,7 +3632,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient2D_x0_000(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_000(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -3552,7 +3705,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_000(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_000(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -3625,7 +3778,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_000(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_000(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -3698,7 +3851,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_x0_001(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_001(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -3771,7 +3924,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_001(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_001(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -3844,7 +3997,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_001(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_001(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -3917,7 +4070,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_x0_010(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_010(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4014,7 +4167,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_010(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_010(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4111,7 +4264,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4200,7 +4353,7 @@ if(sgn(ans_6) != 0) return sgn(ans_6);
 
 
 
-int SosPredicatesImpl::orient2D_x0_011(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_011(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4297,7 +4450,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_011(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_011(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4394,7 +4547,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_011(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_011(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4483,7 +4636,7 @@ if(sgn(ans_6) != 0) return sgn(ans_6);
 
 
 
-int SosPredicatesImpl::orient2D_x0_100(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_100(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4580,7 +4733,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_100(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_100(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4677,7 +4830,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_100(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_100(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4766,7 +4919,7 @@ if(sgn(ans_6) != 0) return sgn(ans_6);
 
 
 
-int SosPredicatesImpl::orient2D_x0_101(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_101(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4863,7 +5016,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_101(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_101(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -4960,7 +5113,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_101(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_101(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5049,7 +5202,7 @@ if(sgn(ans_6) != 0) return sgn(ans_6);
 
 
 
-int SosPredicatesImpl::orient2D_x0_110(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_110(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5122,7 +5275,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_110(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_110(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5195,7 +5348,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_110(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_110(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5268,7 +5421,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_x0_111(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_111(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5341,7 +5494,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_y0_111(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_111(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5414,7 +5567,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_z0_111(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_111(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5487,338 +5640,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient2D_x0_000(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
-
-
-/*****************************************************/
-const VertCoord &iv0x = getCoordinates(v0)[0];
-const VertCoord &iv0y = getCoordinates(v0)[1];
-const VertCoord &iv0z = getCoordinates(v0)[2];
-/*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
-
-
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-
-
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
-
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_1 = -(coeffV1ePower0z*coeffV2ePower0y) + coeffV1ePower0y*coeffV2ePower0z + coeffV1ePower0z*iv0y - coeffV2ePower0z*iv0y - coeffV1ePower0y*iv0z + coeffV2ePower0y*iv0z;
- 
-if(sgn(ans_1) != 0) return sgn(ans_1);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_2 = -(coeffV1ePower1z*coeffV2ePower0y) + coeffV1ePower1y*coeffV2ePower0z - coeffV1ePower0z*coeffV2ePower1y + coeffV1ePower0y*coeffV2ePower1z + coeffV1ePower1z*iv0y - coeffV2ePower1z*iv0y - coeffV1ePower1y*iv0z + coeffV2ePower1y*iv0z;
- 
-if(sgn(ans_2) != 0) return sgn(ans_2);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_3 = -(coeffV1ePower2z*coeffV2ePower0y) + coeffV1ePower2y*coeffV2ePower0z - coeffV1ePower1z*coeffV2ePower1y + coeffV1ePower1y*coeffV2ePower1z - coeffV1ePower0z*coeffV2ePower2y + coeffV1ePower0y*coeffV2ePower2z + coeffV1ePower2z*iv0y - coeffV2ePower2z*iv0y - coeffV1ePower2y*iv0z + coeffV2ePower2y*iv0z;
- 
-if(sgn(ans_3) != 0) return sgn(ans_3);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_4 = -(coeffV1ePower3z*coeffV2ePower0y) + coeffV1ePower3y*coeffV2ePower0z - coeffV1ePower2z*coeffV2ePower1y + coeffV1ePower2y*coeffV2ePower1z - coeffV1ePower1z*coeffV2ePower2y + coeffV1ePower1y*coeffV2ePower2z - coeffV1ePower0z*coeffV2ePower3y + coeffV1ePower0y*coeffV2ePower3z + coeffV1ePower3z*iv0y - coeffV2ePower3z*iv0y - coeffV1ePower3y*iv0z + coeffV2ePower3y*iv0z;
- 
-if(sgn(ans_4) != 0) return sgn(ans_4);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_5 = -(coeffV1ePower3z*coeffV2ePower1y) + coeffV1ePower3y*coeffV2ePower1z - coeffV1ePower2z*coeffV2ePower2y + coeffV1ePower2y*coeffV2ePower2z - coeffV1ePower1z*coeffV2ePower3y + coeffV1ePower1y*coeffV2ePower3z;
- 
-if(sgn(ans_5) != 0) return sgn(ans_5);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_6 = -(coeffV1ePower3z*coeffV2ePower2y) + coeffV1ePower3y*coeffV2ePower2z - coeffV1ePower2z*coeffV2ePower3y + coeffV1ePower2y*coeffV2ePower3z;
- 
-if(sgn(ans_6) != 0) return sgn(ans_6);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_7 = -(coeffV1ePower3z*coeffV2ePower3y) + coeffV1ePower3y*coeffV2ePower3z;
- 
-if(sgn(ans_7) != 0) return sgn(ans_7);
-
-/*****************************************************/
-/*****************************************************/
-
-
- return 0; 
-
- } 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-int SosPredicatesImpl::orient2D_y0_000(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
-
-
-/*****************************************************/
-const VertCoord &iv0x = getCoordinates(v0)[0];
-const VertCoord &iv0y = getCoordinates(v0)[1];
-const VertCoord &iv0z = getCoordinates(v0)[2];
-/*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
-
-
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
-
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_1 = coeffV1ePower0z*coeffV2ePower0x - coeffV1ePower0x*coeffV2ePower0z - coeffV1ePower0z*iv0x + coeffV2ePower0z*iv0x + coeffV1ePower0x*iv0z - coeffV2ePower0x*iv0z;
- 
-if(sgn(ans_1) != 0) return sgn(ans_1);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_2 = coeffV1ePower1z*coeffV2ePower0x - coeffV1ePower1x*coeffV2ePower0z + coeffV1ePower0z*coeffV2ePower1x - coeffV1ePower0x*coeffV2ePower1z - coeffV1ePower1z*iv0x + coeffV2ePower1z*iv0x + coeffV1ePower1x*iv0z - coeffV2ePower1x*iv0z;
- 
-if(sgn(ans_2) != 0) return sgn(ans_2);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_3 = coeffV1ePower2z*coeffV2ePower0x - coeffV1ePower2x*coeffV2ePower0z + coeffV1ePower1z*coeffV2ePower1x - coeffV1ePower1x*coeffV2ePower1z + coeffV1ePower0z*coeffV2ePower2x - coeffV1ePower0x*coeffV2ePower2z - coeffV1ePower2z*iv0x + coeffV2ePower2z*iv0x + coeffV1ePower2x*iv0z - coeffV2ePower2x*iv0z;
- 
-if(sgn(ans_3) != 0) return sgn(ans_3);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_4 = coeffV1ePower3z*coeffV2ePower0x - coeffV1ePower3x*coeffV2ePower0z + coeffV1ePower2z*coeffV2ePower1x - coeffV1ePower2x*coeffV2ePower1z + coeffV1ePower1z*coeffV2ePower2x - coeffV1ePower1x*coeffV2ePower2z + coeffV1ePower0z*coeffV2ePower3x - coeffV1ePower0x*coeffV2ePower3z - coeffV1ePower3z*iv0x + coeffV2ePower3z*iv0x + coeffV1ePower3x*iv0z - coeffV2ePower3x*iv0z;
- 
-if(sgn(ans_4) != 0) return sgn(ans_4);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_5 = coeffV1ePower3z*coeffV2ePower1x - coeffV1ePower3x*coeffV2ePower1z + coeffV1ePower2z*coeffV2ePower2x - coeffV1ePower2x*coeffV2ePower2z + coeffV1ePower1z*coeffV2ePower3x - coeffV1ePower1x*coeffV2ePower3z;
- 
-if(sgn(ans_5) != 0) return sgn(ans_5);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_6 = coeffV1ePower3z*coeffV2ePower2x - coeffV1ePower3x*coeffV2ePower2z + coeffV1ePower2z*coeffV2ePower3x - coeffV1ePower2x*coeffV2ePower3z;
- 
-if(sgn(ans_6) != 0) return sgn(ans_6);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_7 = coeffV1ePower3z*coeffV2ePower3x - coeffV1ePower3x*coeffV2ePower3z;
- 
-if(sgn(ans_7) != 0) return sgn(ans_7);
-
-/*****************************************************/
-/*****************************************************/
-
-
- return 0; 
-
- } 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-int SosPredicatesImpl::orient2D_z0_000(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
-
-
-/*****************************************************/
-const VertCoord &iv0x = getCoordinates(v0)[0];
-const VertCoord &iv0y = getCoordinates(v0)[1];
-const VertCoord &iv0z = getCoordinates(v0)[2];
-/*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
-
-
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
-
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_1 = -(coeffV1ePower0y*coeffV2ePower0x) + coeffV1ePower0x*coeffV2ePower0y + coeffV1ePower0y*iv0x - coeffV2ePower0y*iv0x - coeffV1ePower0x*iv0y + coeffV2ePower0x*iv0y;
-
-if(sgn(ans_1) != 0) return sgn(ans_1);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_2 = -(coeffV1ePower1y*coeffV2ePower0x) + coeffV1ePower1x*coeffV2ePower0y - coeffV1ePower0y*coeffV2ePower1x + coeffV1ePower0x*coeffV2ePower1y + coeffV1ePower1y*iv0x - coeffV2ePower1y*iv0x - coeffV1ePower1x*iv0y + coeffV2ePower1x*iv0y;
- 
-if(sgn(ans_2) != 0) return sgn(ans_2);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_3 = -(coeffV1ePower2y*coeffV2ePower0x) + coeffV1ePower2x*coeffV2ePower0y - coeffV1ePower1y*coeffV2ePower1x + coeffV1ePower1x*coeffV2ePower1y - coeffV1ePower0y*coeffV2ePower2x + coeffV1ePower0x*coeffV2ePower2y + coeffV1ePower2y*iv0x - coeffV2ePower2y*iv0x - coeffV1ePower2x*iv0y + coeffV2ePower2x*iv0y;
- 
-if(sgn(ans_3) != 0) return sgn(ans_3);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_4 = -(coeffV1ePower3y*coeffV2ePower0x) + coeffV1ePower3x*coeffV2ePower0y - coeffV1ePower2y*coeffV2ePower1x + coeffV1ePower2x*coeffV2ePower1y - coeffV1ePower1y*coeffV2ePower2x + coeffV1ePower1x*coeffV2ePower2y - coeffV1ePower0y*coeffV2ePower3x + coeffV1ePower0x*coeffV2ePower3y + coeffV1ePower3y*iv0x - coeffV2ePower3y*iv0x - coeffV1ePower3x*iv0y + coeffV2ePower3x*iv0y;
- 
-if(sgn(ans_4) != 0) return sgn(ans_4);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_5 = -(coeffV1ePower3y*coeffV2ePower1x) + coeffV1ePower3x*coeffV2ePower1y - coeffV1ePower2y*coeffV2ePower2x + coeffV1ePower2x*coeffV2ePower2y - coeffV1ePower1y*coeffV2ePower3x + coeffV1ePower1x*coeffV2ePower3y;
- 
-if(sgn(ans_5) != 0) return sgn(ans_5);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_6 = -(coeffV1ePower3y*coeffV2ePower2x) + coeffV1ePower3x*coeffV2ePower2y - coeffV1ePower2y*coeffV2ePower3x + coeffV1ePower2x*coeffV2ePower3y;
- 
-if(sgn(ans_6) != 0) return sgn(ans_6);
-
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-/*****************************************************/
-VertCoord ans_7 = -(coeffV1ePower3y*coeffV2ePower3x) + coeffV1ePower3x*coeffV2ePower3y;
- 
-if(sgn(ans_7) != 0) return sgn(ans_7);
-
-/*****************************************************/
-/*****************************************************/
-
-
- return 0; 
-
- } 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-int SosPredicatesImpl::orient2D_x0_001(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_000(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -5926,7 +5748,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_001(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_000(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6034,7 +5856,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_001(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_000(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6076,7 +5898,7 @@ VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 /*****************************************************/
 /*****************************************************/
 VertCoord ans_1 = -(coeffV1ePower0y*coeffV2ePower0x) + coeffV1ePower0x*coeffV2ePower0y + coeffV1ePower0y*iv0x - coeffV2ePower0y*iv0x - coeffV1ePower0x*iv0y + coeffV2ePower0x*iv0y;
- 
+
 if(sgn(ans_1) != 0) return sgn(ans_1);
 
 /*****************************************************/
@@ -6142,7 +5964,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_010(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_001(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6250,7 +6072,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_010(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_001(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6358,7 +6180,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_001(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6466,7 +6288,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_011(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_010(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6574,7 +6396,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_011(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_010(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6682,7 +6504,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_011(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_010(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6790,7 +6612,331 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_100(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_011(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+
+
+/*****************************************************/
+const VertCoord &iv0x = getCoordinates(v0)[0];
+const VertCoord &iv0y = getCoordinates(v0)[1];
+const VertCoord &iv0z = getCoordinates(v0)[2];
+/*****************************************************/
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+
+
+VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_1 = -(coeffV1ePower0z*coeffV2ePower0y) + coeffV1ePower0y*coeffV2ePower0z + coeffV1ePower0z*iv0y - coeffV2ePower0z*iv0y - coeffV1ePower0y*iv0z + coeffV2ePower0y*iv0z;
+ 
+if(sgn(ans_1) != 0) return sgn(ans_1);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_2 = -(coeffV1ePower1z*coeffV2ePower0y) + coeffV1ePower1y*coeffV2ePower0z - coeffV1ePower0z*coeffV2ePower1y + coeffV1ePower0y*coeffV2ePower1z + coeffV1ePower1z*iv0y - coeffV2ePower1z*iv0y - coeffV1ePower1y*iv0z + coeffV2ePower1y*iv0z;
+ 
+if(sgn(ans_2) != 0) return sgn(ans_2);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_3 = -(coeffV1ePower2z*coeffV2ePower0y) + coeffV1ePower2y*coeffV2ePower0z - coeffV1ePower1z*coeffV2ePower1y + coeffV1ePower1y*coeffV2ePower1z - coeffV1ePower0z*coeffV2ePower2y + coeffV1ePower0y*coeffV2ePower2z + coeffV1ePower2z*iv0y - coeffV2ePower2z*iv0y - coeffV1ePower2y*iv0z + coeffV2ePower2y*iv0z;
+ 
+if(sgn(ans_3) != 0) return sgn(ans_3);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_4 = -(coeffV1ePower3z*coeffV2ePower0y) + coeffV1ePower3y*coeffV2ePower0z - coeffV1ePower2z*coeffV2ePower1y + coeffV1ePower2y*coeffV2ePower1z - coeffV1ePower1z*coeffV2ePower2y + coeffV1ePower1y*coeffV2ePower2z - coeffV1ePower0z*coeffV2ePower3y + coeffV1ePower0y*coeffV2ePower3z + coeffV1ePower3z*iv0y - coeffV2ePower3z*iv0y - coeffV1ePower3y*iv0z + coeffV2ePower3y*iv0z;
+ 
+if(sgn(ans_4) != 0) return sgn(ans_4);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_5 = -(coeffV1ePower3z*coeffV2ePower1y) + coeffV1ePower3y*coeffV2ePower1z - coeffV1ePower2z*coeffV2ePower2y + coeffV1ePower2y*coeffV2ePower2z - coeffV1ePower1z*coeffV2ePower3y + coeffV1ePower1y*coeffV2ePower3z;
+ 
+if(sgn(ans_5) != 0) return sgn(ans_5);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_6 = -(coeffV1ePower3z*coeffV2ePower2y) + coeffV1ePower3y*coeffV2ePower2z - coeffV1ePower2z*coeffV2ePower3y + coeffV1ePower2y*coeffV2ePower3z;
+ 
+if(sgn(ans_6) != 0) return sgn(ans_6);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_7 = -(coeffV1ePower3z*coeffV2ePower3y) + coeffV1ePower3y*coeffV2ePower3z;
+ 
+if(sgn(ans_7) != 0) return sgn(ans_7);
+
+/*****************************************************/
+/*****************************************************/
+
+
+ return 0; 
+
+ } 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_011(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+
+
+/*****************************************************/
+const VertCoord &iv0x = getCoordinates(v0)[0];
+const VertCoord &iv0y = getCoordinates(v0)[1];
+const VertCoord &iv0z = getCoordinates(v0)[2];
+/*****************************************************/
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+
+
+VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_1 = coeffV1ePower0z*coeffV2ePower0x - coeffV1ePower0x*coeffV2ePower0z - coeffV1ePower0z*iv0x + coeffV2ePower0z*iv0x + coeffV1ePower0x*iv0z - coeffV2ePower0x*iv0z;
+ 
+if(sgn(ans_1) != 0) return sgn(ans_1);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_2 = coeffV1ePower1z*coeffV2ePower0x - coeffV1ePower1x*coeffV2ePower0z + coeffV1ePower0z*coeffV2ePower1x - coeffV1ePower0x*coeffV2ePower1z - coeffV1ePower1z*iv0x + coeffV2ePower1z*iv0x + coeffV1ePower1x*iv0z - coeffV2ePower1x*iv0z;
+ 
+if(sgn(ans_2) != 0) return sgn(ans_2);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_3 = coeffV1ePower2z*coeffV2ePower0x - coeffV1ePower2x*coeffV2ePower0z + coeffV1ePower1z*coeffV2ePower1x - coeffV1ePower1x*coeffV2ePower1z + coeffV1ePower0z*coeffV2ePower2x - coeffV1ePower0x*coeffV2ePower2z - coeffV1ePower2z*iv0x + coeffV2ePower2z*iv0x + coeffV1ePower2x*iv0z - coeffV2ePower2x*iv0z;
+ 
+if(sgn(ans_3) != 0) return sgn(ans_3);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_4 = coeffV1ePower3z*coeffV2ePower0x - coeffV1ePower3x*coeffV2ePower0z + coeffV1ePower2z*coeffV2ePower1x - coeffV1ePower2x*coeffV2ePower1z + coeffV1ePower1z*coeffV2ePower2x - coeffV1ePower1x*coeffV2ePower2z + coeffV1ePower0z*coeffV2ePower3x - coeffV1ePower0x*coeffV2ePower3z - coeffV1ePower3z*iv0x + coeffV2ePower3z*iv0x + coeffV1ePower3x*iv0z - coeffV2ePower3x*iv0z;
+ 
+if(sgn(ans_4) != 0) return sgn(ans_4);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_5 = coeffV1ePower3z*coeffV2ePower1x - coeffV1ePower3x*coeffV2ePower1z + coeffV1ePower2z*coeffV2ePower2x - coeffV1ePower2x*coeffV2ePower2z + coeffV1ePower1z*coeffV2ePower3x - coeffV1ePower1x*coeffV2ePower3z;
+ 
+if(sgn(ans_5) != 0) return sgn(ans_5);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_6 = coeffV1ePower3z*coeffV2ePower2x - coeffV1ePower3x*coeffV2ePower2z + coeffV1ePower2z*coeffV2ePower3x - coeffV1ePower2x*coeffV2ePower3z;
+ 
+if(sgn(ans_6) != 0) return sgn(ans_6);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_7 = coeffV1ePower3z*coeffV2ePower3x - coeffV1ePower3x*coeffV2ePower3z;
+ 
+if(sgn(ans_7) != 0) return sgn(ans_7);
+
+/*****************************************************/
+/*****************************************************/
+
+
+ return 0; 
+
+ } 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_011(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+
+
+/*****************************************************/
+const VertCoord &iv0x = getCoordinates(v0)[0];
+const VertCoord &iv0y = getCoordinates(v0)[1];
+const VertCoord &iv0z = getCoordinates(v0)[2];
+/*****************************************************/
+VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+
+
+VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_1 = -(coeffV1ePower0y*coeffV2ePower0x) + coeffV1ePower0x*coeffV2ePower0y + coeffV1ePower0y*iv0x - coeffV2ePower0y*iv0x - coeffV1ePower0x*iv0y + coeffV2ePower0x*iv0y;
+ 
+if(sgn(ans_1) != 0) return sgn(ans_1);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_2 = -(coeffV1ePower1y*coeffV2ePower0x) + coeffV1ePower1x*coeffV2ePower0y - coeffV1ePower0y*coeffV2ePower1x + coeffV1ePower0x*coeffV2ePower1y + coeffV1ePower1y*iv0x - coeffV2ePower1y*iv0x - coeffV1ePower1x*iv0y + coeffV2ePower1x*iv0y;
+ 
+if(sgn(ans_2) != 0) return sgn(ans_2);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_3 = -(coeffV1ePower2y*coeffV2ePower0x) + coeffV1ePower2x*coeffV2ePower0y - coeffV1ePower1y*coeffV2ePower1x + coeffV1ePower1x*coeffV2ePower1y - coeffV1ePower0y*coeffV2ePower2x + coeffV1ePower0x*coeffV2ePower2y + coeffV1ePower2y*iv0x - coeffV2ePower2y*iv0x - coeffV1ePower2x*iv0y + coeffV2ePower2x*iv0y;
+ 
+if(sgn(ans_3) != 0) return sgn(ans_3);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_4 = -(coeffV1ePower3y*coeffV2ePower0x) + coeffV1ePower3x*coeffV2ePower0y - coeffV1ePower2y*coeffV2ePower1x + coeffV1ePower2x*coeffV2ePower1y - coeffV1ePower1y*coeffV2ePower2x + coeffV1ePower1x*coeffV2ePower2y - coeffV1ePower0y*coeffV2ePower3x + coeffV1ePower0x*coeffV2ePower3y + coeffV1ePower3y*iv0x - coeffV2ePower3y*iv0x - coeffV1ePower3x*iv0y + coeffV2ePower3x*iv0y;
+ 
+if(sgn(ans_4) != 0) return sgn(ans_4);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_5 = -(coeffV1ePower3y*coeffV2ePower1x) + coeffV1ePower3x*coeffV2ePower1y - coeffV1ePower2y*coeffV2ePower2x + coeffV1ePower2x*coeffV2ePower2y - coeffV1ePower1y*coeffV2ePower3x + coeffV1ePower1x*coeffV2ePower3y;
+ 
+if(sgn(ans_5) != 0) return sgn(ans_5);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_6 = -(coeffV1ePower3y*coeffV2ePower2x) + coeffV1ePower3x*coeffV2ePower2y - coeffV1ePower2y*coeffV2ePower3x + coeffV1ePower2x*coeffV2ePower3y;
+ 
+if(sgn(ans_6) != 0) return sgn(ans_6);
+
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+/*****************************************************/
+VertCoord ans_7 = -(coeffV1ePower3y*coeffV2ePower3x) + coeffV1ePower3x*coeffV2ePower3y;
+ 
+if(sgn(ans_7) != 0) return sgn(ans_7);
+
+/*****************************************************/
+/*****************************************************/
+
+
+ return 0; 
+
+ } 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_100(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -6898,7 +7044,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_100(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_100(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7006,7 +7152,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_100(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_100(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7114,7 +7260,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_101(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_101(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7222,7 +7368,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_101(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_101(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7330,7 +7476,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_101(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_101(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7438,7 +7584,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_110(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_110(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7546,7 +7692,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_110(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_110(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7654,7 +7800,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_110(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_110(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7762,7 +7908,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_111(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_111(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7870,7 +8016,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_111(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_111(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -7978,7 +8124,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_111(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_111(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8086,7 +8232,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_000(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_000(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8205,7 +8351,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_000(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_000(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8324,7 +8470,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_000(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_000(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8443,7 +8589,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_001(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_001(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8562,7 +8708,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_001(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_001(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8681,7 +8827,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_001(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_001(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8800,7 +8946,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_010(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_010(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -8919,7 +9065,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_010(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_010(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9038,7 +9184,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_010(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_010(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9157,7 +9303,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_011(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_011(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9276,7 +9422,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_011(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_011(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9395,7 +9541,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_011(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_011(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9514,7 +9660,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_100(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_100(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9633,7 +9779,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_100(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_100(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9752,7 +9898,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_100(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_100(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9871,7 +10017,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_101(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_101(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -9990,7 +10136,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_101(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_101(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10109,7 +10255,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_101(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_101(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10228,7 +10374,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_110(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_110(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10347,7 +10493,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_110(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_110(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10466,7 +10612,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_110(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_110(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10585,7 +10731,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_x0_111(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_x0_111(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10704,7 +10850,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_y0_111(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_y0_111(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10823,7 +10969,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient2D_z0_111(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient2D_z0_111(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const{
 
 
 /*****************************************************/
@@ -10942,7 +11088,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_0000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -10983,7 +11129,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient3D_0001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11048,7 +11194,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11113,7 +11259,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11178,7 +11324,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11243,7 +11389,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11308,7 +11454,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11373,7 +11519,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11438,7 +11584,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11503,7 +11649,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11568,7 +11714,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11633,7 +11779,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11698,7 +11844,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11763,7 +11909,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11828,7 +11974,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11893,7 +12039,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 
 
 /*****************************************************/
@@ -11934,7 +12080,7 @@ if(sgn(ans_1) != 0) return sgn(ans_1);
 
 
 
-int SosPredicatesImpl::orient3D_0000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12010,7 +12156,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12086,7 +12232,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_0010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12186,7 +12332,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_0011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12286,7 +12432,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_0100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12386,7 +12532,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_0101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12486,7 +12632,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_0110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12586,7 +12732,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_0111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_0111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12686,7 +12832,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1000(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12786,7 +12932,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1001(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12886,7 +13032,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1010(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -12986,7 +13132,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1011(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -13086,7 +13232,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1100(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -13186,7 +13332,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1101(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -13286,7 +13432,7 @@ if(sgn(ans_7) != 0) return sgn(ans_7);
 
 
 
-int SosPredicatesImpl::orient3D_1110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1110(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/
@@ -13362,7 +13508,7 @@ if(sgn(ans_4) != 0) return sgn(ans_4);
 
 
 
-int SosPredicatesImpl::orient3D_1111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orient3D_1111(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 
 
 /*****************************************************/

@@ -1,7 +1,7 @@
-#include "sosPredicatesImpl.h"
+#include "originalAlgFromMathematicaSosPredicatesImpl.h"
 
 
-int SosPredicatesImpl::orientation1D_x(const InputVertex &v0, const InputVertex &v1) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_x(const InputVertex &v0, const InputVertex &v1) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 
@@ -19,8 +19,26 @@ int SosPredicatesImpl::orientation1D_x(const InputVertex &v0, const InputVertex 
 		}
 	}
 }
-int SosPredicatesImpl::orientation1D_x(const InputVertex &v0, const VertexFromIntersection &v1) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_x(const InputVertex &v0, const VertexFromIntersection &v1) const {
 	const int meshId0 = v0.getMeshId();
+	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
+
+	if(meshId0==0) {
+		if(meshId1==0) {
+			return orient1D_x_00(v0,v1);
+		} else {
+			return orient1D_x_01(v0,v1);
+		}
+	} else {
+		if(meshId1==0) {
+			return orient1D_x_10(v0,v1);
+		} else {
+			return orient1D_x_11(v0,v1);
+		}
+	}
+}
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_x(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
+	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 
 	if(meshId0==0) {
@@ -40,38 +58,9 @@ int SosPredicatesImpl::orientation1D_x(const InputVertex &v0, const VertexFromIn
 
 
 
-int SosPredicatesImpl::orientation1D_x(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
-	return orientation1D(v0, v1, 0);
 
 
-	/*
-
-
-
-	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
-	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
-
-	if(meshId0==0) {
-		if(meshId1==0) {
-			return orient1D_x_00(v0,v1);
-		} else {
-			return orient1D_x_01(v0,v1);
-		}
-	} else {
-		if(meshId1==0) {
-			return orient1D_x_10(v0,v1);
-		} else {
-			return orient1D_x_11(v0,v1);
-		}
-	}
-	*/
-}
-
-
-
-
-
-int SosPredicatesImpl::orientation1D_y(const InputVertex &v0, const InputVertex &v1) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_y(const InputVertex &v0, const InputVertex &v1) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 
@@ -89,7 +78,7 @@ int SosPredicatesImpl::orientation1D_y(const InputVertex &v0, const InputVertex 
 		}
 	}
 }
-int SosPredicatesImpl::orientation1D_y(const InputVertex &v0, const VertexFromIntersection &v1) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_y(const InputVertex &v0, const VertexFromIntersection &v1) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 
@@ -107,10 +96,7 @@ int SosPredicatesImpl::orientation1D_y(const InputVertex &v0, const VertexFromIn
 		}
 	}
 }
-int SosPredicatesImpl::orientation1D_y(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
-	return orientation1D(v0, v1, 1);
-
-	/*
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_y(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
 	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 
@@ -126,11 +112,11 @@ int SosPredicatesImpl::orientation1D_y(const VertexFromIntersection &v0, const V
 		} else {
 			return orient1D_y_11(v0,v1);
 		}
-	}*/
+	}
 }
 
 
-int SosPredicatesImpl::orientation1D_z(const InputVertex &v0, const InputVertex &v1) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_z(const InputVertex &v0, const InputVertex &v1) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 
@@ -148,7 +134,7 @@ int SosPredicatesImpl::orientation1D_z(const InputVertex &v0, const InputVertex 
 		}
 	}
 }
-int SosPredicatesImpl::orientation1D_z(const InputVertex &v0, const VertexFromIntersection &v1) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_z(const InputVertex &v0, const VertexFromIntersection &v1) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 
@@ -166,10 +152,7 @@ int SosPredicatesImpl::orientation1D_z(const InputVertex &v0, const VertexFromIn
 		}
 	}
 }
-int SosPredicatesImpl::orientation1D_z(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
-	return orientation1D(v0, v1, 2);
-
-	/*
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D_z(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
 	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 
@@ -185,7 +168,7 @@ int SosPredicatesImpl::orientation1D_z(const VertexFromIntersection &v0, const V
 		} else {
 			return orient1D_z_11(v0,v1);
 		}
-	}*/
+	}
 }
 
 
@@ -194,7 +177,7 @@ int SosPredicatesImpl::orientation1D_z(const VertexFromIntersection &v0, const V
 /*****************************************************************************************************************************************************/
 /*****************************************************************************************************************************************************/
 
-int SosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshId();
@@ -229,7 +212,7 @@ int SosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const InputVertex
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -264,7 +247,7 @@ int SosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const InputVertex
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -299,7 +282,7 @@ int SosPredicatesImpl::orientation2D_x0(const InputVertex &v0, const VertexFromI
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_x0(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_x0(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -337,7 +320,7 @@ int SosPredicatesImpl::orientation2D_x0(const VertexFromIntersection &v0, const 
 
 
 
-int SosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshId();
@@ -372,7 +355,7 @@ int SosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const InputVertex
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -407,7 +390,7 @@ int SosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const InputVertex
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -442,7 +425,7 @@ int SosPredicatesImpl::orientation2D_y0(const InputVertex &v0, const VertexFromI
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_y0(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_y0(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -479,7 +462,7 @@ int SosPredicatesImpl::orientation2D_y0(const VertexFromIntersection &v0, const 
 }
 
 
-int SosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshId();
@@ -514,7 +497,7 @@ int SosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const InputVertex
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -549,7 +532,7 @@ int SosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const InputVertex
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -584,7 +567,7 @@ int SosPredicatesImpl::orientation2D_z0(const InputVertex &v0, const VertexFromI
 		}
 	}
 }
-int SosPredicatesImpl::orientation2D_z0(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D_z0(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2) const {
 	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 	const int meshId2 = v2.getMeshOfTriangleDefiningVertex();
@@ -624,7 +607,7 @@ int SosPredicatesImpl::orientation2D_z0(const VertexFromIntersection &v0, const 
 /*****************************************************************************************************************************************************/
 /*****************************************************************************************************************************************************/
 /*****************************************************************************************************************************************************/
-int SosPredicatesImpl::orientation1D(const InputVertex &v0, const InputVertex &v1,int whatAxisProjectTo) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D(const InputVertex &v0, const InputVertex &v1,int whatAxisProjectTo) const {
 	switch(whatAxisProjectTo) {
 		case 0:  return orientation1D_x(v0,v1); break;
 		case 1:  return orientation1D_y(v0,v1); break;
@@ -633,7 +616,7 @@ int SosPredicatesImpl::orientation1D(const InputVertex &v0, const InputVertex &v
 	assert(false);
 }
 
-int SosPredicatesImpl::orientation1D(const InputVertex &v0, const VertexFromIntersection &v1,int whatAxisProjectTo) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D(const InputVertex &v0, const VertexFromIntersection &v1,int whatAxisProjectTo) const {
 	switch(whatAxisProjectTo) {
 		case 0:  return orientation1D_x(v0,v1); break;
 		case 1:  return orientation1D_y(v0,v1); break;
@@ -642,18 +625,17 @@ int SosPredicatesImpl::orientation1D(const InputVertex &v0, const VertexFromInte
 	assert(false);
 }
 
-/*
-int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const VertexFromIntersection &v1,int whatAxisProjectTo) const {
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const VertexFromIntersection &v1,int whatAxisProjectTo) const {
 	switch(whatAxisProjectTo) {
 		case 0:  return orientation1D_x(v0,v1); break;
 		case 1:  return orientation1D_y(v0,v1); break;
 		case 2:  return orientation1D_z(v0,v1); break;
 	}
 	assert(false);
-}*/
+}
 
 
-int SosPredicatesImpl::orientation2D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2,int whatPlaneProjectTo) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2,int whatPlaneProjectTo) const{
 	switch(whatPlaneProjectTo) {
 		case 0:  return orientation2D_x0(v0,v1,v2); break;
 		case 1:  return orientation2D_y0(v0,v1,v2); break;
@@ -662,7 +644,7 @@ int SosPredicatesImpl::orientation2D(const InputVertex &v0, const InputVertex &v
 	assert(false);
 }
 
-int SosPredicatesImpl::orientation2D(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2,int whatPlaneProjectTo) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D(const InputVertex &v0, const InputVertex &v1, const VertexFromIntersection &v2,int whatPlaneProjectTo) const{
 	switch(whatPlaneProjectTo) {
 		case 0:  return orientation2D_x0(v0,v1,v2); break;
 		case 1:  return orientation2D_y0(v0,v1,v2); break;
@@ -671,7 +653,7 @@ int SosPredicatesImpl::orientation2D(const InputVertex &v0, const InputVertex &v
 	assert(false);
 }
 
-int SosPredicatesImpl::orientation2D(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2,int whatPlaneProjectTo) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D(const InputVertex &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2,int whatPlaneProjectTo) const{
 	switch(whatPlaneProjectTo) {
 		case 0:  return orientation2D_x0(v0,v1,v2); break;
 		case 1:  return orientation2D_y0(v0,v1,v2); break;
@@ -680,7 +662,7 @@ int SosPredicatesImpl::orientation2D(const InputVertex &v0, const VertexFromInte
 	assert(false);
 }
 
-int SosPredicatesImpl::orientation2D(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2,int whatPlaneProjectTo) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation2D(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const VertexFromIntersection &v2,int whatPlaneProjectTo) const{
 	switch(whatPlaneProjectTo) {
 		case 0:  return orientation2D_x0(v0,v1,v2); break;
 		case 1:  return orientation2D_y0(v0,v1,v2); break;
@@ -691,7 +673,7 @@ int SosPredicatesImpl::orientation2D(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************************************************************************************************************/
 
-int SosPredicatesImpl::orientation3D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation3D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const InputVertex &v3) const{
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshId();
@@ -760,7 +742,7 @@ int SosPredicatesImpl::orientation3D(const InputVertex &v0, const InputVertex &v
 	}
 }
 
-int SosPredicatesImpl::orientation3D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
+int OriginalAlgFromMathematicaSosPredicatesImpl::orientation3D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const{
 	const int meshId0 = v0.getMeshId();
 	const int meshId1 = v1.getMeshId();
 	const int meshId2 = v2.getMeshId();

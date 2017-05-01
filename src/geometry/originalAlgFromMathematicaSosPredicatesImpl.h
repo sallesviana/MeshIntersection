@@ -1,14 +1,16 @@
 #include "../3dGeometry.h"
 
-#ifndef SosPredicatesImpl_H
-#define SosPredicatesImpl_H
+#ifndef OriginalAlgFromMathematicaSosPredicatesImpl_H
+#define OriginalAlgFromMathematicaSosPredicatesImpl_H
 
 using namespace std;
 
-class SosPredicatesImpl {
+//This is the original version from mathematica.
+//We will employ it to double check results obtained by an optimized version
+class OriginalAlgFromMathematicaSosPredicatesImpl {
 
 public:
-	SosPredicatesImpl(const MeshIntersectionGeometry *geom): geometry(geom) {}
+	OriginalAlgFromMathematicaSosPredicatesImpl(const MeshIntersectionGeometry *geom): geometry(geom) {}
 
 	int orientation1D(const InputVertex &v0, const InputVertex &v1,int whatAxisProjectTo) const;
 	int orientation1D(const InputVertex &v0, const VertexFromIntersection &v1,int whatAxisProjectTo) const;
@@ -25,17 +27,15 @@ public:
 private:
 	const MeshIntersectionGeometry *geometry;
 
-	const Point& getCoordinates(const Vertex &iv) const {
+	const Point& getCoordinates(const InputVertex &iv) const {
 		return geometry->getCoordinates(iv);
 	}
-
-	
 	
 	//given a vertex from intersection, returns the epsilon coefficient of a given coordinate
 	//coord may be COORD_X,COORD_Y or COORD_Z
 	//epsCoefficient may be 0, 1, 2 or 3
 	VertCoord getEpsCoefficientsVertexFromIntersection(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
-	VertCoord getEpsCoefficientsVertexFromIntersectionFaster(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
+
 
 
 

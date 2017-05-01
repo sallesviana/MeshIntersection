@@ -37,7 +37,10 @@ using namespace std;
 #define COLLECT_GEOMETRY_STATISTICS
 
 
-
+//if defined, we will double check the results with the one obtained by the original functions 
+//created using mathematica (we tried to optimize these functions... thus, the double check is good
+//to make sure we optimized correctly...)
+#define DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
 
 
 //===============================================================
@@ -487,6 +490,7 @@ class MeshIntersectionGeometry {
 		}
 	private:
 		friend class SosPredicatesImpl;
+		friend class OriginalAlgFromMathematicaSosPredicatesImpl;
 
 		struct PlaneEquation {Point normal; VertCoord d;};
 		vector<PlaneEquation> planeEquationsInputTriangles[2];
@@ -603,9 +607,9 @@ class MeshIntersectionGeometry {
 		//what is the signal of each coordinate the vector from orig to dest
 		//cannot be 0 (SoS)
 		int signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const;
-		int signalVectorCoord(const InputVertex &orig, const InputVertex &dest, int coord) const;
-		int signalVectorCoord(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const;
-		int signalVectorCoord(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const;
+		int signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const InputVertex &dest, int coord) const;
+		int signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const;
+		int signalVectorCoordOnlyCallWhenCoincident(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const;
 		//int signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const;
 
 

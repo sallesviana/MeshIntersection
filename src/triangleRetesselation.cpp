@@ -1275,9 +1275,9 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
       for(int i=0;i<numTriangles;i++) {
         //Let's triangulate the polygons on this triangle....
 
-        //if((i%onePercentNumPolygons)==0) {
+        if((i%onePercentNumPolygons)==0) {
           clog << "Triangulating " << i << " of " << numTriangles << " Percent= " << (i*100)/numTriangles << "\n";
-        //}
+        }
         for(BoundaryPolygon &polygon:polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].second)        
           polygon.triangulatePolygon(meshIntersectionGeometry,tempVarsTriangulatePolygon);
       }

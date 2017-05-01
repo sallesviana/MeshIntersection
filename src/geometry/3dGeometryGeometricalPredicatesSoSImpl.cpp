@@ -1,12 +1,10 @@
 
 #include "sosPredicatesImpl.h"
+#include "originalAlgFromMathematicaSosPredicatesImpl.h"
+
+
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo) const { 
-  #ifdef COLLECT_GEOMETRY_STATISTICS
-    #pragma omp atomic
-    geometryStatisticsDegenerateCases.orientation2DOOO++;
-  #endif
-
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -21,19 +19,30 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
     coordY = 0;
   }
 
-  //a.x * b.y - a.y * b.x;
   int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+
+  if(ans!=0) return ans;
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DOOO++;
+  #endif  
+
+
+
+
+  //a.x * b.y - a.y * b.x;
   int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo) );
+  #endif
+
   assert(ans==0 || ans==ans2);
+
   return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVertex &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
-  #ifdef COLLECT_GEOMETRY_STATISTICS
-    #pragma omp atomic
-    geometryStatisticsDegenerateCases.orientation2DOOI++;
-  #endif
-
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -50,17 +59,29 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
 
   //a.x * b.y - a.y * b.x;
   int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  if(ans!=0) return ans;
+
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DOOI++;
+  #endif  
+  
+
+
+
   int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
+  #endif
+
   assert(ans==0 || ans==ans2);
+    
+
   return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
-  #ifdef COLLECT_GEOMETRY_STATISTICS
-    #pragma omp atomic
-    geometryStatisticsDegenerateCases.orientation2DOII++;
-  #endif
-
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -75,21 +96,29 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
     coordY = 0;
   }
 
-  //a.x * b.y - a.y * b.x;
   int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  if(ans!=0) return ans;
+
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DOII++;
+  #endif  
+
+
+  //a.x * b.y - a.y * b.x;  
   int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+ 	#ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
+  #endif
 
   assert(ans==0 || ans==ans2);
+
+
   return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
-  #ifdef COLLECT_GEOMETRY_STATISTICS
-    #pragma omp atomic
-    geometryStatisticsDegenerateCases.orientation2DIII++;
-  #endif
-
-
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -106,8 +135,33 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
 
   //a.x * b.y - a.y * b.x;
   int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  if(ans!=0) return ans;
+  if(v1.getMeshOfTriangleDefiningVertex() == v2.getMeshOfTriangleDefiningVertex() && v1.getMeshOfTriangleDefiningVertex()==queryPoint.getMeshOfTriangleDefiningVertex()) {
+  	//if the points are generated from intersections with the same triangle, --> SoS will not modify the answer of the orientation!
+  	if(v1.triangle.compare(v2.triangle)==0 && v2.triangle.compare(queryPoint.triangle)==0) {
+  		#ifdef DOUBLE_CHECK_SOS_RESULTS
+	  		int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+	  		assert(ans==ans2);
+	  	#endif
+	  	#ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+		  	assert(SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
+		  #endif	
+
+	  	return ans;
+	  }
+  }
+
+
+  #ifdef COLLECT_GEOMETRY_STATISTICS
+    #pragma omp atomic
+    geometryStatisticsDegenerateCases.orientation2DIII++;
+  #endif
+  
   int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
-  assert(ans==0 || ans==ans2);
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
+  #endif
+      
   return ans2;
 }
 
@@ -195,31 +249,42 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
 
 //3d orientation...
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const {
+  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  if(ans!=0) return ans;
+
+
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation3DOO++;
   #endif
 
+  int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);    
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation3D(p1,p2,p3,v));
+  #endif
 
-  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
-
-
-  int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);
   assert(ans==0 || ans==ans2);
 
   return ans2;
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const {
+  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  if(ans!=0) return ans;
+
+
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation3DOI++;
-  #endif
-
-  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  #endif  
 
   int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation3D(p1,p2,p3,v));
+  #endif
+  
   assert(ans==0 || ans==ans2);
+
   return ans2;
 }
 
@@ -236,50 +301,81 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
 
 
 
-int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const InputVertex &dest, int coord) const {
+
+
+
+
+int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const InputVertex &dest, int coord) const {
   //signal vector coord(orig,dest) = -orientation(orig,dest)
   //
   //
+  /*
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation1DOO++;
+  #endif*/
+
+  int ans = 0;
+  int meshId0 = orig.getMeshId();
+  int meshId1 = dest.getMeshId();
+  if(meshId0!=meshId1) {
+    if(meshId0==0) ans = 1; // orig is in mesh 0 --> non perturbed , dest is in 1--> positive perturb, dest-orig = positive perturb.
+    else ans = -1;
+  }
+
+  #ifdef DOUBLE_CHECK_SOS_RESULTS    
+  	int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+    assert(ans==ans2);
+  #endif
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(SosPredicatesImpl(this).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
   #endif
 
-  const Point &p0 =  getCoordinates(orig);
-  const Point &p1 =  getCoordinates(dest);
-  int ans = sgn(p1[coord]-p0[coord]);
-  if(ans!=0) {
-    int meshId0 = orig.getMeshId();
-    int meshId1 = dest.getMeshId();
-    if(meshId0!=meshId1) {
-      if(meshId0==0) ans = 1; // orig is in mesh 0 --> non perturbed , dest is in 1--> positive perturb, dest-orig = positive perturb.
-      else ans = -1;
-    }
-  }
-  int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
-
-  assert(ans==0 || ans==ans2);
-  
-  //if they are in the same mesh, there is no perturbation between them --> we should return ans;
-  return ans2;
+  return ans;
+ 
 }
 
-int MeshIntersectionGeometry::signalVectorCoord(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const {
+
+int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const {
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation1DOI++;
   #endif
 
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(SosPredicatesImpl(this).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
+  #endif  
+
   return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 }
 
-int MeshIntersectionGeometry::signalVectorCoord(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const {
+int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const {
+  int ans = 0;
+
+  /*
+	//this does not seem to be true!
+	//imagine the tip of a triangle touching another triangle... after perturbation the signal can become non zero, right?
+  if(orig.getMeshOfTriangleDefiningVertex() == dest.getMeshOfTriangleDefiningVertex() ) { //if they are generated from triangles from same mesh --> if there is a coincidence it is really a coincidence
+  	#ifdef DOUBLE_CHECK_SOS_RESULTS
+  		int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+  		assert(ans2==ans);
+  	#endif
+
+  	return ans;
+  }*/
+
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation1DII++;
+  #endif  
+
+  int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+
+  #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+  	assert(SosPredicatesImpl(this).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
   #endif
 
-  return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+  return ans2; 
 }
 
 
@@ -291,6 +387,15 @@ int MeshIntersectionGeometry::signalVectorCoord(const VertexFromIntersection &or
 //I think this could be 0... suppose the two vertices are from same mesh, for example...
 //TODO: review...
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const {
+  const Point &p0 =  getCoordinates(orig);
+  const Point &p1 =  getCoordinates(dest);
+  int ans = 0; // sgn(p1[coord]-p0[coord]);
+  if(p1[coord] > p0[coord]) ans = 1;
+  if(p1[coord] < p0[coord]) ans = -1;
+
+  if(ans!=0) return ans;
+
+  
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.signVector++;
@@ -301,15 +406,15 @@ int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex
 
   if(isV1InputVertex) {
     if(isV2InputVertex) //input,input
-      return signalVectorCoord(*static_cast<const InputVertex*>(&orig),*static_cast<const InputVertex*>(&dest),coord); 
+      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&orig),*static_cast<const InputVertex*>(&dest),coord); 
     else //input, intersection
-      return signalVectorCoord(*static_cast<const InputVertex*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
+      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
   }
   else { 
     if(isV2InputVertex)
-      return -signalVectorCoord(*static_cast<const InputVertex*>(&dest),*static_cast<const VertexFromIntersection*>(&orig),coord);
+      return -signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&dest),*static_cast<const VertexFromIntersection*>(&orig),coord);
     else
-      return signalVectorCoord(*static_cast<const VertexFromIntersection*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
+      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const VertexFromIntersection*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
   }
 }
 
@@ -405,7 +510,7 @@ bool MeshIntersectionGeometry::isTriangleAbovePointSoSImpl(const InputTriangle &
 
   TempVarIsTriangleNormalPointingPositiveZ temp;
 
-  cerr << "Which side? " << sideOfTriangle << endl;
+  //cerr << "Which side? " << sideOfTriangle << endl;
   //if the point is on the positive side, it will be below the triangle if it points down
   if(sideOfTriangle==1) return !isTriangleNormalPointingPositiveZSoSImpl(t,temp);
   else return isTriangleNormalPointingPositiveZSoSImpl(t,temp);
@@ -578,7 +683,7 @@ const void computePlaneEquationsInputTriangle(const Point &t0,const Point &t1,co
 const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoSImpl(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const {
   //Let candidate triangle be triangle 1 and bestTriangle be triangle2...
 
-  cerr << "Getting best triangle" << endl;
+  //cerr << "Getting best triangle" << endl;
   //c2 (a1 eps (2mesh-1) + b1 eps^2  (2mesh-1))  > c1(a2 eps (2mesh-1) + b2 eps^2  (2mesh-1))
   VertCoord a1,b1,c1; //plane equation of triangle 1 (triangle 1: a1 x + b1 y + c1 z = d1 -- we do not need the "D")
   VertCoord a2,b2,c2; 
