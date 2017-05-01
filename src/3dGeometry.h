@@ -40,7 +40,7 @@ using namespace std;
 //if defined, we will double check the results with the one obtained by the original functions 
 //created using mathematica (we tried to optimize these functions... thus, the double check is good
 //to make sure we optimized correctly...)
-//#define DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+#define DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
 
 
 //===============================================================

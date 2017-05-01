@@ -74,6 +74,7 @@ VertCoord SosPredicatesImpl::getEpsCoefficientsVertexFromIntersectionFaster(cons
 }
 
 VertCoord SosPredicatesImpl::getEpsCoefficientsVertexFromIntersection(const VertexFromIntersection &v0, int epsCoefficient,int coord) const {
+	//assert(getEpsCoefficientsVertexFromIntersectionFaster(v0,epsCoefficient,coord)==getEpsCoefficientsVertexFromIntersectionOriginal(v0,epsCoefficient,coord));
 	return getEpsCoefficientsVertexFromIntersectionFaster(v0,epsCoefficient,coord);
 }
 

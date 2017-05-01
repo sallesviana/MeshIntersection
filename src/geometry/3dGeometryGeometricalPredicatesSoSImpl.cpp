@@ -373,7 +373,7 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Vert
   int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
-  	 assert(ans2==-OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
+  	assert(ans2==-OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
   #endif
 
   return ans2; 

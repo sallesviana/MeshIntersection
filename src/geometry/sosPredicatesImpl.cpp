@@ -1,27 +1,33 @@
 #include "sosPredicatesImpl.h"
 
 
+inline int getSignal(int i){
+	if(i>0) return 1;
+	if(i<0) return -1;
+	return 0;
+}
+
 //alternative impl. for orientation 1d...
 int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const VertexFromIntersection &v1, const int coord) const {
 
-	int sngDiff1 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 0, coord) , getEpsCoefficientsVertexFromIntersection(v1, 0, coord) );
+	int cmpDiff1 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 0, coord) , getEpsCoefficientsVertexFromIntersection(v1, 0, coord) );
 	 
-	if(sngDiff1 != 0) return sngDiff1;
+	if(cmpDiff1 != 0) return getSignal(cmpDiff1);
 
 
-	int sngDiff2 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 1, coord) , getEpsCoefficientsVertexFromIntersection(v1, 1, coord) );
+	int cmpDiff2 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 1, coord) , getEpsCoefficientsVertexFromIntersection(v1, 1, coord) );
 	 
-	if(sngDiff2 != 0) return sngDiff2;
+	if(cmpDiff2 != 0) return getSignal(cmpDiff2);
 
 
-	int sngDiff3 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 2, coord) , getEpsCoefficientsVertexFromIntersection(v1, 2, coord) );
+	int cmpDiff3 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 2, coord) , getEpsCoefficientsVertexFromIntersection(v1, 2, coord) );
 	 
-	if(sngDiff3 != 0) return sngDiff3;
+	if(cmpDiff3 != 0) return getSignal(cmpDiff3);
 
 
-	int sngDiff4 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 3, coord) , getEpsCoefficientsVertexFromIntersection(v1, 3, coord) );
+	int cmpDiff4 = cmp(getEpsCoefficientsVertexFromIntersection(v0, 3, coord) , getEpsCoefficientsVertexFromIntersection(v1, 3, coord) );
 	 
-	return sngDiff4;
+	return getSignal(cmpDiff4);
 	
 
 
@@ -33,7 +39,9 @@ int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const Ver
 			return orient1D_z_10(v0,v1);
 		}
 	}
+*/
 
+	/*
 	VertCoord ans_1 = getEpsCoefficientsVertexFromIntersection(v0, 0, coord) - getEpsCoefficientsVertexFromIntersection(v1, 0, coord);
 	 
 	if(sgn(ans_1) != 0) return sgn(ans_1);
@@ -52,8 +60,8 @@ int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const Ver
 	 
 	if(sgn(ans_4) != 0) return sgn(ans_4);
 	return 0;
+	*/
 
-*/
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
