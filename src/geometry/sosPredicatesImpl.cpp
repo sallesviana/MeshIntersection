@@ -26,6 +26,14 @@ int SosPredicatesImpl::orientation1D(const VertexFromIntersection &v0, const Ver
 
 
 /*
+	if(coord==2) {
+		if(v0.getMeshOfTriangleDefiningVertex()==1 && v1.getMeshOfTriangleDefiningVertex()==1) return orient1D_z_11(v0,v1);
+		if(v0.getMeshOfTriangleDefiningVertex()==1 && v1.getMeshOfTriangleDefiningVertex()==0) {
+			cerr << "aqui" << endl;
+			return orient1D_z_10(v0,v1);
+		}
+	}
+
 	VertCoord ans_1 = getEpsCoefficientsVertexFromIntersection(v0, 0, coord) - getEpsCoefficientsVertexFromIntersection(v1, 0, coord);
 	 
 	if(sgn(ans_1) != 0) return sgn(ans_1);

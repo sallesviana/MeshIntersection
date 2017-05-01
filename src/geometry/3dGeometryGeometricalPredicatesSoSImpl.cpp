@@ -3,6 +3,7 @@
 #include "originalAlgFromMathematicaSosPredicatesImpl.h"
 
 
+//#define SosPredicatesImpl OriginalAlgFromMathematicaSosPredicatesImpl
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo) const { 
   const Point &p0 =  getCoordinates(v1);
@@ -372,7 +373,7 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Vert
   int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
 
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
-  	assert(SosPredicatesImpl(this).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
+  	 assert(ans2==-OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
   #endif
 
   return ans2; 

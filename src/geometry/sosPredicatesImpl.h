@@ -36,6 +36,7 @@ private:
 	//epsCoefficient may be 0, 1, 2 or 3
 	VertCoord getEpsCoefficientsVertexFromIntersection(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
 	VertCoord getEpsCoefficientsVertexFromIntersectionFaster(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
+		VertCoord getEpsCoefficientsVertexFromIntersectionOriginal(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
 
 
 

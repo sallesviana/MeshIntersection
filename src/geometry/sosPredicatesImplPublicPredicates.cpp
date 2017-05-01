@@ -167,9 +167,9 @@ int SosPredicatesImpl::orientation1D_z(const InputVertex &v0, const VertexFromIn
 	}
 }
 int SosPredicatesImpl::orientation1D_z(const VertexFromIntersection &v0, const VertexFromIntersection &v1) const {
-	return orientation1D(v0, v1, 2);
+	//return orientation1D(v0, v1, 2);
 
-	/*
+	
 	const int meshId0 = v0.getMeshOfTriangleDefiningVertex();
 	const int meshId1 = v1.getMeshOfTriangleDefiningVertex();
 
@@ -185,7 +185,7 @@ int SosPredicatesImpl::orientation1D_z(const VertexFromIntersection &v0, const V
 		} else {
 			return orient1D_z_11(v0,v1);
 		}
-	}*/
+	}
 }
 
 
