@@ -2,8 +2,8 @@ flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc
 
 all: meshIntersection
 
-meshIntersection: pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o utils.o triangleRetesselation.o triangleClassification.o sosPredicatesImpl.o sosPredicatesImplPublicPredicates.o getEpsCoefficientsVertex.o
-		g++ pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o triangleRetesselation.o triangleClassification.o utils.o sosPredicatesImpl.o sosPredicatesImplPublicPredicates.o getEpsCoefficientsVertex.o $(flags) -o  meshIntersection
+meshIntersection: originalAlgFromMathematicaSosPredicatesImpl.o originalAlgFromMathematicaSosPredicatesImplPublicPredicates.o originalAlgFromMathematicaGetEpsCoefficientsVertex.o pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o utils.o triangleRetesselation.o triangleClassification.o sosPredicatesImpl.o sosPredicatesImplPublicPredicates.o getEpsCoefficientsVertex.o
+		g++ originalAlgFromMathematicaSosPredicatesImpl.o originalAlgFromMathematicaSosPredicatesImplPublicPredicates.o originalAlgFromMathematicaGetEpsCoefficientsVertex.o  pinMesh.o floodFillScanline.o meshIntersection.o nested3DGrid.o 3dGeometry.o triangleRetesselation.o triangleClassification.o utils.o sosPredicatesImpl.o sosPredicatesImplPublicPredicates.o getEpsCoefficientsVertex.o $(flags) -o  meshIntersection
 
 
 meshIntersection.o: src/meshIntersection.cpp
@@ -40,3 +40,14 @@ sosPredicatesImplPublicPredicates.o: src/geometry/sosPredicatesImpl.h src/geomet
 
 getEpsCoefficientsVertex.o: src/geometry/getEpsCoefficientsVertex.cpp src/geometry/sosPredicatesImpl.h
 	g++ src/geometry/getEpsCoefficientsVertex.cpp $(flags) -c 
+
+
+
+originalAlgFromMathematicaSosPredicatesImpl.o: src/geometry/originalAlgFromMathematicaSosPredicatesImpl.cpp src/geometry/originalAlgFromMathematicaSosPredicatesImpl.h 
+	g++  src/geometry/originalAlgFromMathematicaSosPredicatesImpl.cpp  $(flags) -c 
+
+originalAlgFromMathematicaSosPredicatesImplPublicPredicates.o: src/geometry/originalAlgFromMathematicaSosPredicatesImpl.h src/geometry/originalAlgFromMathematicaSosPredicatesImpl.cpp
+	g++ src/geometry/originalAlgFromMathematicaSosPredicatesImplPublicPredicates.cpp $(flags) -c 
+
+originalAlgFromMathematicaGetEpsCoefficientsVertex.o: src/geometry/originalAlgFromMathematicaGetEpsCoefficientsVertex.cpp src/geometry/originalAlgFromMathematicaSosPredicatesImpl.h
+	g++ src/geometry/originalAlgFromMathematicaGetEpsCoefficientsVertex.cpp $(flags) -c 

@@ -137,7 +137,9 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
   //a.x * b.y - a.y * b.x;
   int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
   if(ans!=0) return ans;
-  if(v1.getMeshOfTriangleDefiningVertex() == v2.getMeshOfTriangleDefiningVertex() && v1.getMeshOfTriangleDefiningVertex()==queryPoint.getMeshOfTriangleDefiningVertex()) {
+  
+  //I am not sure if this is true... double check..()
+  /*if(v1.getMeshOfTriangleDefiningVertex() == v2.getMeshOfTriangleDefiningVertex() && v1.getMeshOfTriangleDefiningVertex()==queryPoint.getMeshOfTriangleDefiningVertex()) {
   	//if the points are generated from intersections with the same triangle, --> SoS will not modify the answer of the orientation!
   	if(v1.triangle.compare(v2.triangle)==0 && v2.triangle.compare(queryPoint.triangle)==0) {
   		#ifdef DOUBLE_CHECK_SOS_RESULTS
@@ -150,7 +152,7 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
 
 	  	return ans;
 	  }
-  }
+  }*/
 
 
   #ifdef COLLECT_GEOMETRY_STATISTICS
@@ -703,12 +705,13 @@ const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoSI
 
   //Because of SoS, let's first check the first epsilon coefficient (eps):
   //c2 (a1 eps (2mesh-1))  > c1(a2 eps (2mesh-1) ) --> c2 (a1 eps (2mesh-1))  - c1(a2 eps (2mesh-1) ) > 0 --> (c2 (a1)  - c1(a2))*eps (2mesh-1) > 0
-  int signEps1Term = sgn( c2*a1 - c1*a2 )*epsSignal;
+  int signEps1Term = sgn( a1/c1 - a2/c2 )*epsSignal;
   if(signEps1Term==1) return candidateTriangle;
   else if(signEps1Term==0) {
-    int signEps2Term = sgn( c2*b1 - c1*b2 )*epsSignal; ////c2 (b1 ) - c1(b2) * (eps^2  (2mesh-1))
+    int signEps2Term = sgn( b1/c1 - b2/c2 )*epsSignal; ////c2 (b1 ) - c1(b2) * (eps^2  (2mesh-1))
     assert(signEps2Term!=0); //the triangle shouldn't be vertical...  both signals can't be 0...
     if(signEps2Term==1) return candidateTriangle;
+    else return bestTriangle;
   }
   else return bestTriangle;
 }
