@@ -84,7 +84,7 @@ class PinMesh {
     MeshIntersectionGeometry::HeightPointInTriangleProjection heightAbovePoint,heightAbovePointBestTriangle;
     TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;
   };
-  ObjectId computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, GridCellsLabels &gridCellsLabels, bool &foundUsingGrid);
+  ObjectId computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, bool &foundUsingGrid);
 
 
 

@@ -488,7 +488,7 @@ bool PinMesh::triangleAbovePointSoS(int meshId,const Triangle &triangle,const Po
 //example of special case: vertical triangle, point below vertex of triangle, point below edge of triangle...
 //temp_big_ints should have size at least 2
 //tempVertCoords should have size at least 8
-ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, GridCellsLabels &gridCellsLabels, bool &foundUsingGrid) {
+ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, bool &foundUsingGrid) {
   const int gridSizeLevel1 = uniformGrid->gridSizeLevel1;
   const int gridSizeLevel2 = uniformGrid->gridSizeLevel2;
 
@@ -537,10 +537,10 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
 
 
 
-    if (!foundATriangleAboveP && gridCellsLabels.labels[xGridFirstLevel][yGridFirstLevel][cz] >= 0) {
+    /*if (!foundATriangleAboveP && gridCellsLabels.labels[xGridFirstLevel][yGridFirstLevel][cz] >= 0) {
       foundUsingGrid = true;
       return gridCellsLabels.labels[xGridFirstLevel][yGridFirstLevel][cz];
-    }
+    }*/
 
     if (!gridFirstLevel.hasSecondLevel(xGridFirstLevel,yGridFirstLevel,cz)) { 
       for (int iTriangle = 0;iTriangle < numTrianglesInCell;iTriangle++) {
@@ -598,11 +598,11 @@ ObjectId PinMesh::computeObjectWherePointIsTwoLevel(const InputVertex &p,int glo
       
       int highestCellZToProcessNestedSubGrid = gridSizeLevel2;
       for(int zSubGrid=startZ;zSubGrid<gridSizeLevel2;zSubGrid++) { //iterate through the subgrid...
-        const int ipol = gridCellsLabels.childGridLabels[xGridFirstLevel][yGridFirstLevel][cz]->labels[xCellCoordSubGrid][yCellCoordSubGrid][zSubGrid] ;//grid[1-imap][cx][cy].pol; 
+        /*const int ipol = gridCellsLabels.childGridLabels[xGridFirstLevel][yGridFirstLevel][cz]->labels[xCellCoordSubGrid][yCellCoordSubGrid][zSubGrid] ;//grid[1-imap][cx][cy].pol; 
         if (!foundATriangleAboveP && ipol >= 0) {
           foundUsingGrid = true;
           return ipol;
-        }
+        }*/
 
 
         //const vector<Triangle *> &trianglesInNestedCell = childGrid.gridCells[xCellCoordSubGrid][yCellCoordSubGrid][zSubGrid].triangles[meshId];
@@ -729,7 +729,6 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
 
   //we will compute where the empty cells are (to accelerate the point in vol computations!)
 
-  GridCellsLabels cellsLabels(gridSize); 
 
 /*  big_int tempVarsInt[2];
   VertCoord tempVertCoordMatrix[2][3];
@@ -744,6 +743,7 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
   
 
   //const vector<vector<vector<Nested3DGridCell> > >  &gridCells = uniformGrid->grid.gridCells;
+  /*GridCellsLabels cellsLabels(gridSize); 
 
   const Nested3DGrid &gridFirstLevel = (uniformGrid->grid);
   for(int gx=0;gx<gridSize;gx++) 
@@ -770,7 +770,7 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
         }        
       }
  // cerr << "End of filling labels.." << endl;
-  clock_gettime(CLOCK_REALTIME, &t01);  
+  clock_gettime(CLOCK_REALTIME, &t01);  */
 
   int numSearchsPerformedToFillGrid = 0;
   
@@ -887,7 +887,7 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
 
   #ifdef PINMESH_VERBOSE   
   //computing some statistics...
-  int numEmptyGridCells=0,numNonEmptyGridCells= 0;
+  /*int numEmptyGridCells=0,numNonEmptyGridCells= 0;
    for(int gx=0;gx<gridSize;gx++) 
       for(int gy=0;gy<gridSize;gy++)
         for(int gz=0;gz<gridSize;gz++) {
@@ -916,7 +916,7 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
    
   cerr << "Empty grid cells: " << numEmptyGridCells << endl;
   cerr << "Non empty grid cells: " << numNonEmptyGridCells << endl;
-  cerr << "Percent empty cells: " << (100.0*numEmptyGridCells)/(numEmptyGridCells+numNonEmptyGridCells) << endl; 
+  cerr << "Percent empty cells: " << (100.0*numEmptyGridCells)/(numEmptyGridCells+numNonEmptyGridCells) << endl; */
   #endif
 
 
@@ -943,7 +943,7 @@ void PinMesh::locateVerticesInObject(const vector<InputVertex> &verticesToLocate
       int gz = uniformGrid->get_global_z_coord_mesh_vertex(p.getMeshId(),p.getId());//gridZGlobalVertexToLocate[i];//gzVector[i];
 
 
-      ObjectId id2 = computeObjectWherePointIsTwoLevel(p,gx,gy,gz,meshIdToLocate, tempVarsLocate ,cellsLabels,foundUsingGrid);
+      ObjectId id2 = computeObjectWherePointIsTwoLevel(p,gx,gy,gz,meshIdToLocate, tempVarsLocate ,foundUsingGrid);
       numVerticesFoundUsingGridLocal += foundUsingGrid;
 
       /*cerr << "Vertex from mesh: " << 1-meshIdToLocate << endl;
