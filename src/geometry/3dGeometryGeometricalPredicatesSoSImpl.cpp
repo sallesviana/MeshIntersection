@@ -3,6 +3,12 @@
 #include "originalAlgFromMathematicaSosPredicatesImpl.h"
 
 
+inline int getSignal(int i){
+  if(i>0) return 1;
+  if(i<0) return -1;
+  return 0;
+}
+
 //#define SosPredicatesImpl OriginalAlgFromMathematicaSosPredicatesImpl
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
@@ -392,9 +398,9 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Vert
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord,TempVarsSoSPredicatesImpl &tempVars)  {
   const Point &p0 =  getCoordinates(orig);
   const Point &p1 =  getCoordinates(dest);
-  int ans = 0; // sgn(p1[coord]-p0[coord]);
-  if(p1[coord] > p0[coord]) ans = 1;
-  if(p1[coord] < p0[coord]) ans = -1;
+  int ans = getSignal(cmp(p1[coord],p0[coord])); // sgn(p1[coord]-p0[coord]);
+  //if(p1[coord] > p0[coord]) ans = 1;
+  //if(p1[coord] < p0[coord]) ans = -1;
 
   if(ans!=0) return ans;
 
