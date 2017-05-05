@@ -5,10 +5,11 @@
 
 using namespace std;
 
+
 class SosPredicatesImpl {
 
 public:
-	SosPredicatesImpl(const MeshIntersectionGeometry *geom): geometry(geom) {}
+	SosPredicatesImpl(MeshIntersectionGeometry *geom,TempVarsSoSPredicatesImpl &tempVarsArg): tempVars(tempVarsArg), geometry(geom) {}
 
 	int orientation1D(const InputVertex &v0, const InputVertex &v1,int whatAxisProjectTo) const;
 	int orientation1D(const InputVertex &v0, const VertexFromIntersection &v1,int whatAxisProjectTo) const;
@@ -23,20 +24,22 @@ public:
 	int orientation3D(const InputVertex &v0, const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &v3) const;
 
 private:
-	const MeshIntersectionGeometry *geometry;
+	MeshIntersectionGeometry *geometry;
 
 	const Point& getCoordinates(const Vertex &iv) const {
 		return geometry->getCoordinates(iv);
 	}
 
 	
-	
+	TempVarsSoSPredicatesImpl &tempVars;
+
 	//given a vertex from intersection, returns the epsilon coefficient of a given coordinate
 	//coord may be COORD_X,COORD_Y or COORD_Z
 	//epsCoefficient may be 0, 1, 2 or 3
-	VertCoord getEpsCoefficientsVertexFromIntersection(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
+	const VertCoord&  getEpsCoefficientsVertexFromIntersection(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
 	VertCoord getEpsCoefficientsVertexFromIntersectionFaster(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
-		VertCoord getEpsCoefficientsVertexFromIntersectionOriginal(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
+	const VertCoord&  getEpsCoefficientsVertexFromIntersectionFaster2(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
+	VertCoord getEpsCoefficientsVertexFromIntersectionOriginal(const VertexFromIntersection &v0, int epsCoefficient,int coord) const;
 
 
 

@@ -596,18 +596,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -666,18 +666,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -736,18 +736,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -806,18 +806,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -876,18 +876,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -946,18 +946,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1016,18 +1016,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1086,18 +1086,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1156,18 +1156,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1226,18 +1226,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1296,18 +1296,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1366,18 +1366,18 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1433,15 +1433,15 @@ int SosPredicatesImpl::orient1D_x_00(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 
 
 /*****************************************************/
@@ -1497,15 +1497,15 @@ int SosPredicatesImpl::orient1D_y_00(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 
 
 /*****************************************************/
@@ -1561,15 +1561,15 @@ int SosPredicatesImpl::orient1D_z_00(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1625,15 +1625,15 @@ int SosPredicatesImpl::orient1D_x_01(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 
 /*****************************************************/
 /*****************************************************/
@@ -1688,15 +1688,15 @@ int SosPredicatesImpl::orient1D_y_01(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 
 /*****************************************************/
 /*****************************************************/
@@ -1751,15 +1751,15 @@ int SosPredicatesImpl::orient1D_z_01(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -1815,16 +1815,16 @@ int SosPredicatesImpl::orient1D_x_10(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 
 
 /*****************************************************/
@@ -1880,16 +1880,16 @@ int SosPredicatesImpl::orient1D_y_10(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 
 
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 
 
 /*****************************************************/
@@ -1945,16 +1945,16 @@ int SosPredicatesImpl::orient1D_z_10(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -2010,16 +2010,16 @@ int SosPredicatesImpl::orient1D_x_11(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
 
 /*****************************************************/
 /*****************************************************/
@@ -2074,16 +2074,16 @@ int SosPredicatesImpl::orient1D_y_11(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
 
 
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
 
 
 /*****************************************************/
@@ -2139,16 +2139,16 @@ int SosPredicatesImpl::orient1D_z_11(const VertexFromIntersection &v0, const Ver
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
 /*****************************************************/
@@ -3506,18 +3506,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -3579,18 +3579,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -3652,18 +3652,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -3725,18 +3725,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -3798,18 +3798,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -3871,18 +3871,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -3944,18 +3944,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4041,18 +4041,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4138,18 +4138,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4227,18 +4227,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4324,18 +4324,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4421,18 +4421,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4510,18 +4510,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4607,18 +4607,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4704,18 +4704,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4793,18 +4793,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4890,18 +4890,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -4987,18 +4987,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5076,18 +5076,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5149,18 +5149,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5222,18 +5222,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5295,18 +5295,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5368,18 +5368,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5441,18 +5441,18 @@ const VertCoord &iv1x = getCoordinates(v1)[0];
 const VertCoord &iv1y = getCoordinates(v1)[1];
 const VertCoord &iv1z = getCoordinates(v1)[2];
 /*****************************************************/
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5511,39 +5511,39 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
 
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
 
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
 
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
-
-
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
 
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+
+
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5626,32 +5626,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5734,32 +5734,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5842,32 +5842,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -5950,32 +5950,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6058,32 +6058,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6166,32 +6166,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6274,32 +6274,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6382,32 +6382,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6490,32 +6490,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6598,32 +6598,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6706,32 +6706,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6814,32 +6814,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -6922,32 +6922,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7030,32 +7030,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7138,32 +7138,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7246,32 +7246,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7354,32 +7354,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7462,32 +7462,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7570,32 +7570,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7678,32 +7678,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7786,32 +7786,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -7894,32 +7894,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8002,32 +8002,32 @@ const VertCoord &iv0x = getCoordinates(v0)[0];
 const VertCoord &iv0y = getCoordinates(v0)[1];
 const VertCoord &iv0z = getCoordinates(v0)[2];
 /*****************************************************/
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8107,46 +8107,46 @@ int SosPredicatesImpl::orient2D_x0_000(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8226,46 +8226,46 @@ int SosPredicatesImpl::orient2D_y0_000(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8345,46 +8345,46 @@ int SosPredicatesImpl::orient2D_z0_000(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8464,46 +8464,46 @@ int SosPredicatesImpl::orient2D_x0_001(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8583,46 +8583,46 @@ int SosPredicatesImpl::orient2D_y0_001(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8702,46 +8702,46 @@ int SosPredicatesImpl::orient2D_z0_001(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8821,46 +8821,46 @@ int SosPredicatesImpl::orient2D_x0_010(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -8940,46 +8940,46 @@ int SosPredicatesImpl::orient2D_y0_010(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9059,46 +9059,46 @@ int SosPredicatesImpl::orient2D_z0_010(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9178,46 +9178,46 @@ int SosPredicatesImpl::orient2D_x0_011(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9297,46 +9297,46 @@ int SosPredicatesImpl::orient2D_y0_011(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9416,46 +9416,46 @@ int SosPredicatesImpl::orient2D_z0_011(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9535,46 +9535,46 @@ int SosPredicatesImpl::orient2D_x0_100(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9654,46 +9654,46 @@ int SosPredicatesImpl::orient2D_y0_100(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9773,46 +9773,46 @@ int SosPredicatesImpl::orient2D_z0_100(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -9892,46 +9892,46 @@ int SosPredicatesImpl::orient2D_x0_101(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10011,46 +10011,46 @@ int SosPredicatesImpl::orient2D_y0_101(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10130,46 +10130,46 @@ int SosPredicatesImpl::orient2D_z0_101(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10249,46 +10249,46 @@ int SosPredicatesImpl::orient2D_x0_110(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10368,46 +10368,46 @@ int SosPredicatesImpl::orient2D_y0_110(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10487,46 +10487,46 @@ int SosPredicatesImpl::orient2D_z0_110(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10606,46 +10606,46 @@ int SosPredicatesImpl::orient2D_x0_111(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10725,46 +10725,46 @@ int SosPredicatesImpl::orient2D_y0_111(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -10844,46 +10844,46 @@ int SosPredicatesImpl::orient2D_z0_111(const VertexFromIntersection &v0, const V
 
 /*****************************************************/
 /*****************************************************/
-VertCoord coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
-VertCoord coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
-VertCoord coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
-VertCoord coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
-VertCoord coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
-VertCoord coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
-VertCoord coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
-VertCoord coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
-VertCoord coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
-VertCoord coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
-VertCoord coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
-VertCoord coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
+const VertCoord &coeffV0ePower0x = getEpsCoefficientsVertexFromIntersection(v0, 0, 0);
+const VertCoord &coeffV0ePower1x = getEpsCoefficientsVertexFromIntersection(v0, 1, 0);
+const VertCoord &coeffV0ePower2x = getEpsCoefficientsVertexFromIntersection(v0, 2, 0);
+const VertCoord &coeffV0ePower3x = getEpsCoefficientsVertexFromIntersection(v0, 3, 0);
+const VertCoord &coeffV0ePower0y = getEpsCoefficientsVertexFromIntersection(v0, 0, 1);
+const VertCoord &coeffV0ePower1y = getEpsCoefficientsVertexFromIntersection(v0, 1, 1);
+const VertCoord &coeffV0ePower2y = getEpsCoefficientsVertexFromIntersection(v0, 2, 1);
+const VertCoord &coeffV0ePower3y = getEpsCoefficientsVertexFromIntersection(v0, 3, 1);
+const VertCoord &coeffV0ePower0z = getEpsCoefficientsVertexFromIntersection(v0, 0, 2);
+const VertCoord &coeffV0ePower1z = getEpsCoefficientsVertexFromIntersection(v0, 1, 2);
+const VertCoord &coeffV0ePower2z = getEpsCoefficientsVertexFromIntersection(v0, 2, 2);
+const VertCoord &coeffV0ePower3z = getEpsCoefficientsVertexFromIntersection(v0, 3, 2);
 
 
-VertCoord coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
-VertCoord coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
-VertCoord coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
-VertCoord coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
-VertCoord coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
-VertCoord coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
-VertCoord coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
-VertCoord coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
-VertCoord coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
-VertCoord coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
-VertCoord coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
-VertCoord coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
+const VertCoord &coeffV1ePower0x = getEpsCoefficientsVertexFromIntersection(v1, 0, 0);
+const VertCoord &coeffV1ePower1x = getEpsCoefficientsVertexFromIntersection(v1, 1, 0);
+const VertCoord &coeffV1ePower2x = getEpsCoefficientsVertexFromIntersection(v1, 2, 0);
+const VertCoord &coeffV1ePower3x = getEpsCoefficientsVertexFromIntersection(v1, 3, 0);
+const VertCoord &coeffV1ePower0y = getEpsCoefficientsVertexFromIntersection(v1, 0, 1);
+const VertCoord &coeffV1ePower1y = getEpsCoefficientsVertexFromIntersection(v1, 1, 1);
+const VertCoord &coeffV1ePower2y = getEpsCoefficientsVertexFromIntersection(v1, 2, 1);
+const VertCoord &coeffV1ePower3y = getEpsCoefficientsVertexFromIntersection(v1, 3, 1);
+const VertCoord &coeffV1ePower0z = getEpsCoefficientsVertexFromIntersection(v1, 0, 2);
+const VertCoord &coeffV1ePower1z = getEpsCoefficientsVertexFromIntersection(v1, 1, 2);
+const VertCoord &coeffV1ePower2z = getEpsCoefficientsVertexFromIntersection(v1, 2, 2);
+const VertCoord &coeffV1ePower3z = getEpsCoefficientsVertexFromIntersection(v1, 3, 2);
 
 
-VertCoord coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
-VertCoord coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
-VertCoord coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
-VertCoord coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
-VertCoord coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
-VertCoord coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
-VertCoord coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
-VertCoord coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
-VertCoord coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
-VertCoord coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
-VertCoord coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
-VertCoord coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
+const VertCoord &coeffV2ePower0x = getEpsCoefficientsVertexFromIntersection(v2, 0, 0);
+const VertCoord &coeffV2ePower1x = getEpsCoefficientsVertexFromIntersection(v2, 1, 0);
+const VertCoord &coeffV2ePower2x = getEpsCoefficientsVertexFromIntersection(v2, 2, 0);
+const VertCoord &coeffV2ePower3x = getEpsCoefficientsVertexFromIntersection(v2, 3, 0);
+const VertCoord &coeffV2ePower0y = getEpsCoefficientsVertexFromIntersection(v2, 0, 1);
+const VertCoord &coeffV2ePower1y = getEpsCoefficientsVertexFromIntersection(v2, 1, 1);
+const VertCoord &coeffV2ePower2y = getEpsCoefficientsVertexFromIntersection(v2, 2, 1);
+const VertCoord &coeffV2ePower3y = getEpsCoefficientsVertexFromIntersection(v2, 3, 1);
+const VertCoord &coeffV2ePower0z = getEpsCoefficientsVertexFromIntersection(v2, 0, 2);
+const VertCoord &coeffV2ePower1z = getEpsCoefficientsVertexFromIntersection(v2, 1, 2);
+const VertCoord &coeffV2ePower2z = getEpsCoefficientsVertexFromIntersection(v2, 2, 2);
+const VertCoord &coeffV2ePower3z = getEpsCoefficientsVertexFromIntersection(v2, 3, 2);
 
 
 /*****************************************************/
@@ -11964,18 +11964,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12040,18 +12040,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12116,18 +12116,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12216,18 +12216,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12316,18 +12316,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12416,18 +12416,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12516,18 +12516,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12616,18 +12616,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12716,18 +12716,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12816,18 +12816,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -12916,18 +12916,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -13016,18 +13016,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -13116,18 +13116,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -13216,18 +13216,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -13316,18 +13316,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/
@@ -13392,18 +13392,18 @@ const VertCoord &iv2x = getCoordinates(v2)[0];
 const VertCoord &iv2y = getCoordinates(v2)[1];
 const VertCoord &iv2z = getCoordinates(v2)[2];
 /*****************************************************/
-VertCoord coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
-VertCoord coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
-VertCoord coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
-VertCoord coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
-VertCoord coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
-VertCoord coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
-VertCoord coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
-VertCoord coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
-VertCoord coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
-VertCoord coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
-VertCoord coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
-VertCoord coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
+const VertCoord &coeffV3ePower0x = getEpsCoefficientsVertexFromIntersection(v3, 0, 0);
+const VertCoord &coeffV3ePower1x = getEpsCoefficientsVertexFromIntersection(v3, 1, 0);
+const VertCoord &coeffV3ePower2x = getEpsCoefficientsVertexFromIntersection(v3, 2, 0);
+const VertCoord &coeffV3ePower3x = getEpsCoefficientsVertexFromIntersection(v3, 3, 0);
+const VertCoord &coeffV3ePower0y = getEpsCoefficientsVertexFromIntersection(v3, 0, 1);
+const VertCoord &coeffV3ePower1y = getEpsCoefficientsVertexFromIntersection(v3, 1, 1);
+const VertCoord &coeffV3ePower2y = getEpsCoefficientsVertexFromIntersection(v3, 2, 1);
+const VertCoord &coeffV3ePower3y = getEpsCoefficientsVertexFromIntersection(v3, 3, 1);
+const VertCoord &coeffV3ePower0z = getEpsCoefficientsVertexFromIntersection(v3, 0, 2);
+const VertCoord &coeffV3ePower1z = getEpsCoefficientsVertexFromIntersection(v3, 1, 2);
+const VertCoord &coeffV3ePower2z = getEpsCoefficientsVertexFromIntersection(v3, 2, 2);
+const VertCoord &coeffV3ePower3z = getEpsCoefficientsVertexFromIntersection(v3, 3, 2);
 
 
 /*****************************************************/

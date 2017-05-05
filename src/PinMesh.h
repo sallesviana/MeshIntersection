@@ -82,6 +82,7 @@ class PinMesh {
     MeshIntersectionGeometry::TempVarIsTriangleAbovePointSoS tempVarIsTriangleAbovePointSoS;
     MeshIntersectionGeometry::TempVarIsTriangleNormalPointingPositiveZ tempVarIsTriangleNormalPointingPositiveZ;
     MeshIntersectionGeometry::HeightPointInTriangleProjection heightAbovePoint,heightAbovePointBestTriangle;
+    TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;
   };
   ObjectId computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, GridCellsLabels &gridCellsLabels, bool &foundUsingGrid);
 
@@ -96,7 +97,7 @@ class PinMesh {
 
 
   const Nested3DGridWrapper *uniformGrid;
-  const MeshIntersectionGeometry *geometry;  //array with size at least 2 (one for each mesh)
+  MeshIntersectionGeometry *geometry;  //array with size at least 2 (one for each mesh)
 
 
 public:

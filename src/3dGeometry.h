@@ -34,14 +34,16 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 using namespace std;
 
 
-//#define COLLECT_GEOMETRY_STATISTICS
+#define COLLECT_GEOMETRY_STATISTICS
 
 
 //if defined, we will double check the results with the one obtained by the original functions 
 //created using mathematica (we tried to optimize these functions... thus, the double check is good
 //to make sure we optimized correctly...)
-#define DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
-
+//#define DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
+//#define DOUBLE_CHECK_RESULTS_SOS
+//#define DOUBLE_CHECK_SOS_RESULTS
+//#define PINMESH_VERBOSE
 
 //===============================================================
 // Definitions...
@@ -158,17 +160,20 @@ public:
 };
 
 class InputTriangle: public Triangle {
-public:
-	InputTriangle(const InputVertex &p0, const InputVertex &p1, const InputVertex &p2,ObjectId above, ObjectId below)
+	friend void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
+	friend void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
+
+	InputTriangle(const InputVertex &p0, const InputVertex &p1, const InputVertex &p2,ObjectId above, ObjectId below, const int triId)
 			:Triangle(above,below) {
 		//cerr << p0 << " " << p1 << " " << p2 << " " << above << " " << below << endl;
 		p[0] = p0;
 		p[1] = p1;
 		p[2] = p2;		
+		id = triId;
 	}
+	
+public:
 	InputTriangle() {}
-
-
 	/*
 	//we assume the input triangles are unique
 	bool operator==(const InputTriangle &t) const {
@@ -206,6 +211,9 @@ public:
 		return p[2].compare(t.p[2]);
 	}
 
+	int getIdForEps() const {
+		return id;
+	}
 
 
 	int getMeshId() const {
@@ -221,6 +229,7 @@ public:
   	cerr << "Tri from: " << p[0].getMeshId() << " " << p[0].getId() << " "<< p[1].getId() << " "<< p[2].getId() << "";
   }
 private:
+	int id;
 	InputVertex p[3];
 };
 
@@ -244,14 +253,20 @@ private:
 //Two vertices from the intersection may have the same ids (the ids are used only to help finding the positions of the
 //vertex coordinates in arrays..)
 class VertexFromIntersection: public Vertex {
-	public:
-		bool isInputVertex() const { return false; }
-
+	private:
+		friend MeshIntersectionGeometry;
+		//Let's allow the creation of vertices from intersection only in the geometry class..
 		VertexFromIntersection(const InputVertex &edgeV1, const InputVertex &edgeV2, const InputTriangle triangleGeneratedVertex) {
 			setEdges(edgeV1,edgeV2);
 			triangle = triangleGeneratedVertex;
+			idForEps = -1;
 		}
-		VertexFromIntersection() { };
+		VertexFromIntersection() { idForEps = -1; };
+
+	public:
+		bool isInputVertex() const { return false; }
+
+		
 
 		/*
 		bool operator==(const VertexFromIntersection &v) const {
@@ -337,12 +352,23 @@ class VertexFromIntersection: public Vertex {
 			assert(edge[0].getId()<=edge[1].getId());
 		}
 
-
+		int getIdForEps() const {
+			assert(idForEps!=-1); //was it initialized? it should've been!
+			return idForEps;
+		}
 	//private:
-
+		int idForEps; //we employ this id to uniquely identify each vertex from the intersection (it should be sequential and start with 0)
 		//this vertex is the intersection between the edge and the input triangle triangle 
 		InputVertex edge[2];
 		InputTriangle triangle;
+};
+
+
+struct TempVarsSoSPredicatesImpl {
+	VertCoord tmp;
+	VertCoord t1xt2x;
+	VertCoord tDenominatorValue;
+	VertCoord r1r0x,r1r0y,r1r0z;
 };
 
 
@@ -354,7 +380,7 @@ class MeshIntersectionGeometry {
 
 		//the meshId can be either 0 or 1
 		struct TempVarsGetGridCellContainingVertex { VertCoord tempVertCoords; big_int tempVarsInt[3];};
-		array<int,3> getGridCellContainingVertex(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const;
+		array<int,3> getGridCellContainingVertex(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) ;
 		
 
 		vector<InputTriangle> inputTriangles[2];
@@ -379,8 +405,8 @@ class MeshIntersectionGeometry {
 		void computeIntersections(const vector<pair<InputTriangle *,InputTriangle *> > &inputTrianglesToConsider, vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges, vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection, unsigned long long &numIntersectionTests);	
 
 		
-		struct TempVarsIsCloser {VertCoord tempVertCoords[4];};
-		bool isCloser(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
+		struct TempVarsIsCloser {VertCoord tempVertCoords[4]; TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl; };
+		bool isCloser(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) ;
 
 
 
@@ -388,43 +414,47 @@ class MeshIntersectionGeometry {
 		//Supposing all vertices are projected to a plane
 		//we will have two vectors (v1V-origV) and (v2V-origV).
 		//Is the angle the second vector larger than the angle of the first one? (supposing the positive part of y=0 is the angle 0 (when the plane to project is the z=0) )
-		struct TempVarsIsAngleWith0Greater {VertCoord v1x,v2x,v1y,v2y;};
+		struct TempVarsIsAngleWith0Greater {VertCoord v1x,v2x,v1y,v2y; TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;};
 
 		struct TempVarsIsTriangleClockwisedOriented { VertCoord tempCoords[0]; };
-		bool isTriangleClockwisedOriented(const InputTriangle &t,const int whatPlaneProjectTo, TempVarsIsTriangleClockwisedOriented &tempVarsIsTriangleClockwisedOriented) const;
+		bool isTriangleClockwisedOriented(const InputTriangle &t,const int whatPlaneProjectTo, TempVarsIsTriangleClockwisedOriented &tempVarsIsTriangleClockwisedOriented) ;
 	
-		struct TempVarsIsVertexTriangleProjection {};
+		struct TempVarsIsVertexTriangleProjection { TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl; };
 		bool isVertexInTriangleProjection(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTo,TempVarsIsVertexTriangleProjection &tempVars);
 
-		struct TempVarsIsVertexConvex { VertCoord tempCoords[2];};
+		struct TempVarsIsVertexConvex { VertCoord tempCoords[2]; TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;};
 		bool isVertexConvex(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTo,TempVarsIsVertexConvex &tempVars);
 	
 		//given two vertices, do they intersect (except at endpoints) ?
-		struct TempVarsDoIntersect { };
-		bool doIntersect(const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2, int whatPlaneProjectTriangleTo, TempVarsDoIntersect &tempVars) const;
-		bool onSegment(const Vertex & p, const Vertex & q, const Vertex & r, int whatPlaneProjectTo) const;
+		struct TempVarsDoIntersect { TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl; };
+		bool doIntersect(const pair<const Vertex *,const Vertex *> &e1, const pair<const Vertex *,const Vertex *> &e2, int whatPlaneProjectTriangleTo, TempVarsDoIntersect &tempVars) ;
+		bool onSegment(const Vertex & p, const Vertex & q, const Vertex & r, int whatPlaneProjectTo, TempVarsSoSPredicatesImpl &tempVars) ;
 		
 
 		//**************************************************************************************//
 		//------------------ For PinMesh...
 		
 		//Checks if a vertex if projected to z=0 is in the projection of the triangle to z = 0
-		struct TempVarsIsVertexTriangleProjectionZ0 { VertCoord tempVertCoords[6]; };
-		bool isVertexInTriangleProjection(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
+		struct TempVarsIsVertexTriangleProjectionZ0 { VertCoord tempVertCoords[6]; TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl; };
+		bool isVertexInTriangleProjection(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) ;
+
+
+
+		struct TempVarIsTriangleNormalPointingPositiveZ { TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;};
+		bool isTriangleNormalPointingPositiveZ(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) ;
+
 
 		// checks if a triangle is above a point
 		//the projection of the point to z=0 is on the projection of the triangle to z=0
 		//thus, we need to check if the projection of the point onto the triangle is above the point
-		struct TempVarIsTriangleAbovePointSoS {};
-		bool isTriangleAbovePointSoS(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const;
+		struct TempVarIsTriangleAbovePointSoS {TempVarIsTriangleNormalPointingPositiveZ tempVarsTriangleNormal;TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl; };
+		bool isTriangleAbovePointSoS(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) ;
 
-		struct TempVarIsTriangleNormalPointingPositiveZ {};
-		bool isTriangleNormalPointingPositiveZ(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const;
 
 		//Given two triangles above a point, where the height above point is equal for both triangles, decide which one is lower according after SoS
 		//the point may be even on the triangles (below, after SoS)
 		struct TempVarGetBestTrianglePointInObjectSoS {};
-		const InputTriangle * getBestTrianglePointInObjectSoS(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const;
+		const InputTriangle * getBestTrianglePointInObjectSoS(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) ;
 		
 		
 		struct HeightPointInTriangleProjection {  private: VertCoord height; friend class MeshIntersectionGeometry;};
@@ -437,40 +467,40 @@ class MeshIntersectionGeometry {
 		// However, the wrong result never make the algorithm wrong (only may make it slower since these two functions are only employed to determine when
 		// PinMesh should stop when the cells are processed to find the lowest triangle above a point)
 		struct TempVarZCellGlobalFromProjectionOfPoint {VertCoord tempVertCoord; big_int tempVarsInt[2];};
-		int zCellGlobalFromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const;
+		int zCellGlobalFromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) ;
 		
 		struct TempVarZCellFromProjectionOfPoint{VertCoord tempVertCoord; big_int tempVarsInt[2];};
 		//In what uniform grid cell
-		int zCellLevel1FromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) const;
+		int zCellLevel1FromProjectionOfPoint(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) ;
 
 		
 		//No need for SoS here (performance workaround...):
 		//For consistency, we try to "hide" coordinates inside the HeightPointInTriangleProjection struct (so that PinMesh, like other classes, does not have access to coordinates)
 		
 		struct TempVarComputeHeightAbovePointNoSoS { VertCoord tempVertCoords[5]; Point vec[2]; };
-		void computeHeightAbovePointNoSoS(HeightPointInTriangleProjection &height,const InputTriangle &triangle, const InputVertex &p, TempVarComputeHeightAbovePointNoSoS &tempVars) const;
+		void computeHeightAbovePointNoSoS(HeightPointInTriangleProjection &height,const InputTriangle &triangle, const InputVertex &p, TempVarComputeHeightAbovePointNoSoS &tempVars) ;
 		//1 if p is lower than the point with heightOtherPoint (considering the z-coordinate)
     //0 if equal
-		int compareHeightWithPointHeightNoSoS(const InputVertex &queryPoint,const HeightPointInTriangleProjection &heightOtherPoint) const;
+		int compareHeightWithPointHeightNoSoS(const InputVertex &queryPoint,const HeightPointInTriangleProjection &heightOtherPoint) ;
 		
 		//1 if height is smaller than the best, 0 if equal, -1 otherwise
-		int compareHeightWithBestHeightNoSoS(const HeightPointInTriangleProjection &heightAbovePointObj,const HeightPointInTriangleProjection &bestHeightAbovePoint) const;
+		int compareHeightWithBestHeightNoSoS(const HeightPointInTriangleProjection &heightAbovePointObj,const HeightPointInTriangleProjection &bestHeightAbovePoint) ;
 
 
 		//-------------------------------- End PinMesh
 
 		struct TempVarsIsOnZeroPlusAxisNoSoS { VertCoord vecLen[2]; };
-		int isOnZeroPlusAxisNoSoS(const Vertex &v1,const Vertex &v2,const int whatPlaneProjectTo, TempVarsIsOnZeroPlusAxisNoSoS &tempVars) const;
+		int isOnZeroPlusAxisNoSoS(const Vertex &v1,const Vertex &v2,const int whatPlaneProjectTo, TempVarsIsOnZeroPlusAxisNoSoS &tempVars) ;
 
 
-		bool isAngleWith0GreaterNoSoSNonZeroAngle(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
+		bool isAngleWith0GreaterNoSoSNonZeroAngle(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) ;
 
 
 		//Sorting edges by angle with 0...
 		struct TempVarsSortEdgesByAngle { TempVarsIsAngleWith0Greater tempVarsIsAngleWith0Greater; TempVarsIsOnZeroPlusAxisNoSoS tempVarsIsOnZeroPlusAxisNoSoS; };
 		void sortEdgesSharingStartingVertexByAngle(vector<pair<const Vertex *,const Vertex *> >::iterator begin,
                                             vector<pair<const Vertex *,const Vertex *> >::iterator end,
-                                            const int planeProjectTriangleTo,  TempVarsSortEdgesByAngle &tempVars) const;
+                                            const int planeProjectTriangleTo,  TempVarsSortEdgesByAngle &tempVars) ;
 
 		//
 
@@ -481,8 +511,8 @@ class MeshIntersectionGeometry {
 		
 
 		//for debugging purposes...
-		void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) const;
-		void saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) const;
+		void storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) ;
+		void saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) ;
 
 		void printPointForDebugging(const Vertex &v) const {
 			array<double,3> coords = getCoordinatesForDebugging(v);
@@ -495,6 +525,29 @@ class MeshIntersectionGeometry {
 		struct PlaneEquation {Point normal; VertCoord d;};
 		vector<PlaneEquation> planeEquationsInputTriangles[2];
 		vector<int> isPlaneEquationInputTrianglesInitialized[2];
+
+
+		//the coordinates of a vertex from intersection are r0 + t*(r1-r0)
+		//here we store the eps coefficients of the t for each vertex from the intersection.
+		struct EpsCoefficientsVertexIntersection {
+			//EpsCoefficientsVertexIntersection() {  omp_init_lock(&lock); }
+			
+			Point epsCoefficients[3]; //epsCoefficients[0] is actually the coefficient for eps^1
+																//epsCoefficients[0][0] is the coordinate x of the eps coefficient 1 of the point
+			bool init;
+			omp_lock_t lock;
+		};
+		vector<EpsCoefficientsVertexIntersection> epsCoefficientsVertexIntersection;
+		
+		struct TEpsDeterminanCommonTerms {
+			//TEpsDeterminanCommonTerms(): init(false) { omp_init_lock(&lock); }
+			rational commonTerms[3];
+			bool init;
+			omp_lock_t lock;
+		};
+		vector<TEpsDeterminanCommonTerms> tEpsDeterminanCommonTerms; 
+
+
 
 		void storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges);
 		
@@ -543,6 +596,7 @@ class MeshIntersectionGeometry {
 			array<VertCoord,2> isect1,isect2;
 			VertCoord du0,du1,du2, dv0,dv1,dv2, vp0,vp1,vp2, up0,up1,up2,b,c,max,tmp,diff;
 			VertCoord tempRationals[6];	
+			TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;
 		};
 		int intersectTwoTriangles(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
@@ -553,9 +607,9 @@ class MeshIntersectionGeometry {
 
 		//We are actually not using these functions...
 		/*
-		int getGridCellXContainingVertex(int meshId,const VertCoord &x, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) const;
-		int getGridCellYContainingVertex(int meshId,const VertCoord &y, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) const;
-		int getGridCellZContainingVertex(int meshId,const VertCoord &z, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) const;
+		int getGridCellXContainingVertex(int meshId,const VertCoord &x, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) ;
+		int getGridCellYContainingVertex(int meshId,const VertCoord &y, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) ;
+		int getGridCellZContainingVertex(int meshId,const VertCoord &z, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) ;
 		*/
 		
 
@@ -578,59 +632,64 @@ class MeshIntersectionGeometry {
 		int isVertexConvexMainImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
 		int intersectTwoTrianglesMainImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
-             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars);
+             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) ;
 
-		array<int,3> getGridCellContainingVertexOrig(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) const ;
-		bool isCloserOrig(const InputVertex &origV, const Vertex &v1V, const Vertex &v2V, TempVarsIsCloser &tempVars) const ;
-		bool isAngleWith0GreaterOrig(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const ;
+		array<int,3> getGridCellContainingVertexOrig(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) ;
+		bool isCloserOrig(const InputVertex &origV, const Vertex &v1V, const Vertex &v2V, TempVarsIsCloser &tempVars) const;
+		bool isAngleWith0GreaterOrig(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 		bool isVertexInTriangleProjectionOrig(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
 		bool isVertexConvexOrig(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
-		bool isVertexInTriangleProjectionOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const ;
-		//bool isTriangleAbovePointSoSOrig(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const ;
-		bool isTriangleNormalPointingPositiveZOrig(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const ;
-		int zCellGlobalFromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const ;
-		int zCellLevel1FromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) const ;
-		const InputTriangle * getBestTrianglePointInObjectSoSOrig(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const ;
+		bool isVertexInTriangleProjectionOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
+		//bool isTriangleAbovePointSoSOrig(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) ;
+		bool isTriangleNormalPointingPositiveZOrig(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const;
+		int zCellGlobalFromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellGlobalFromProjectionOfPoint &tempVars) const;
+		int zCellLevel1FromProjectionOfPointOrig(const HeightPointInTriangleProjection &heightAbovePoint, const InputTriangle &triangle, const InputVertex &p, const Nested3DGridWrapper &uniformGrid, TempVarZCellFromProjectionOfPoint &tempVars) const;
+		const InputTriangle * getBestTrianglePointInObjectSoSOrig(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const;
+
+
+
+
+
 
 		//SoS functions...
-		int orientation(const Vertex &v1, const Vertex &v2, const Vertex &p, int whatPlaneProjectTrianglesTo) const ; 
-		int orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &p, int whatPlaneProjectTrianglesTo) const ; 
-		int orientation(const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo) const ;
-		int orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo) const ;
-		int orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo) const ;	
-		int orientation(const InputTriangle&t, const InputVertex &v) const;
-		int orientation(const InputTriangle&t, const VertexFromIntersection &v) const;
-		int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const;
-  	int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const;
+		int orientation(const Vertex &v1, const Vertex &v2, const Vertex &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ; 
+		int orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ; 
+		int orientation(const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ;
+		int orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ;
+		int orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ;	
+		int orientation(const InputTriangle&t, const InputVertex &v,TempVarsSoSPredicatesImpl &tempVars) ;
+		int orientation(const InputTriangle&t, const VertexFromIntersection &v,TempVarsSoSPredicatesImpl &tempVars) ;
+		int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v,TempVarsSoSPredicatesImpl &tempVars) ;
+  	int orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v,TempVarsSoSPredicatesImpl &tempVars) ;
   
 
 		//what is the signal of each coordinate the vector from orig to dest
 		//cannot be 0 (SoS)
-		int signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const;
-		int signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const InputVertex &dest, int coord) const;
-		int signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const;
-		int signalVectorCoordOnlyCallWhenCoincident(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const;
-		//int signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) const;
+		int signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord,TempVarsSoSPredicatesImpl &tempVars) ;
+		int signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const InputVertex &dest, int coord,TempVarsSoSPredicatesImpl &tempVars) ;
+		int signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const VertexFromIntersection &dest, int coord,TempVarsSoSPredicatesImpl &tempVars) ;
+		int signalVectorCoordOnlyCallWhenCoincident(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord,TempVarsSoSPredicatesImpl &tempVars) ;
+		//int signalVectorCoordCanBe0(const Vertex &orig, const Vertex &dest, int coord) ;
 
 
-		bool isCloserSoSImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
+		bool isCloserSoSImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) ;
 		
-		bool isOrientationPositiveSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
-		bool isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
-		bool isVertexInTriangleProjectionSoSImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
-		bool isVertexConvexSoSImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
-		bool isVertexInTriangleProjectionSoSImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
-		bool isTriangleNormalPointingPositiveZSoSImpl(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const;
-		bool isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const;
+		bool isOrientationPositiveSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) ;
+		bool isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) ;
+		bool isVertexInTriangleProjectionSoSImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) ;
+		bool isVertexConvexSoSImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) ;
+		bool isVertexInTriangleProjectionSoSImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) ;
+		bool isTriangleNormalPointingPositiveZSoSImpl(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) ;
+		bool isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) ;
 		
 		bool intersectTwoTrianglesSoSImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
-				     VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) const;
+				     VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) ;
 
 		//does edge (p1,p2) intersect the triangle?
-		bool intersectEdgeWithTriangleSoSImpl(const InputTriangle &triangle, const InputVertex &p1, const InputVertex &p2, TempVarsComputeIntersections &tempVars) const;
+		bool intersectEdgeWithTriangleSoSImpl(const InputTriangle &triangle, const InputVertex &p1, const InputVertex &p2, TempVarsComputeIntersections &tempVars) ;
 
 
-		const InputTriangle * getBestTrianglePointInObjectSoSImpl(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const;
+		const InputTriangle * getBestTrianglePointInObjectSoSImpl(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) ;
 
 };
 
@@ -730,10 +789,10 @@ private:
 
 
 //Reads a GTS file, fills the boundingBox with the boundingBox of the triangles read
-void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId);
+void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId, const int);
 
 
 //Reads a Lium file, fills the boundingBox with the boundingBox of the triangles read
-void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId);
+void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId, const int);
 
 #endif

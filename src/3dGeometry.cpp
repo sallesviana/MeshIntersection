@@ -79,7 +79,7 @@ GeometryStatistics geometryStatisticsDegenerateCases, geometryStatisticsNonDegen
 
 void MeshIntersectionGeometry::sortEdgesSharingStartingVertexByAngle(vector<pair<const Vertex *,const Vertex *> >::iterator begin,
                                             vector<pair<const Vertex *,const Vertex *> >::iterator end,
-                                            const int planeProjectTriangleTo,  TempVarsSortEdgesByAngle &tempVars) const {
+                                            const int planeProjectTriangleTo,  TempVarsSortEdgesByAngle &tempVars)  {
 
   
 
@@ -334,7 +334,63 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
   }
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "End!" <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  cerr << "After assigning vertices ids (for rational coords): " <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+
+  //TODO: maybe it would be better to use an unordered map or to sort and binary search...
+  struct VertInterComparator {
+    bool operator()(const VertexFromIntersection &a,const VertexFromIntersection &b)  const {
+        return a.compare(b)<0;
+    }
+  };
+  map<VertexFromIntersection,int,VertInterComparator> idsOfVerticesFromIntersection;
+  for(int i=0;i<numEdges;i++) {
+    VertexFromIntersection &v1 = edgesFromIntersection[i].first;
+    VertexFromIntersection &v2 = edgesFromIntersection[i].second;
+    int idV1,idV2;
+
+    if(idsOfVerticesFromIntersection.count(v1)==0) {
+      idV1 = idsOfVerticesFromIntersection.size();
+      idsOfVerticesFromIntersection[v1] = idV1;
+    } else {
+      idV1 = idsOfVerticesFromIntersection[v1];
+    } 
+    if(idsOfVerticesFromIntersection.count(v2)==0) {
+      idV2 = idsOfVerticesFromIntersection.size();
+      idsOfVerticesFromIntersection[v2] = idV2;
+    } else {
+      idV2 = idsOfVerticesFromIntersection[v2];
+    }
+
+    v1.idForEps = idV1;
+    v2.idForEps = idV2;
+  }
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "After assigning vertices ids (for eps coords): " <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  cerr << "Num unique vertices from intersection: " << idsOfVerticesFromIntersection.size() << "\n";
+
+
+  clock_gettime(CLOCK_REALTIME, &t0);
+  tEpsDeterminanCommonTerms.resize(inputTriangles[0].size()+inputTriangles[1].size());
+  epsCoefficientsVertexIntersection.resize(idsOfVerticesFromIntersection.size() );
+
+  int n = tEpsDeterminanCommonTerms.size();
+  #pragma omp for
+  for(int i=0;i<n;i++) {
+    tEpsDeterminanCommonTerms[i].init = false;
+    omp_init_lock(&(tEpsDeterminanCommonTerms[i].lock));
+  }
+
+  n = epsCoefficientsVertexIntersection.size();
+  #pragma omp for
+  for(int i=0;i<n;i++) {
+    epsCoefficientsVertexIntersection[i].init = false;
+    omp_init_lock(&(epsCoefficientsVertexIntersection[i].lock));
+  }
+
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to init vectors for numerator/denominator for t: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 }
 
 void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTriangle *,InputTriangle *> > &inputTrianglesToConsider, 
@@ -506,6 +562,8 @@ MeshIntersectionGeometry::MeshIntersectionGeometry(const string &pathMesh0, cons
   	if(meshBoundingBoxes[1][1][i] > boundingBoxTwoMeshesTogetter[1][i])
   		boundingBoxTwoMeshesTogetter[1][i] = meshBoundingBoxes[1][1][i];
   }
+
+
 }
 
 void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
@@ -513,10 +571,12 @@ void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
   string inputFileExtension = path.substr(path.size()-3,3);
   assert(inputFileExtension=="gts" || inputFileExtension=="ium");
   bool isGtsFile = inputFileExtension=="gts";
+
+  int numTrianglesPreviouslyRead = (meshId==0)?0:inputTriangles[0].size();
   if(isGtsFile)
-    readGTSFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId);
+    readGTSFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
   else 
-    readLiumFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId);
+    readLiumFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
 
   cerr << "Initializing bounding-boxes of triangles\n"; 
   timespec t0,t1;
@@ -557,7 +617,7 @@ void MeshIntersectionGeometry::initTriangleBoundingBox(int meshId, int triangleI
 }
 
 //Reads a GTS file, fills the boundingBox with the boundingBox of the triangles read
-void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId) {
+void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead) {
 	FILE *inputFile = fopen(fileName.c_str(),"r");
 	if (inputFile==NULL ) {
     cerr << "ERROR: failed to open file " << fileName << endl;
@@ -612,13 +672,13 @@ void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> 
 		assert(edges[b][1]==edges[c][0]);
 		assert(edges[c][1]==edges[a][0]);
 
-		triangles[i] = InputTriangle( InputVertex(meshId,edges[a][0]), InputVertex(meshId,edges[a][1]),InputVertex(meshId,edges[b][1]),OUTSIDE_OBJECT,1);
+		triangles[i] = InputTriangle( InputVertex(meshId,edges[a][0]), InputVertex(meshId,edges[a][1]),InputVertex(meshId,edges[b][1]),OUTSIDE_OBJECT,1,i+numTrianglesPreviouslyRead);
 	}
 }
 
 
 //Reads a Lium file, fills the boundingBox with the boundingBox of the triangles read
-void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId) {
+void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead) {
 	FILE *inputFile = fopen(fileName.c_str(),"r");
 	if (inputFile==NULL ) {
     cerr << "ERROR: failed to open file " << fileName << endl;
@@ -663,7 +723,7 @@ void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle>
 		objNormal++;
 		objContrNormal++;
 		//cerr << objNormal << " " << objContrNormal << endl;
-		triangles[i] = InputTriangle(InputVertex(meshId,a),InputVertex(meshId,b),InputVertex(meshId,c),objNormal,objContrNormal);
+		triangles[i] = InputTriangle(InputVertex(meshId,a),InputVertex(meshId,b),InputVertex(meshId,c),objNormal,objContrNormal,i+numTrianglesPreviouslyRead);
 	}
 }
 
@@ -720,7 +780,7 @@ Point MeshIntersectionGeometry::computePointFromIntersectionVertex(VertexFromInt
 }
 
 
-void MeshIntersectionGeometry::saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path) const {
+void MeshIntersectionGeometry::saveEdgesAsGTS(const vector<pair<const Vertex *,const Vertex *>>  &edges,const string &path)  {
   vector<pair<array<double,3>,array<double,3>> > edgesToStore;
   for(const pair<const Vertex *,const Vertex *> &edge:edges) {
 
@@ -732,7 +792,7 @@ void MeshIntersectionGeometry::saveEdgesAsGTS(const vector<pair<const Vertex *,c
   storeEdgesAsGts(path,edgesToStore );
 }
 
-void MeshIntersectionGeometry::storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore) const {
+void MeshIntersectionGeometry::storeEdgesAsGts(const string &path,const vector<pair<array<double,3>,array<double,3>> > &edgesToStore)  {
   /*map<array<double,3>, int> vertexToId;
 
   vector<array<double,3> > vertices;

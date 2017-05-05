@@ -5,7 +5,7 @@
 
 //#define SosPredicatesImpl OriginalAlgFromMathematicaSosPredicatesImpl
 
-int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo) const { 
+int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -33,7 +33,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
 
 
   //a.x * b.y - a.y * b.x;
-  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  int ans2 = SosPredicatesImpl(this,tempVars).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo) );
   #endif
@@ -43,7 +43,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
   return ans2;
 }
 
-int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVertex &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
+int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVertex &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -71,7 +71,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
 
 
 
-  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  int ans2 = SosPredicatesImpl(this,tempVars).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
   #endif
@@ -82,7 +82,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
   return ans2;
 }
 
-int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
+int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) { 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -108,7 +108,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
 
 
   //a.x * b.y - a.y * b.x;  
-  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  int ans2 = SosPredicatesImpl(this,tempVars).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
  	#ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
   #endif
@@ -119,7 +119,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
   return ans2;
 }
 
-int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo) const { 
+int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) { 
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
@@ -160,7 +160,7 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
     geometryStatisticsDegenerateCases.orientation2DIII++;
   #endif
   
-  int ans2 = SosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
+  int ans2 = SosPredicatesImpl(this,tempVars).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation2D(v1,v2,queryPoint,whatPlaneProjectTrianglesTo));
   #endif
@@ -172,7 +172,7 @@ int cts[20] = {0};
 //TODO: remove cts++ for performance...
 
 //1 if make a left turn, -1 if make a right turn, 0 --> degeneracy (shouldn't happen...)
-int MeshIntersectionGeometry::orientation(const Vertex &v1, const Vertex &v2, const Vertex &p, int whatPlaneProjectTrianglesTo) const { 
+int MeshIntersectionGeometry::orientation(const Vertex &v1, const Vertex &v2, const Vertex &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
   bool isV1InputVertex = (&v1)->isInputVertex();
   bool isV2InputVertex = (&v2)->isInputVertex();  
   bool isPInputVertex = (&p)->isInputVertex();
@@ -180,31 +180,31 @@ int MeshIntersectionGeometry::orientation(const Vertex &v1, const Vertex &v2, co
   int numInputVertices = isV1InputVertex+isV2InputVertex+isPInputVertex;
   if(numInputVertices==3) {
     cts[0]++;
-    return orientation(*static_cast<const InputVertex*>(&v1),*static_cast<const InputVertex*>(&v2),*static_cast<const InputVertex*>(&p),whatPlaneProjectTrianglesTo);
+    return orientation(*static_cast<const InputVertex*>(&v1),*static_cast<const InputVertex*>(&v2),*static_cast<const InputVertex*>(&p),whatPlaneProjectTrianglesTo,tempVars);
   } else if(numInputVertices==0) {
     cts[1]++;
-    return orientation(*static_cast<const VertexFromIntersection*>(&v1),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo);
+    return orientation(*static_cast<const VertexFromIntersection*>(&v1),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo,tempVars);
   } else if(numInputVertices==1) {
     if(isV1InputVertex) {
       cts[2]++;
-      return orientation(*static_cast<const InputVertex*>(&v1),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo);
+      return orientation(*static_cast<const InputVertex*>(&v1),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo,tempVars);
     } else if(isV2InputVertex) {
       cts[3]++;
-      return -orientation(*static_cast<const InputVertex*>(&v2),*static_cast<const VertexFromIntersection*>(&v1),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo);
+      return -orientation(*static_cast<const InputVertex*>(&v2),*static_cast<const VertexFromIntersection*>(&v1),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo,tempVars);
     } else { //p is the input vertex...
       cts[4]++;
-      return -orientation(*static_cast<const InputVertex*>(&p),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&v1),whatPlaneProjectTrianglesTo);
+      return -orientation(*static_cast<const InputVertex*>(&p),*static_cast<const VertexFromIntersection*>(&v2),*static_cast<const VertexFromIntersection*>(&v1),whatPlaneProjectTrianglesTo,tempVars);
     }
   } else { //numInputVertices is 2...
     if(!isV1InputVertex) { // v2 and p are input vertices
       cts[5]++;
-      return orientation(*static_cast<const InputVertex*>(&v2),*static_cast<const InputVertex*>(&p),*static_cast<const VertexFromIntersection*>(&v1),whatPlaneProjectTrianglesTo);
+      return orientation(*static_cast<const InputVertex*>(&v2),*static_cast<const InputVertex*>(&p),*static_cast<const VertexFromIntersection*>(&v1),whatPlaneProjectTrianglesTo,tempVars);
     } else if(!isV2InputVertex) { // v1 and p are input vertices
       cts[6]++;
-      return orientation(*static_cast<const InputVertex*>(&p),*static_cast<const InputVertex*>(&v1),*static_cast<const VertexFromIntersection*>(&v2),whatPlaneProjectTrianglesTo);
+      return orientation(*static_cast<const InputVertex*>(&p),*static_cast<const InputVertex*>(&v1),*static_cast<const VertexFromIntersection*>(&v2),whatPlaneProjectTrianglesTo,tempVars);
     } else { // v1 and v2 are input vertices...
       cts[7]++;
-      return orientation(*static_cast<const InputVertex*>(&v1),*static_cast<const InputVertex*>(&v2),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo);
+      return orientation(*static_cast<const InputVertex*>(&v1),*static_cast<const InputVertex*>(&v2),*static_cast<const VertexFromIntersection*>(&p),whatPlaneProjectTrianglesTo,tempVars);
     }
   }
 }
@@ -251,7 +251,7 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
 
 
 //3d orientation...
-int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v) const {
+int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v,TempVarsSoSPredicatesImpl &tempVars) {
   int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
   if(ans!=0) return ans;
 
@@ -261,7 +261,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
     geometryStatisticsDegenerateCases.orientation3DOO++;
   #endif
 
-  int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);    
+  int ans2 = SosPredicatesImpl(this,tempVars).orientation3D(p1,p2,p3,v);    
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation3D(p1,p2,p3,v));
   #endif
@@ -271,7 +271,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
   return ans2;
 }
 
-int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v) const {
+int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v,TempVarsSoSPredicatesImpl &tempVars)  {
   int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
   if(ans!=0) return ans;
 
@@ -281,7 +281,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
     geometryStatisticsDegenerateCases.orientation3DOI++;
   #endif  
 
-  int ans2 = SosPredicatesImpl(this).orientation3D(p1,p2,p3,v);
+  int ans2 = SosPredicatesImpl(this,tempVars).orientation3D(p1,p2,p3,v);
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation3D(p1,p2,p3,v));
   #endif
@@ -293,12 +293,12 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
 
 
 //3d orientation.
-int MeshIntersectionGeometry::orientation(const InputTriangle&t, const InputVertex &v) const {
-  return orientation(*(t.getInputVertex(0)),*(t.getInputVertex(1)),*(t.getInputVertex(2)),v);
+int MeshIntersectionGeometry::orientation(const InputTriangle&t, const InputVertex &v,TempVarsSoSPredicatesImpl &tempVars)  {
+  return orientation(*(t.getInputVertex(0)),*(t.getInputVertex(1)),*(t.getInputVertex(2)),v,tempVars);
 }
 
-int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFromIntersection &v) const {
-  return orientation(*(t.getInputVertex(0)),*(t.getInputVertex(1)),*(t.getInputVertex(2)),v);
+int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFromIntersection &v,TempVarsSoSPredicatesImpl &tempVars)  {
+  return orientation(*(t.getInputVertex(0)),*(t.getInputVertex(1)),*(t.getInputVertex(2)),v,tempVars);
 }  
 
 
@@ -308,7 +308,7 @@ int MeshIntersectionGeometry::orientation(const InputTriangle&t, const VertexFro
 
 
 
-int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const InputVertex &dest, int coord) const {
+int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const InputVertex &dest, int coord,TempVarsSoSPredicatesImpl &tempVars)  {
   //signal vector coord(orig,dest) = -orientation(orig,dest)
   //
   //
@@ -327,11 +327,11 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Inpu
   }
 
   #ifdef DOUBLE_CHECK_SOS_RESULTS    
-  	int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+  	int ans2 = -SosPredicatesImpl(this,tempVars).orientation1D(orig,dest,coord);
     assert(ans==ans2);
   #endif
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
-  	assert(SosPredicatesImpl(this).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
+  	assert(SosPredicatesImpl(this,tempVars).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
   #endif
 
   return ans;
@@ -339,20 +339,20 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Inpu
 }
 
 
-int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const VertexFromIntersection &dest, int coord) const {
+int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const InputVertex &orig, const VertexFromIntersection &dest, int coord,TempVarsSoSPredicatesImpl &tempVars)  {
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
     geometryStatisticsDegenerateCases.orientation1DOI++;
   #endif
 
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
-  	assert(SosPredicatesImpl(this).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
+  	assert(SosPredicatesImpl(this,tempVars).orientation1D(orig,dest,coord)==OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
   #endif  
 
-  return -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+  return -SosPredicatesImpl(this,tempVars).orientation1D(orig,dest,coord);
 }
 
-int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord) const {
+int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const VertexFromIntersection &orig, const VertexFromIntersection &dest, int coord,TempVarsSoSPredicatesImpl &tempVars)  {
   int ans = 0;
 
   /*
@@ -372,7 +372,7 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Vert
     geometryStatisticsDegenerateCases.orientation1DII++;
   #endif  
 
-  int ans2 = -SosPredicatesImpl(this).orientation1D(orig,dest,coord);
+  int ans2 = -SosPredicatesImpl(this,tempVars).orientation1D(orig,dest,coord);
 
   #ifdef DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
   	assert(ans2==-OriginalAlgFromMathematicaSosPredicatesImpl(this).orientation1D(orig,dest,coord));
@@ -389,7 +389,7 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Vert
 //can be 0 (SoS)
 //I think this could be 0... suppose the two vertices are from same mesh, for example...
 //TODO: review...
-int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord) const {
+int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord,TempVarsSoSPredicatesImpl &tempVars)  {
   const Point &p0 =  getCoordinates(orig);
   const Point &p1 =  getCoordinates(dest);
   int ans = 0; // sgn(p1[coord]-p0[coord]);
@@ -409,15 +409,15 @@ int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex
 
   if(isV1InputVertex) {
     if(isV2InputVertex) //input,input
-      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&orig),*static_cast<const InputVertex*>(&dest),coord); 
+      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&orig),*static_cast<const InputVertex*>(&dest),coord,tempVars); 
     else //input, intersection
-      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
+      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord,tempVars); 
   }
   else { 
     if(isV2InputVertex)
-      return -signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&dest),*static_cast<const VertexFromIntersection*>(&orig),coord);
+      return -signalVectorCoordOnlyCallWhenCoincident(*static_cast<const InputVertex*>(&dest),*static_cast<const VertexFromIntersection*>(&orig),coord,tempVars);
     else
-      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const VertexFromIntersection*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord); 
+      return signalVectorCoordOnlyCallWhenCoincident(*static_cast<const VertexFromIntersection*>(&orig),*static_cast<const VertexFromIntersection*>(&dest),coord,tempVars); 
   }
 }
 
@@ -443,18 +443,18 @@ Predicates and functions using SoS
 
 
 //Is v1 closer to origV than v2 is?
-bool MeshIntersectionGeometry::isCloserSoSImpl(const InputVertex &orig, const VertexFromIntersection &v1, const VertexFromIntersection &v2, TempVarsIsCloser &tempVars) const {
+bool MeshIntersectionGeometry::isCloserSoSImpl(const InputVertex &orig, const VertexFromIntersection &v1, const VertexFromIntersection &v2, TempVarsIsCloser &tempVars)  {
   //we know that v1 and v2 are formed by the intersection of v1.triangle and an edge with endpoint in orig ; and v2.triangle and an
   //edge with endpoint in orig. 
   //Thus, v1 will be closer to orig iff v1 and orig are on the same side of v2.triangle 
-  return orientation(v2.triangle,orig) == orientation(v2.triangle,v1);
+  return orientation(v2.triangle,orig,tempVars.tempVarsSoSPredicatesImpl) == orientation(v2.triangle,v1,tempVars.tempVarsSoSPredicatesImpl);
 }
 
 
-bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
-  int o1 = orientation(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
-  int o2 = orientation(v2,v3,queryPoint,whatPlaneProjectTrianglesTo);
-  int o3 = orientation(v3,v1,queryPoint,whatPlaneProjectTrianglesTo);
+bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars)  {
+  int o1 = orientation(v1,v2,queryPoint,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl);
+  int o2 = orientation(v2,v3,queryPoint,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl);
+  int o3 = orientation(v3,v1,queryPoint,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl);
   //this will not work w/o SoS if point exactly on boundary...
 
   //TODO: change code after implementing SoS properly...
@@ -473,12 +473,12 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const Vertex 
 }
 
 
-bool MeshIntersectionGeometry::isVertexConvexSoSImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const {
-  return orientation(v1,queryVertex,v3,whatPlaneProjectTrianglesTo)<0;
+bool MeshIntersectionGeometry::isVertexConvexSoSImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars)  {
+  return orientation(v1,queryVertex,v3,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl)<0;
 }
 
 
-bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
+bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars)  {
   const Vertex &v1 = *(t.getInputVertex(0));
   const Vertex &v2 = *(t.getInputVertex(1));
   const Vertex &v3 = *(t.getInputVertex(2));
@@ -493,9 +493,9 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const InputTr
   return o2==o3;
   */
 
-  int o1 = orientation(v1,v2,queryPoint,whatPlaneProjectTrianglesTo);
-  int o2 = orientation(v2,v3,queryPoint,whatPlaneProjectTrianglesTo);
-  int o3 = orientation(v3,v1,queryPoint,whatPlaneProjectTrianglesTo);
+  int o1 = orientation(v1,v2,queryPoint,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl);
+  int o2 = orientation(v2,v3,queryPoint,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl);
+  int o3 = orientation(v3,v1,queryPoint,whatPlaneProjectTrianglesTo,tempVars.tempVarsSoSPredicatesImpl);
   if(o2!=0 && o3!=0 && o2!=o3)
     return false;
   if(o1!=0 && o2!=0 && o1!=o2)
@@ -507,29 +507,29 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoSImpl(const InputTr
 
 //The input triangle should not be vertical (PinMesh does not use vertical triangles because of the perturbation!)
 //Given a vertex p, is p below the triangle t ? (we know p projected to z=0 is on t projected to z=0...)
-bool MeshIntersectionGeometry::isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars) const {
+bool MeshIntersectionGeometry::isTriangleAbovePointSoSImpl(const InputTriangle &t, const InputVertex &p,TempVarIsTriangleAbovePointSoS &tempVars)  {
   //The orientation(t,p) < 0 iff the point is on the side pointed by the normal
-  int sideOfTriangle = -orientation(t,p); //is p on the positive (1) or negative (-1) side of the triangle?
+  int sideOfTriangle = -orientation(t,p,tempVars.tempVarsSoSPredicatesImpl); //is p on the positive (1) or negative (-1) side of the triangle?
 
-  TempVarIsTriangleNormalPointingPositiveZ temp;
+ // TempVarIsTriangleNormalPointingPositiveZ temp;
 
   //cerr << "Which side? " << sideOfTriangle << endl;
   //if the point is on the positive side, it will be below the triangle if it points down
-  if(sideOfTriangle==1) return !isTriangleNormalPointingPositiveZSoSImpl(t,temp);
-  else return isTriangleNormalPointingPositiveZSoSImpl(t,temp);
+  if(sideOfTriangle==1) return !isTriangleNormalPointingPositiveZSoSImpl(t,tempVars.tempVarsTriangleNormal);
+  else return isTriangleNormalPointingPositiveZSoSImpl(t,tempVars.tempVarsTriangleNormal);
   //if the point is on the negative sie, it will be below the triangle if it points up...
 }
 
 
 
-bool MeshIntersectionGeometry::isOrientationPositiveSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
-  return orientation(origV,v1V,v2V,planeToProject)>0;
+bool MeshIntersectionGeometry::isOrientationPositiveSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars)  {
+  return orientation(origV,v1V,v2V,planeToProject,tempVars.tempVarsSoSPredicatesImpl)>0;
 }
 
 //TODO
 //we need to consider point on axis and the angle...
 //this function have to be complete... we will call it, for example, when we have degenerate edges.
-bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const {
+bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars)  {
   //TODO: check on what side of the "x" axis the vectors are (origV,v1V), (origV,v2V)...
 
   int xCoord = 0;
@@ -542,8 +542,8 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
     yCoord= 2;    
   } 
 
-  const int sgnV1y = signalVectorCoord(origV,v1V,yCoord);
-  const int sgnV2y = signalVectorCoord(origV,v2V,yCoord);
+  const int sgnV1y = signalVectorCoord(origV,v1V,yCoord,tempVars.tempVarsSoSPredicatesImpl);
+  const int sgnV2y = signalVectorCoord(origV,v2V,yCoord,tempVars.tempVarsSoSPredicatesImpl);
 
   //TODO: consider the case where one of the vectors is exactly on 0... this can happen!
   
@@ -551,8 +551,8 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
   if(sgnV1y<0 && sgnV2y>0) return false;
 
   //they are in the same side of the x axis... (or exactly on the x axis...)
-  const int sgnV1x = signalVectorCoord(origV,v1V,xCoord);
-  const int sgnV2x = signalVectorCoord(origV,v2V,xCoord);
+  const int sgnV1x = signalVectorCoord(origV,v1V,xCoord,tempVars.tempVarsSoSPredicatesImpl);
+  const int sgnV2x = signalVectorCoord(origV,v2V,xCoord,tempVars.tempVarsSoSPredicatesImpl);
 
   if(sgnV1y>0) { //are both at the non-negative y?
     //check if their x is different...
@@ -569,7 +569,7 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
 
   
   //same side of the x-axis --> use vector orientation...
-  return orientation(origV,v1V,v2V,planeToProject)>0;
+  return orientation(origV,v1V,v2V,planeToProject,tempVars.tempVarsSoSPredicatesImpl)>0;
 }
 
 //TODO: use pre-computed normals here...
@@ -578,24 +578,24 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
 
 //TO think: is it true that if we project the triangle to z=0, this function
 //should return true if v3 is to the left of the vector v1-v2 ?
-bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZSoSImpl(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const {
-    return orientation(*t.getInputVertex(0),*t.getInputVertex(1),*t.getInputVertex(2),PLANE_Z0)==1;
+bool MeshIntersectionGeometry::isTriangleNormalPointingPositiveZSoSImpl(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars)  {
+    return orientation(*t.getInputVertex(0),*t.getInputVertex(1),*t.getInputVertex(2),PLANE_Z0,tempVars.tempVarsSoSPredicatesImpl)==1;
 }
 
 
 
 
-bool MeshIntersectionGeometry::intersectEdgeWithTriangleSoSImpl(const InputTriangle &triangle, const InputVertex &p1, const InputVertex &p2, TempVarsComputeIntersections &tempVars) const {
-  int orientationP1Triangle = orientation(triangle,p1);
-  int orientationP2Triangle = orientation(triangle,p2);
+bool MeshIntersectionGeometry::intersectEdgeWithTriangleSoSImpl(const InputTriangle &triangle, const InputVertex &p1, const InputVertex &p2, TempVarsComputeIntersections &tempVars)  {
+  int orientationP1Triangle = orientation(triangle,p1,tempVars.tempVarsSoSPredicatesImpl);
+  int orientationP2Triangle = orientation(triangle,p2,tempVars.tempVarsSoSPredicatesImpl);
   if(orientationP1Triangle==orientationP2Triangle) return false; //both are on the same side of the triangle's plane...
 
   const InputVertex &a = *(triangle.getInputVertex(0));
   const InputVertex &b = *(triangle.getInputVertex(1));
   const InputVertex &c = *(triangle.getInputVertex(2));
 
-  if(orientationP1Triangle>0) return (orientation(a,b,p2,p1)>0) && (orientation(b,c,p2,p1)>0) && (orientation(c,a,p2,p1)>0);
-  else return (orientation(a,b,p1,p2)>0) && (orientation(b,c,p1,p2)>0) && (orientation(c,a,p1,p2)>0);
+  if(orientationP1Triangle>0) return (orientation(a,b,p2,p1,tempVars.tempVarsSoSPredicatesImpl)>0) && (orientation(b,c,p2,p1,tempVars.tempVarsSoSPredicatesImpl)>0) && (orientation(c,a,p2,p1,tempVars.tempVarsSoSPredicatesImpl)>0);
+  else return (orientation(a,b,p1,p2,tempVars.tempVarsSoSPredicatesImpl)>0) && (orientation(b,c,p1,p2,tempVars.tempVarsSoSPredicatesImpl)>0) && (orientation(c,a,p1,p2,tempVars.tempVarsSoSPredicatesImpl)>0);
 }
 
 
@@ -604,7 +604,7 @@ bool MeshIntersectionGeometry::intersectEdgeWithTriangleSoSImpl(const InputTrian
 //ex: maybe w/o SoS we would have edge-triangle, but with SoS the intersection is triangle-edge...
 //think a little more to make sure we really cannot compute the coordinates..
 bool MeshIntersectionGeometry::intersectTwoTrianglesSoSImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
-            VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) const {
+            VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars)  {
   //because of SoS, we will have exactly two edge-triangle intersections
   //we need to test all 6 possibilities of edge-triangle intersections...
 
@@ -683,7 +683,7 @@ Since the heights are the same at (x,y), we can elliminate the non-epsilon terms
  c2 (a1 eps (2mesh-1) + b1 eps^2  (2mesh-1))  > c1(a2 eps (2mesh-1) + b2 eps^2  (2mesh-1))
  */
 const void computePlaneEquationsInputTriangle(const Point &t0,const Point &t1,const Point &t2, VertCoord &a, VertCoord &b, VertCoord &c) ;
-const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoSImpl(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars) const {
+const InputTriangle * MeshIntersectionGeometry::getBestTrianglePointInObjectSoSImpl(const InputTriangle *candidateTriangle,const InputTriangle *bestTriangle, const InputVertex &p,TempVarGetBestTrianglePointInObjectSoS &tempVars)  {
   //Let candidate triangle be triangle 1 and bestTriangle be triangle2...
 
   //cerr << "Getting best triangle" << endl;
