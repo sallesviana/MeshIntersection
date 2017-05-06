@@ -162,18 +162,20 @@ public:
 class InputTriangle: public Triangle {
 	friend void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
 	friend void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
+	friend class MeshIntersectionGeometry;
 
-	InputTriangle(const InputVertex &p0, const InputVertex &p1, const InputVertex &p2,ObjectId above, ObjectId below, const int triId)
+	//we made this private suth that only some functions can construct input triangles...
+	InputTriangle(const InputVertex &p0, const InputVertex &p1, const InputVertex &p2,ObjectId above, ObjectId below)
 			:Triangle(above,below) {
 		//cerr << p0 << " " << p1 << " " << p2 << " " << above << " " << below << endl;
 		p[0] = p0;
 		p[1] = p1;
 		p[2] = p2;		
-		id = triId;
+		id = -1; //not initialized yet...
 	}
 	
 public:
-	InputTriangle() {}
+	InputTriangle(): id(-1) {}
 	/*
 	//we assume the input triangles are unique
 	bool operator==(const InputTriangle &t) const {
@@ -211,10 +213,13 @@ public:
 		return p[2].compare(t.p[2]);
 	}
 
+	//we will give one unique id (from 1) for each intersecting triangle...
 	int getIdForEps() const {
 		return id;
 	}
-
+	void setIdForEps(int triId) {
+		id = triId;
+	}
 
 	int getMeshId() const {
 		return p[0].getMeshId();
@@ -366,6 +371,8 @@ class VertexFromIntersection: public Vertex {
 
 struct TempVarsSoSPredicatesImpl {
 	VertCoord tmp;
+	VertCoord tmp2;
+	VertCoord tmp3;
 	VertCoord t1xt2x;
 	VertCoord tDenominatorValue;
 	VertCoord r1r0x,r1r0y,r1r0z;
@@ -530,7 +537,7 @@ class MeshIntersectionGeometry {
 		//the coordinates of a vertex from intersection are r0 + t*(r1-r0)
 		//here we store the eps coefficients of the t for each vertex from the intersection.
 		struct EpsCoefficientsVertexIntersection {
-			//EpsCoefficientsVertexIntersection() {  omp_init_lock(&lock); }
+			//EpsCoefficientsVertexIntersection(): init(false) {   }
 			
 			Point epsCoefficients[3]; //epsCoefficients[0] is actually the coefficient for eps^1
 																//epsCoefficients[0][0] is the coordinate x of the eps coefficient 1 of the point
@@ -540,16 +547,17 @@ class MeshIntersectionGeometry {
 		vector<EpsCoefficientsVertexIntersection> epsCoefficientsVertexIntersection;
 		
 		struct TEpsDeterminanCommonTerms {
-			//TEpsDeterminanCommonTerms(): init(false) { omp_init_lock(&lock); }
+			//TEpsDeterminanCommonTerms(): init(false),willBeUsed(false) {  }
 			rational commonTerms[3];
 			bool init;
+			//bool willBeUsed; //this tEps will be used only if the corresponding triangle intersects other triangles.
 			omp_lock_t lock;
 		};
 		vector<TEpsDeterminanCommonTerms> tEpsDeterminanCommonTerms; 
 
 
 
-		void storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges);
+		void storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges,  const vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges);
 		
 		struct TempVarsComputePlaneEquation {Point E1,E2; VertCoord temp;};
 		void computePlaneEquation(PlaneEquation &equation, const Point &V0, const Point &V1, const Point &V2, TempVarsComputePlaneEquation &tempVars);

@@ -253,7 +253,7 @@ void MeshIntersectionGeometry::initPlaneEquationInputTriangle(int meshId, int tr
 
 
 
-void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges) {
+void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges, const vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges) {
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
   
@@ -372,21 +372,68 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
 
 
   clock_gettime(CLOCK_REALTIME, &t0);
-  tEpsDeterminanCommonTerms.resize(inputTriangles[0].size()+inputTriangles[1].size());
+
+
+  int numPairsInterTri = intersectingTrianglesThatGeneratedEdges.size();
+  int numUniqueInterTriSeenSoFar = 0;
+
+  struct InputTriComparator {
+    bool operator()(const InputTriangle &a,const InputTriangle &b)  const {
+        return a.compare(b)<0;
+    }
+  };
+  map<InputTriangle,int,InputTriComparator> idForEpsEachTriangle;
+  for(int i=0;i<numPairsInterTri;i++) { //only triangles intersecting other triangles need to have their locks initialized...
+    int triId = intersectingTrianglesThatGeneratedEdges[i].first->id;
+    if(triId==-1) { //not initialized yet...
+      intersectingTrianglesThatGeneratedEdges[i].first->setIdForEps(numUniqueInterTriSeenSoFar);
+      idForEpsEachTriangle[*intersectingTrianglesThatGeneratedEdges[i].first] = numUniqueInterTriSeenSoFar;
+      numUniqueInterTriSeenSoFar++;
+    }
+
+    triId = intersectingTrianglesThatGeneratedEdges[i].second->id;
+    if(triId==-1) { //not initialized yet...
+      intersectingTrianglesThatGeneratedEdges[i].second->setIdForEps(numUniqueInterTriSeenSoFar);
+      idForEpsEachTriangle[*intersectingTrianglesThatGeneratedEdges[i].second] = numUniqueInterTriSeenSoFar;
+      numUniqueInterTriSeenSoFar++;
+    }  
+  }
+  
+  //unfortunately in our current implementation the vertices from intersection do not store pointers to input triangles, 
+  //it would be be better to use pointers and keep the instances unique...
+  for(int i=0;i<numEdges;i++) {
+    VertexFromIntersection &v1 = edgesFromIntersection[i].first;
+    VertexFromIntersection &v2 = edgesFromIntersection[i].second;
+    v1.triangle.id = idForEpsEachTriangle[v1.triangle];
+    v2.triangle.id = idForEpsEachTriangle[v2.triangle];
+  }
+
+
+  cerr << "Number of unique triangles: " << numUniqueInterTriSeenSoFar << endl;
+
+  tEpsDeterminanCommonTerms.resize(numUniqueInterTriSeenSoFar);
   epsCoefficientsVertexIntersection.resize(idsOfVerticesFromIntersection.size() );
 
+
+
+  /*int n = tEpsDeterminanCommonTerms.size();
+  #pragma omp parallel for
+  for(int i=0;i<n;i++) {
+    if(tEpsDeterminanCommonTerms[i].willBeUsed) //we only need to init the lock if the triangle intersects other triangles...
+      omp_init_lock(&(tEpsDeterminanCommonTerms[i].lock));
+  }*/
+
   int n = tEpsDeterminanCommonTerms.size();
-  #pragma omp for
+  #pragma omp parallel for
   for(int i=0;i<n;i++) {
     tEpsDeterminanCommonTerms[i].init = false;
-    omp_init_lock(&(tEpsDeterminanCommonTerms[i].lock));
+    omp_init_lock(&(tEpsDeterminanCommonTerms[i].lock));  
   }
 
   n = epsCoefficientsVertexIntersection.size();
-  #pragma omp for
+  #pragma omp parallel for
   for(int i=0;i<n;i++) {
     epsCoefficientsVertexIntersection[i].init = false;
-    omp_init_lock(&(epsCoefficientsVertexIntersection[i].lock));
   }
 
   clock_gettime(CLOCK_REALTIME, &t1);
@@ -489,7 +536,7 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
 
   cerr << "Registering new vertices" << endl;
   //After the intersections are computed, we need to "register" the coordinates of the new vertices and store their ids...
-  storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(edgesFromIntersection,coordsVerticesOfEdges);
+  storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(edgesFromIntersection,coordsVerticesOfEdges,intersectingTrianglesThatGeneratedEdges);
 
 
   //#define DEBUGGING_MODE
@@ -672,7 +719,7 @@ void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> 
 		assert(edges[b][1]==edges[c][0]);
 		assert(edges[c][1]==edges[a][0]);
 
-		triangles[i] = InputTriangle( InputVertex(meshId,edges[a][0]), InputVertex(meshId,edges[a][1]),InputVertex(meshId,edges[b][1]),OUTSIDE_OBJECT,1,i+numTrianglesPreviouslyRead);
+		triangles[i] = InputTriangle( InputVertex(meshId,edges[a][0]), InputVertex(meshId,edges[a][1]),InputVertex(meshId,edges[b][1]),OUTSIDE_OBJECT,1);
 	}
 }
 
@@ -723,7 +770,7 @@ void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle>
 		objNormal++;
 		objContrNormal++;
 		//cerr << objNormal << " " << objContrNormal << endl;
-		triangles[i] = InputTriangle(InputVertex(meshId,a),InputVertex(meshId,b),InputVertex(meshId,c),objNormal,objContrNormal,i+numTrianglesPreviouslyRead);
+		triangles[i] = InputTriangle(InputVertex(meshId,a),InputVertex(meshId,b),InputVertex(meshId,c),objNormal,objContrNormal);
 	}
 }
 

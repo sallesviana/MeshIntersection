@@ -26,7 +26,18 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
     coordY = 0;
   }
 
-  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  tempVars.tmp = p1[coordX];
+  tempVars.tmp -= p0[coordX];
+  tempVars.tmp2 = p[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp *= tempVars.tmp2;
+  tempVars.tmp2 = p1[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp3 = p[coordX];
+  tempVars.tmp3 -= p0[coordX];
+  tempVars.tmp2 *= tempVars.tmp3;
+  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
 
   if(ans!=0) return ans;
 
@@ -65,7 +76,19 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
   }
 
   //a.x * b.y - a.y * b.x;
-  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  tempVars.tmp = p1[coordX];
+  tempVars.tmp -= p0[coordX];
+  tempVars.tmp2 = p[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp *= tempVars.tmp2;
+  tempVars.tmp2 = p1[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp3 = p[coordX];
+  tempVars.tmp3 -= p0[coordX];
+  tempVars.tmp2 *= tempVars.tmp3;
+  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+
   if(ans!=0) return ans;
 
 
@@ -103,7 +126,19 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
     coordY = 0;
   }
 
-  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  tempVars.tmp = p1[coordX];
+  tempVars.tmp -= p0[coordX];
+  tempVars.tmp2 = p[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp *= tempVars.tmp2;
+  tempVars.tmp2 = p1[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp3 = p[coordX];
+  tempVars.tmp3 -= p0[coordX];
+  tempVars.tmp2 *= tempVars.tmp3;
+  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+
   if(ans!=0) return ans;
 
 
@@ -141,7 +176,19 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
   }
 
   //a.x * b.y - a.y * b.x;
-  int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+  tempVars.tmp = p1[coordX];
+  tempVars.tmp -= p0[coordX];
+  tempVars.tmp2 = p[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp *= tempVars.tmp2;
+  tempVars.tmp2 = p1[coordY];
+  tempVars.tmp2 -= p0[coordY];
+  tempVars.tmp3 = p[coordX];
+  tempVars.tmp3 -= p0[coordX];
+  tempVars.tmp2 *= tempVars.tmp3;
+  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+
   if(ans!=0) return ans;
   
   //I am not sure if this is true... double check..()

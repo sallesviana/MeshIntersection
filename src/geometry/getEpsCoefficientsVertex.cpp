@@ -129,6 +129,14 @@ const VertCoord&  SosPredicatesImpl::getEpsCoefficientsVertexFromIntersectionFas
 
 	const InputTriangle &triangle = v0.triangle;
 	int triId = triangle.getIdForEps();
+	if(triId >=  geometry->tEpsDeterminanCommonTerms.size()) {
+		cerr << "Error with triId: " << triId << " "  <<  geometry->tEpsDeterminanCommonTerms.size() << endl;
+	}
+	assert(triId <  geometry->tEpsDeterminanCommonTerms.size());
+	if(triId==-1) {
+		cerr << "Error when processing a vertex from intersection... id = -1 "<< endl;
+	}
+	assert(triId!=-1);
 	MeshIntersectionGeometry::TEpsDeterminanCommonTerms &tCommonTerms = geometry->tEpsDeterminanCommonTerms[triId];
 
 
