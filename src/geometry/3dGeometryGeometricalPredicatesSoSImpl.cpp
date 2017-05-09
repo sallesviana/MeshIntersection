@@ -305,7 +305,7 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
 
 //3d orientation...
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v,TempVarsSoSPredicatesImpl &tempVars) {
-  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  int ans = 0;//signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
   if(ans!=0) return ans;
 
 
@@ -325,7 +325,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVerte
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const VertexFromIntersection &v,TempVarsSoSPredicatesImpl &tempVars)  {
-  int ans = signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  int ans = 0;// signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
   if(ans!=0) return ans;
 
 
