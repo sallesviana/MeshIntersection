@@ -448,7 +448,9 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
   const long long numPairsTrianglesToProcess = inputTrianglesToConsider.size();
   numIntersectionTests = numPairsTrianglesToProcess;
 
-  
+  timespec t0,t1;
+  clock_gettime(CLOCK_REALTIME, &t0);
+
   cerr << "Initializing plane equations...\n";
   
   for(int meshId=0;meshId<2;meshId++) {
@@ -466,6 +468,22 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
     vector<int>::iterator it = std::unique (trianglesToProcess.begin(), trianglesToProcess.end());
     trianglesToProcess.resize( std::distance(trianglesToProcess.begin(),it) );*/
 
+    vector<int> trianglesToConsider(inputTriangles[meshId].size(),0);
+    if(meshId==0) {
+      #pragma omp parallel for
+      for(int i=0;i<numPairsTrianglesToProcess;i++) {
+        int id = inputTrianglesToConsider[i].first-&inputTriangles[0][0];
+        trianglesToConsider[id] = 1;
+      }
+    } else {
+      #pragma omp parallel for
+      for(int i=0;i<numPairsTrianglesToProcess;i++) {
+        int id = inputTrianglesToConsider[i].second-&inputTriangles[1][0];
+        trianglesToConsider[id] = 1;
+      }
+    }
+
+
     int numTri = inputTriangles[meshId].size();
     cerr << "Triangles to compute equations determined\n";
 
@@ -476,7 +494,8 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
 
       #pragma omp for
       for(int i=0;i<numTri;i++) {
-        initPlaneEquationInputTriangle(meshId, i,tempVars);
+        if(trianglesToConsider[i])
+          initPlaneEquationInputTriangle(meshId, i,tempVars);
       }
     }
 
@@ -484,7 +503,10 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
   //for(int i:isPlaneEquationInputTrianglesInitialized[1]) cerr << i << " "; cerr << endl;
   cerr << "Computing the intersections...\n"; 
 
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to only compute plane equations: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
+  clock_gettime(CLOCK_REALTIME, &t0);
 
   vector<pair<Point,Point> > coordsVerticesOfEdges;
 
@@ -533,6 +555,8 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
     }
   }
 
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to only compute intersections: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
   cerr << "Registering new vertices" << endl;
   //After the intersections are computed, we need to "register" the coordinates of the new vertices and store their ids...
