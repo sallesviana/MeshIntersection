@@ -1121,7 +1121,11 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 
   assert(edgesFromIntersection.size()==intersectingTrianglesThatGeneratedEdges.size());
   timespec t0,t1;
+
+  #ifdef VERBOSE
   cerr << "Retesselating triangles..." << "\n";
+  #endif
+
   clock_gettime(CLOCK_REALTIME, &t0);
 
 
@@ -1143,8 +1147,10 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
   }
  
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to extract the edges intersecting each triangle: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
+  #ifdef VERBOSE
+    cerr << "Time to extract the edges intersecting each triangle: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  #endif
 
   //for each triangle t from mesh meshId, intersectingEdgesInEachTriangle[meshId][t] contains a vector of ids of edges formed by the intersection
   //of t with other triangles...
@@ -1166,7 +1172,9 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
     int numTrianglesToProcess = intersectingEdgesInEachTriangleToProcess.size();
     polygonsFromRetesselationOfEachTriangle[meshIdToProcess].resize(numTrianglesToProcess);
 
-    cerr << "Number of triangles to retesselate in this mesh: " << numTrianglesToProcess << "\n";
+    #ifdef VERBOSE
+      cerr << "Number of triangles to retesselate in this mesh: " << numTrianglesToProcess << "\n";
+    #endif
 
     statisticsAboutRetesseation.ctTrianglesRetesselate += numTrianglesToProcess;
 
@@ -1184,10 +1192,13 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 
       #pragma omp for
       for(int i=0;i<numTrianglesToProcess;i++) {      
-        if((i%onePercentNumTriangles)==0) {
-          #pragma omp critical
-          clog << "Retesselating " << i << " of " << numTrianglesToProcess << " Percent= " << (i*100)/numTrianglesToProcess << "\n";      
-        }
+
+        #ifdef VERBOSE
+          if((i%onePercentNumTriangles)==0) {
+            #pragma omp critical
+            clog << "Retesselating " << i << " of " << numTrianglesToProcess << " Percent= " << (i*100)/numTrianglesToProcess << "\n";      
+          }
+        #endif  
         //for each triangle ts, let's process the triangles intersecting t and the edges
         //formed by the intersection of ts and these triangles
 
@@ -1254,12 +1265,14 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
 
 
 
+  #ifdef VERBOSE
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Time to retesselate creating new polygons: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
 
-  clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to retesselate creating new polygons: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";  
-
-  clock_gettime(CLOCK_REALTIME, &t0);
-  cerr << "Triangulating polygons from retesselation...\n";
+    clock_gettime(CLOCK_REALTIME, &t0);
+    cerr << "Triangulating polygons from retesselation...\n";
+  #endif
+    
   for(int meshIdToProcess=0;meshIdToProcess<2;meshIdToProcess++) {
     int numTriangles = polygonsFromRetesselationOfEachTriangle[meshIdToProcess].size();
 
@@ -1274,25 +1287,27 @@ void retesselateIntersectingTriangles(MeshIntersectionGeometry & meshIntersectio
       #pragma omp for
       for(int i=0;i<numTriangles;i++) {
         //Let's triangulate the polygons on this triangle....
-
-        if((i%onePercentNumPolygons)==0) {
-          clog << "Triangulating " << i << " of " << numTriangles << " Percent= " << (i*100)/numTriangles << "\n";
-        }
+        #ifdef VERBOSE
+          if((i%onePercentNumPolygons)==0) {
+            clog << "Triangulating " << i << " of " << numTriangles << " Percent= " << (i*100)/numTriangles << "\n";
+          }
+        #endif
         for(BoundaryPolygon &polygon:polygonsFromRetesselationOfEachTriangle[meshIdToProcess][i].second)        
           polygon.triangulatePolygon(meshIntersectionGeometry,tempVarsTriangulatePolygon);
       }
     }
   }
 
+  #ifdef VERBOSE
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to triangulate polygons: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+    cerr << "Time to triangulate polygons: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
-  
-  cerr << "Counts computed during retesselation: " << "\n";
-  statisticsAboutRetesseation.printStatsSoFar();
-  cerr << "Number of inters. tests (for insertin tris.)that are true    : " << ctEdgeIntersect << "\n";
-  cerr << "Number of inters. tests (for insertin tris.)that are false    : " << ctEdgeDoNotIntersect << "\n";
-
+    
+    cerr << "Counts computed during retesselation: " << "\n";
+    statisticsAboutRetesseation.printStatsSoFar();
+    cerr << "Number of inters. tests (for insertin tris.)that are true    : " << ctEdgeIntersect << "\n";
+    cerr << "Number of inters. tests (for insertin tris.)that are false    : " << ctEdgeDoNotIntersect << "\n";
+  #endif
 
 
  

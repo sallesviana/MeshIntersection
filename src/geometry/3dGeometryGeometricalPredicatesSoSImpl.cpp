@@ -277,6 +277,8 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoS(const Vertex &v1,
 
 //SOS ORIENTATION of vertex with respect to a triangle and other basic geometric operations...
 
+
+/*
 int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point &p4) {
   const VertCoord &p1x = p1[0];
   const VertCoord &p1y = p1[1];
@@ -300,7 +302,7 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
                          p2z*p3x*p4y - p1x*p3z*p4y + p2x*p3z*p4y + p1y*p2x*p4z - p1x*p2y*p4z - 
                          p1y*p3x*p4z + p2y*p3x*p4z + p1x*p3y*p4z - p2x*p3y*p4z;
   return sgn(det);
-}
+}*/
 
 
 //3d orientation...
