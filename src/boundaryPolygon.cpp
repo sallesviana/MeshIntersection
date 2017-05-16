@@ -181,7 +181,7 @@ void BoundaryPolygon::updateStatusVertex(MeshIntersectionGeometry &geometry,int 
 				else if(vertexId == rEnd) {
 					rEnd = listVerticesToProcess[vertexId].crPrev;
 					if(rEnd!=-1) { 
-						listVerticesToProcess[rBegin].crNext = -1;
+						listVerticesToProcess[rEnd].crNext = -1;
 					}
 					listVerticesToProcess[vertexId].crPrev = -1;
 

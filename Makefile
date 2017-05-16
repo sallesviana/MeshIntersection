@@ -1,4 +1,4 @@
-flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc 
+flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc  -fpermissive
 
 all: meshIntersection
 
