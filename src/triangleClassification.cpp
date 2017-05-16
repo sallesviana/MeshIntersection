@@ -150,15 +150,18 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 
 {
     vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
+
+    
     for(const InputTriangle&t:inputTriangles[meshId]) {
       if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
         adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
-        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
-        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
+        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
 
         adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
-        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());
-        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
+        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
+
+        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
+        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
       } 
     }
 
@@ -400,6 +403,8 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
   
   clock_gettime(CLOCK_REALTIME, &t0); 
 
+
+  #ifdef DEBUGGING_MODE
   for(int meshId=0;meshId<2;meshId++){
     const int szOutputTrianglesFromIntersection = outputTrianglesFromRetesselation[meshId].size();
     for(int i=0;i<szOutputTrianglesFromIntersection;i++) {
@@ -408,7 +413,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
       assert(t.getVertex(0)->getMeshId()<3);
     }  
   }
-
+  #endif
 
   //Currently, let's write all vertices to the output
 	int numVerticesInEachMesh[3] = {geometry.getNumVertices(0),geometry.getNumVertices(1),geometry.getNumVertices(2)};
@@ -508,7 +513,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 			}
 		}
 	}
-	sort(outputEdges.begin(),outputEdges.end());
+	__gnu_parallel::sort(outputEdges.begin(),outputEdges.end());
 	auto newEndItr = unique(outputEdges.begin(),outputEdges.end());
 	outputEdges.resize(newEndItr- outputEdges.begin());
 
