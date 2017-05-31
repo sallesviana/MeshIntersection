@@ -5,7 +5,7 @@
 
 
 #include "nested3DGrid.h"
-
+#include <sstream>
 
 
 #ifdef COLLECT_GEOMETRY_STATISTICS
@@ -640,12 +640,15 @@ MeshIntersectionGeometry::MeshIntersectionGeometry(const string &pathMesh0, cons
 void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
 	assert(path.size()>=4);
   string inputFileExtension = path.substr(path.size()-3,3);
-  assert(inputFileExtension=="gts" || inputFileExtension=="ium");
+  assert(inputFileExtension=="gts" || inputFileExtension=="ium" || inputFileExtension=="off");
   bool isGtsFile = inputFileExtension=="gts";
+  bool isOffFile = inputFileExtension=="off";
 
   int numTrianglesPreviouslyRead = (meshId==0)?0:inputTriangles[0].size();
   if(isGtsFile)
     readGTSFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
+  else if (isOffFile) 
+    readOFFFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
   else 
     readLiumFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
 
@@ -748,6 +751,155 @@ void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> 
 }
 
 
+/*
+//Parsing rationals exactly
+//source: https://mortoray.com/2013/03/14/parsing-an-exact-decimal-value-using-gmp/
+mpq_class parse_decimal( std::string const & str )
+{
+    //meta = pdf_is_exact;
+ 
+    //this is intentionally far more lenient than the one in node_parser to retain flexibility
+    static boost::regex re_num( "([+-]?)([0-9]*)(\\.([0-9]*))?([eE]([+-]?)([0-9]+))?" );
+    boost::match_results<std::string::const_iterator> what;
+    if( !boost::regex_match( str, what, re_num ) )
+        PRE_FAIL( std::string( "invalid number: " + str ) );
+ 
+    mpz_class part;
+    mpq_class combine;
+    bool negative = false;
+ 
+    if( what[1].matched && *what[1].first == '-' )
+        negative = true;
+ 
+    if( what[2].matched )
+        combine = parse_bitz( what[2].first, what[2].second );
+ 
+    if( what[3].matched ) {
+        //meta |= pdf_had_decimal;
+        unsigned len = unsigned( what[4].second - what[4].first );
+        if( len ) {
+            part = parse_bitz( what[4].first, what[4].second );
+            mpz_class div(10);
+            mpz_pow_ui( div.get_mpz_t(), div.get_mpz_t(), len );
+            combine += mpq_class( part, div );
+        }
+    }
+ 
+    if( what[5].matched ) {
+       // meta |= pdf_had_exponent;
+        mpz_class e = parse_bitz( what[7].first, what[7].second );
+        mpz_class base(10), base_exp;
+ 
+        //TODO: check that "e" is constrained to unsigned long
+        mpz_pow_ui( base_exp.get_mpz_t(), base.get_mpz_t(), e.get_ui() );
+ 
+        if( *what[6].first == '-' )
+            combine /= base_exp;
+        else
+            combine *= base_exp;
+    }
+ 
+    if( negative )
+        combine *= -1;
+    combine.canonicalize();
+    return number( combine );
+}
+*/
+
+void readOFFFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead) {
+  ifstream fin(fileName.c_str());
+
+
+  if (!fin) {
+    cerr << "ERROR: failed to open file " << fileName << endl;
+    exit(1);
+  }
+  cerr << "Reading file " << fileName << endl;
+  int numVertices, numTriangles,numObjects;
+  string off;
+  getline(fin,off);
+  if(off!="OFF") {
+    cerr << "Warning: Is this file really an OFF file? " << off << endl;
+  }
+
+  string temp;
+  //fin.ignore('\n');
+  while(getline(fin,temp)) {
+    cerr <<  "tmep: " << temp << endl;
+    if(temp.find("#")==std::string::npos) break;
+  }
+  stringstream ss;
+  ss<< temp;
+  cerr << temp << endl;
+  assert(ss >> numVertices >> numTriangles >> numObjects);
+
+
+
+  cerr << "Vertices, triangles, objects: " << numVertices << " " << numTriangles << " " << numObjects << endl;
+  vertices.resize(numVertices);
+  triangles.resize(numTriangles);
+
+  //rational xr,yr,zr;
+  for(int i=0;i<numVertices;i++) {
+    getline(fin,temp);
+    stringstream ss;
+    ss<< temp;
+    /*if(!(ss >> vertices[i][0] >> vertices[i][1] >> vertices[i][2])) {
+      cerr << "Error reading vertex coord:" << temp << endl;
+      exit(1);
+    }*/
+    double x,y,z;
+    ss >> x >> y >> z;
+
+    //ss << temp;
+    //ss >> vertices[i][0] >> vertices[i][1] >> vertices[i][2];
+    //cerr << x << " " << vertices[i][0].get_d() << " " << vertices[i][0] << endl;
+
+
+    //double x,y,z;
+    //assert(fscanf(inputFile,"%lf %lf %lf",&x,&y,&z)==3);
+
+    vertices[i][0] = x;
+    vertices[i][1] = y;
+    vertices[i][2] = z;
+
+    if (i==0) { //initialize the bounding box in the first iteration...
+      boundingBox[0] = vertices[0];
+      boundingBox[1] = vertices[0];
+    }
+
+    accum_min(boundingBox[0][0],vertices[i][0]);
+    accum_min(boundingBox[0][1],vertices[i][1]);
+    accum_min(boundingBox[0][2],vertices[i][2]);
+
+    accum_max(boundingBox[1][0],vertices[i][0]);
+    accum_max(boundingBox[1][1],vertices[i][1]);
+    accum_max(boundingBox[1][2],vertices[i][2]);
+  }
+  
+  for(int i=0;i<numTriangles;i++) {
+    int a,b,c;
+    int nv;
+    
+    getline(fin,temp);
+    stringstream ss;
+    ss<< temp;
+    if(!(ss >> nv >> a >> b >> c)) {
+      cerr << "Error reading: " << temp << endl;
+      exit(1);
+    }
+    assert(nv==3);
+
+    //assert(fscanf(inputFile,"%d %d %d %d %d",&a,&b,&c,&objNormal,&objContrNormal)==5);
+    //a--;b--;c--; //we count from 0, not from 1...
+    
+
+    //cerr << objNormal << " " << objContrNormal << endl;
+    triangles[i] = InputTriangle(InputVertex(meshId,a),InputVertex(meshId,b),InputVertex(meshId,c),OUTSIDE_OBJECT,1);
+  }
+}
+
+
 //Reads a Lium file, fills the boundingBox with the boundingBox of the triangles read
 void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead) {
 	FILE *inputFile = fopen(fileName.c_str(),"r");
@@ -801,7 +953,7 @@ void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle>
 void MeshIntersectionGeometry::storeAllVertices(ostream &out) {
   for(int meshId=0;meshId<3;meshId++)
     for(const Point &p:verticesCoordinates[meshId]) 
-      out << p[0].get_d() << " " << p[1].get_d() << " " << p[2].get_d() << "\n";    
+      out << std::setprecision (std::numeric_limits<double>::digits10 + 2) << p[0].get_d() << " " << p[1].get_d() << " " << p[2].get_d() << "\n";    
 }
 
 //For debugging purposes

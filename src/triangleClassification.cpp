@@ -548,16 +548,18 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
  
 
   //now, let's write everything in the output!
-  outputStream << totalNumberOutputVertices << " " << totalNumberOutputEdges << " " << totalNumberOutputTriangles << '\n';
+  outputStream << "OFF\n";
+  //outputStream << totalNumberOutputVertices << " " << totalNumberOutputEdges << " " << totalNumberOutputTriangles << '\n';
+  outputStream << totalNumberOutputVertices << " " <<  totalNumberOutputTriangles << " 0\n";
 
   //print the coordinates of the vertices...
   
   geometry.storeAllVertices(outputStream);
 
 	//print edges...
-	for(const pair<int,int> &p:outputEdges) {
-		outputStream << p.first+1 << " " << p.second+1 << "\n"; //in a GTS file we start counting from 1...
-	}
+	//for(const pair<int,int> &p:outputEdges) {
+	//	outputStream << p.first+1 << " " << p.second+1 << "\n"; //in a GTS file we start counting from 1...
+	//}
 
 	//print triangles...
 	for(int meshId=0;meshId<2;meshId++) 
@@ -571,6 +573,8 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 				//according to the right hand rule, the ordering of the vertices should be (c,b,a)
 				swap(a,c);
 			} 
+      outputStream << "3 " << a << " " << b << " " << c << "\n";
+      /*
 			pair<int,int> e;
 			if (a<b) {e.first = a; e.second = b;}
 			else     {e.first = b; e.second = a;}
@@ -585,7 +589,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 			if (c<a) {e.first = c; e.second = a;}
 			else     {e.first = a; e.second = c;}
 			//outputStream << edgesIds[e]+1 << "\n";
-			outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";
+			outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";*/
 		}
 
     
@@ -601,6 +605,10 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 					//according to the right hand rule, the ordering of the vertices should be (c,b,a)
 					swap(a,c);
 				} 
+
+        outputStream << "3 " << a << " " << b << " " << c << "\n";
+
+        /*
 				pair<int,int> e;
 				if (a<b) {e.first = a; e.second = b;}
 				else     {e.first = b; e.second = a;}
@@ -615,7 +623,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 				if (c<a) {e.first = c; e.second = a;}
 				else     {e.first = a; e.second = c;}
 				//outputStream << edgesIds[e]+1 << "\n";
-				outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";
+				outputStream << mapEdgesIds2[e.first][e.second]+1 << "\n";*/
 			}
     
 	

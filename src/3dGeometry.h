@@ -25,6 +25,7 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 #include <cassert>
 #include <array>
 #include <vector>
+#include <iomanip>
 #include <iostream>
 #include <parallel/algorithm>
 #include "rationals.h"
@@ -34,8 +35,8 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 using namespace std;
 
 
-//#define VERBOSE
-//#define COLLECT_GEOMETRY_STATISTICS
+#define VERBOSE
+#define COLLECT_GEOMETRY_STATISTICS
 
 
 //if defined, we will double check the results with the one obtained by the original functions 
@@ -161,6 +162,7 @@ public:
 };
 
 class InputTriangle: public Triangle {
+	friend void readOFFFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
 	friend void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
 	friend void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId,const int numTrianglesPreviouslyRead);
 	friend class MeshIntersectionGeometry;

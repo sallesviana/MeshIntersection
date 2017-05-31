@@ -277,8 +277,8 @@ unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshI
 
 int main(int argc, char **argv) {
   if (argc!=7) {
-      cerr << "Error... use ./3dIntersection inputMesh0 inputMesh1 gridSizeLevel1 gridSizeLevel2 triggerSecondLevel outputFile.gts" << endl;
-      cerr << "The mesh file may be in the gts format or in the lium format (multimaterial)" << endl;
+      cerr << "Error... use ./3dIntersection inputMesh0 inputMesh1 gridSizeLevel1 gridSizeLevel2 triggerSecondLevel outputFile.off" << endl;
+      cerr << "The mesh file may be in the off, gts format or in the lium format (multimaterial)" << endl;
       exit(1);
   }
   clock_gettime(CLOCK_REALTIME, &t0BeginProgram);
