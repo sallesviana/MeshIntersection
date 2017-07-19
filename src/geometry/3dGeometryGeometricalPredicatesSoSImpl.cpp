@@ -581,6 +581,36 @@ bool MeshIntersectionGeometry::isOrientationPositiveSoSImpl(const Vertex &origV,
   return orientation(origV,v1V,v2V,planeToProject,tempVars.tempVarsSoSPredicatesImpl)>0;
 }
 
+
+
+int getCodeVertexInQuadrant(int sgnX,int sgnY) {
+  //Let's suppose: 0 is x+ axis, 1 is x+,y+ , 2 is y+ axis, 3 is x-,y+, 4 is x-, 5 is ...
+  //      2
+  //    3 | 1
+  //      |
+  //  4-------0
+  //      |
+  //    5 | 7
+  //      6
+
+  assert(!(sgnX==0 && sgnY==0));
+  //Given the signals of a vector, return its code... Indefinite result for 0,0 (shouldn't happen...)
+  if(sgnY==0) {
+    if(sgnX>0) return 0;
+    else return 4;
+  } else if(sgnY>0) { //above x axis...
+    if(sgnX==0) return 2;
+    else if(sgnX>0) return 1;
+    else return 3;
+  } else { //sgnY is < 0
+    if(sgnX==0) return 6;
+    else if(sgnX>0) return 7;
+    else return 5;
+  }
+  
+}
+
+
 //TODO
 //we need to consider point on axis and the angle...
 //this function have to be complete... we will call it, for example, when we have degenerate edges.
@@ -606,8 +636,23 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
   if(sgnV1y<0 && sgnV2y>0) return false;
 
   //they are in the same side of the x axis... (or exactly on the x axis...)
+  // ---> No!!!! ONE may be on the x axis and the other one in any side...
   const int sgnV1x = signalVectorCoord(origV,v1V,xCoord,tempVars.tempVarsSoSPredicatesImpl);
   const int sgnV2x = signalVectorCoord(origV,v2V,xCoord,tempVars.tempVarsSoSPredicatesImpl);
+
+  //Let's suppose: 0 is x+ axis, 1 is x+,y+ , 2 is y+ axis, 3 is x-,y+, 4 is x-, 5 is ...
+  //      2
+  //    3 | 1
+  //      |
+  //  4-------0
+  //      |
+  //    5 | 7
+  //      6
+  int codeV1 = getCodeVertexInQuadrant(sgnV1x,sgnV1y);
+  int codeV2 = getCodeVertexInQuadrant(sgnV2x,sgnV2y);
+  if(codeV1!=codeV2) return codeV1 < codeV2;
+ /*
+ Buggy code... int posV1 = 0;
 
   if(sgnV1y>0) { //are both at the non-negative y?
     //check if their x is different...
@@ -620,7 +665,7 @@ bool MeshIntersectionGeometry::isAngleWith0GreaterSoSImpl(const Vertex &origV, c
 
   //is one of them on the x+ axis?
   if(sgnV1y==0 && sgnV1x>0) return true; // v1 is on x+ --> angle is 0
-  if(sgnV2y==0 && sgnV2x>0) return false; //v2 is on x+ --> angle of v2 is 0 --> v2 < v1..
+  if(sgnV2y==0 && sgnV2x>0) return false; //v2 is on x+ --> angle of v2 is 0 --> v2 < v1..*/
 
   
   //same side of the x-axis --> use vector orientation...
