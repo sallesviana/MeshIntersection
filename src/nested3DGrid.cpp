@@ -68,17 +68,11 @@ void Nested3DGrid::deleteMemory(int gridSizeLevel1) {
 
 
 void Nested3DGridWrapper::initGridCells() {
-  int xCellmin;
-  int yCellmin;
-  int zCellmin;
-
-  int xCellmax;
-  int yCellmax;
-  int zCellmax; 
+  
   
   int grid3 = gridSizeLevel1*gridSizeLevel1*gridSizeLevel1;
   int gridSize = gridSizeLevel1;
-  vector<int> countTrianglesInEachGridTemp(grid3);
+  
 
   MeshIntersectionGeometry &meshGeometry = *meshGeometryPtr;
 
@@ -96,62 +90,72 @@ void Nested3DGridWrapper::initGridCells() {
   }
 
 
-  timespec t0,t1;
+  
 
   cerr << "Starting first pass..." << endl;
 
-
+  //#pragma omp parallel for
   for(int imap=0;imap<2;imap++) { // for each map...
+    timespec t0,t1;
+    
+
     const size_t sz = meshGeometry.inputTriangles[imap].size();
 
     grid.startPositionRaggedArray[imap] = new InputTriangle**[grid3+1];
 		for(int i=0;i<=grid3;i++) grid.startPositionRaggedArray[imap][i] = 0;
 
-    for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] = 0;
+
     //we will performa first pass just to count the number of triangles we will insert in each grid cell...
 
     clock_gettime(CLOCK_REALTIME, &t0);
-    for(size_t i = 0;i<sz;i++) { 
-      InputTriangle*t = &meshGeometry.inputTriangles[imap][i];
-      
 
-      /*
-      xCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][0] ][0]  ;
-      yCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][1] ][1]  ;
-      zCellmin =  gridCellEachPointLevel1[imap][ t->boundingBox[0][2] ][2]  ;
+    vector<int> countTrianglesInEachGridTemp(grid3,0);
+    #pragma omp parallel
+    {
+        vector<int> myCountTrianglesInEachGridTemp(grid3);
+        for(size_t i=0;i<grid3;i++) myCountTrianglesInEachGridTemp[i] = 0;
 
-      xCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][0] ][0]  ;
-      yCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][1] ][1]  ;
-      zCellmax =  gridCellEachPointLevel1[imap][ t->boundingBox[1][2] ][2]  ;*/
+        #pragma omp for
+        for(size_t i = 0;i<sz;i++) { 
+          InputTriangle*t = &meshGeometry.inputTriangles[imap][i];
 
-      //getVertexIdInputTriangleWithMinCoord(int meshId, int triangleId, int coord)
-      xCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 0) ][0]  ;
-      yCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 1) ][1]  ;
-      zCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 2) ][2]  ;
+          //getVertexIdInputTriangleWithMinCoord(int meshId, int triangleId, int coord)
+          int xCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 0) ][0]  ;
+          int yCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 1) ][1]  ;
+          int zCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 2) ][2]  ;
 
-      xCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 0) ][0]  ;
-      yCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 1) ][1]  ;
-      zCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 2) ][2]  ;
+          int xCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 0) ][0]  ;
+          int yCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 1) ][1]  ;
+          int zCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 2) ][2]  ;
 
-      
+          
 
-      assert(xCellmin>=0);
-      assert(yCellmin>=0);
-      assert(zCellmin>=0);
-      assert(xCellmax<gridSizeLevel1);
-      assert(yCellmax<gridSizeLevel1);
-      assert(zCellmax<gridSizeLevel1);
+          assert(xCellmin>=0);
+          assert(yCellmin>=0);
+          assert(zCellmin>=0);
+          assert(xCellmax<gridSizeLevel1);
+          assert(yCellmax<gridSizeLevel1);
+          assert(zCellmax<gridSizeLevel1);
 
-		  for(int x = xCellmin;x<=xCellmax;x++) {
-		  	const int xBase = x*gridSize*gridSize;
-		    for(int y = yCellmin;y<=yCellmax;y++) {
-		    	const int yBase = y*gridSize;
-		      for(int z = zCellmin;z<=zCellmax;z++) {
-      			countTrianglesInEachGridTemp[xBase+yBase+z]++;
-		      }
-		    }
-		  }
-		}
+          
+    		  for(int x = xCellmin;x<=xCellmax;x++) {
+    		  	const int xBase = x*gridSize*gridSize;
+    		    for(int y = yCellmin;y<=yCellmax;y++) {
+    		    	const int yBase = y*gridSize;
+    		      for(int z = zCellmin;z<=zCellmax;z++) {            
+          			myCountTrianglesInEachGridTemp[xBase+yBase+z]++;
+    		      }
+    		    }
+    		  }
+    		}
+        #pragma omp critical
+        {
+          //Timer t; cerr << "Reduction: ";
+          for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] += myCountTrianglesInEachGridTemp[i];
+        }
+    }
+
+
 		clock_gettime(CLOCK_REALTIME, &t1);
   	cerr << "Time to perform first pass: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n";
 
@@ -175,15 +179,17 @@ void Nested3DGridWrapper::initGridCells() {
 
 		clock_gettime(CLOCK_REALTIME, &t0);
 		for(size_t i=0;i<grid3;i++) countTrianglesInEachGridTemp[i] = 0; //we will reuse this array to count the amount of triangles we've already inserted...
-		for(size_t i = 0;i<sz;i++) { 
+		
+    #pragma omp parallel for
+    for(size_t i = 0;i<sz;i++) { 
       InputTriangle*t = &(meshGeometry.inputTriangles[imap][i]);
-      xCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 0)  ][0]  ;
-      yCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 1) ][1]  ;
-      zCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 2) ][2]  ;
+      int xCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 0)  ][0]  ;
+      int yCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 1) ][1]  ;
+      int zCellmin =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMinCoord(imap, i, 2) ][2]  ;
 
-      xCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 0)  ][0]  ;
-      yCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 1)  ][1]  ;
-      zCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 2)  ][2]  ;
+      int xCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 0)  ][0]  ;
+      int yCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 1)  ][1]  ;
+      int zCellmax =  gridCellEachPointLevel1[imap][ meshGeometry.getVertexIdInputTriangleWithMaxCoord(imap, i, 2)  ][2]  ;
 
       assert(xCellmin>=0);
       assert(yCellmin>=0);
@@ -198,8 +204,11 @@ void Nested3DGridWrapper::initGridCells() {
 		    	const int yBase = y*gridSize;
 		      for(int z = zCellmin;z<=zCellmax;z++) {
 		      	InputTriangle** startPositionCell = grid.startPositionRaggedArray[imap][xBase+yBase+z];
-		      	*(startPositionCell+countTrianglesInEachGridTemp[xBase+yBase+z]) = t;
-      			countTrianglesInEachGridTemp[xBase+yBase+z]++;
+
+            int posInsert = __sync_fetch_and_add(&(countTrianglesInEachGridTemp[xBase+yBase+z]),1) ;
+            *(startPositionCell+posInsert) = t;//*(startPositionCell+countTrianglesInEachGridTemp[xBase+yBase+z]) = t;
+        		//countTrianglesInEachGridTemp[xBase+yBase+z]++;
+            
 		      }
 		    }
 		  }
