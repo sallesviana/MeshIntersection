@@ -1,4 +1,4 @@
-flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc  -fpermissive
+flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc  -fpermissive  -lmpfr -lCGAL -DCGAL_USE_GMPXX -DCGAL_DONT_USE_LAZY_KERNEL
 
 all: meshIntersection
 

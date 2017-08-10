@@ -554,12 +554,16 @@ void Nested3DGridWrapper::computeGridCellWhereEachPointIs() {
     {
 
         MeshIntersectionGeometry::TempVarsGetGridCellContainingVertex tempVars;
+        CGAL::Lazy_exact_nt<mpq_class> cellScale2LevelsCGAL = CGAL::Lazy_exact_nt<mpq_class>(cellScale2Levels);
 
         int threadId = omp_get_thread_num();
 
-          #pragma omp for schedule(dynamic,1000)
-          for(int i=0;i<numPointsImap;i++) {
-            const array<int,3> gridCell = meshGeometryPtr->getGridCellContainingVertex(meshId,i,cellScale2Levels,tempVars);
+          #pragma omp for 
+          for(int i=0;i<numPointsImap;i++) {            
+            const array<int,3> gridCell = meshGeometryPtr->getGridCellContainingVertex(meshId, i, cellScale2LevelsCGAL, cellScale2Levels,gridSize2Levels, tempVars);
+
+            //const array<int,3> gridCellOrig = meshGeometryPtr->getGridCellContainingVertex(meshId,i,cellScale2Levels,tempVars);
+            //assert(gridCellOrigrm ==gridCell);
 
             gridCellEachPointLevel1[meshId][i][0] = gridCell[0]/gridSizeLevel2;
             gridCellEachPointLevel1[meshId][i][1] = gridCell[1]/gridSizeLevel2;

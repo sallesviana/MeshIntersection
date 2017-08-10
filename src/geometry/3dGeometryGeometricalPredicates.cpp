@@ -15,7 +15,9 @@ int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh
   //TODO: detect coincidencies properly here...
   //TODO
   //TODO: intersection at edge/vertex --> SoS...
-  int ans = intersectTwoTrianglesMainImpl(triMesh0,triMesh1,coordsPt1,vertexThatCreatedPt1, coordsPt2, vertexThatCreatedPt2, tempVars);
+
+  //Disabled to force the CGAL SoS version...
+  int ans = 0;//intersectTwoTrianglesMainImpl(triMesh0,triMesh1,coordsPt1,vertexThatCreatedPt1, coordsPt2, vertexThatCreatedPt2, tempVars);
 
 
   
@@ -506,6 +508,117 @@ array<int,3> MeshIntersectionGeometry::getGridCellContainingVertex(const int mes
   tempVar -= boundingBoxMin[2];
   tempVar *= cellScale;
   const int z  = convertToInt(tempVar,tempVars.tempVarsInt);
+
+  return {x,y,z};
+}
+
+
+//Given a coordinate, the cell sizes, the base of the grid and a temporary coordinate variable,
+//returns the cell where this coordinate should be.
+//we are processing points independently --> even if trigger a lazy kernel we should be fine in parallel...
+//is round performed exactly with the lazy type?
+
+//for each coordinate c, determine the bin (int) where it is:
+//1) get the approx of c. If int(c.approx().inf()) == int(c.approx().sup()) --> we know the bin!
+//2) Else, use exact...
+
+//is round down exact?
+int getIntCellCoord(const CGAL::Interval_nt<false> &gridCoord,int gridSize) {
+  //#define SANITY_CHECKS_CELL_FROM_COORD
+
+  //gridCoord now represents the coordinate in the grid --> we have to round this exactly to an integer value
+  //For example, if gridCoord is in the interval: 
+    //[2.1,2.255] --> gridCoord --> 2
+    //[2,2.1] --> gridCoord --> 2
+    //[2.1, 2.9999] --> gridCoord --> 2
+    //[1.999999,2.00001] --> gridCoord --> ??? (we need exact arithmetic to determine if temp is 1 or 2...)
+    //[2.1, 3] --> gridCoord --> ?? (2 or 3...)
+    //[2.1, 3.00001] --> gridCoord --> ?? (2 or 3...)
+
+  //is this truncation safe?
+  double candidateCellD =  gridCoord.inf(); //lower bound of the interval
+
+  //for some reason, candidateCellD could be -infinity for example...
+  //if this happens, we have to use exact arithmetic...
+  if(candidateCellD>=0 && candidateCellD<gridSize) {
+    int candidateCell = (int)candidateCellD;
+
+    if(gridCoord>=candidateCell && candidateCell+1 > gridCoord) {
+      #ifdef SANITY_CHECKS_CELL_FROM_COORD
+        big_int intCellCoord = gridCoord.exact().get_num()/gridCoord.exact().get_den();
+        int cellCoord = castIntWrap(intCellCoord);
+        assert(candidateCell==cellCoord);
+      #endif
+      return candidateCell;
+    }
+    cerr << "Oops...trying other..." << endl;    
+
+    candidateCell -= 1; //check around the candidate cell...
+    if(gridCoord>=candidateCell && candidateCell+1 > gridCoord) {
+      #ifdef SANITY_CHECKS_CELL_FROM_COORD
+        big_int intCellCoord = gridCoord.exact().get_num()/gridCoord.exact().get_den();
+        int cellCoord = castIntWrap(intCellCoord);
+        assert(candidateCell==cellCoord);
+      #endif
+      return candidateCell;
+    }
+
+    candidateCell += 2;
+    if(gridCoord>=candidateCell && candidateCell+1 > gridCoord) {
+      #ifdef SANITY_CHECKS_CELL_FROM_COORD
+        big_int intCellCoord = gridCoord.exact().get_num()/gridCoord.exact().get_den();
+        int cellCoord = castIntWrap(intCellCoord);
+        assert(candidateCell==cellCoord);
+      #endif
+      return candidateCell;
+    }
+  }
+
+  cerr << "Having to check using the exact value..." << endl;
+
+
+  throw -1;
+}
+
+//version using CGAL interval arithmetic for performance.
+array<int,3> MeshIntersectionGeometry::getGridCellContainingVertex(const int meshId, const int vertexId, const CGAL::Lazy_exact_nt<mpq_class> &cellScale, const VertCoord &cellScaleRational, int gridSize, TempVarsGetGridCellContainingVertex &tempVars ) {
+  CGAL::Interval_nt<false> &tempVar = tempVars.myTemp;//tempVertCoords[poolToUse];
+  const Point_3 &point = verticesCoordinatesCGAL[meshId][vertexId];
+
+  const array<CGAL::Lazy_exact_nt<mpq_class>,3> &boundingBoxMin  = boundingBoxTwoMeshesTogetterCGAL[0];
+
+  
+  int x, y, z;
+  try {
+    tempVar = point.x().approx();
+    tempVar -= boundingBoxMin[0].approx(); 
+    tempVar *= cellScale.approx(); 
+    x = getIntCellCoord(tempVar,gridSize); 
+  } catch(...) {
+    cerr << "Filter failure x" << endl; //if the computation cannot be performed exactly with intervals, let's call the rational version (TODO: compute only X, only Y, only Z instead of computing x,y,z exactly every time at lest one fail..)
+    return getGridCellContainingVertex(meshId, vertexId, cellScaleRational, tempVars );
+  }
+
+  try {
+    tempVar = point.y().approx();
+    tempVar -= boundingBoxMin[1].approx();
+    tempVar *= cellScale.approx();
+    y = getIntCellCoord(tempVar,gridSize);
+  } catch(...) {
+    cerr << "Filter failure y" << endl;
+    return getGridCellContainingVertex(meshId, vertexId, cellScaleRational, tempVars );
+  }
+
+  try {
+    tempVar = point.z().approx();
+    tempVar -= boundingBoxMin[2].approx();
+    tempVar *= cellScale.approx();
+    z  = getIntCellCoord(tempVar,gridSize);
+  } catch(...) {
+    cerr << "Filter failure z" << endl;
+    return getGridCellContainingVertex(meshId, vertexId, cellScaleRational, tempVars );
+  }
+
 
   return {x,y,z};
 }

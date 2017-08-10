@@ -306,6 +306,16 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
   for(int i=0;i<numUniqueVerts;i++)
     verticesCoordinates[2][i] = *vertPtrs[i];
 
+  /*{
+    Timer t;
+    cerr << "Storing CGAL vertices from intersection: ";
+
+    verticesCoordinatesCGAL[2].resize(numUniqueVerts);
+    #pragma omp parallel for
+    for(int i=0;i<numUniqueVerts;i++)
+      verticesCoordinatesCGAL[2][i] = Point_3(verticesCoordinates[2][i][0],verticesCoordinates[2][i][1],verticesCoordinates[2][i][2]);
+  }*/
+
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Vertices copied" << endl;
   clock_gettime(CLOCK_REALTIME, &t0);
@@ -634,7 +644,20 @@ MeshIntersectionGeometry::MeshIntersectionGeometry(const string &pathMesh0, cons
   		boundingBoxTwoMeshesTogetter[1][i] = meshBoundingBoxes[1][1][i];
   }
 
+  for(int i=0;i<3;i++) {
+    boundingBoxTwoMeshesTogetterCGAL[0][i] = CGAL::Lazy_exact_nt<mpq_class>(boundingBoxTwoMeshesTogetter[0][i]);
+    boundingBoxTwoMeshesTogetterCGAL[1][i] = CGAL::Lazy_exact_nt<mpq_class>(boundingBoxTwoMeshesTogetter[1][i]);
+  }
+}
 
+void initializeCGALCoordinates(vector<Point_3> &verticesCoordinatesCGAL,vector<Point> &verticesCoordinates) {
+  int n = verticesCoordinates.size();
+  verticesCoordinatesCGAL.resize(n);
+
+  #pragma omp parallel for
+  for(int i=0;i<n;i++) {
+    verticesCoordinatesCGAL[i] = Point_3(verticesCoordinates[i][0],verticesCoordinates[i][1],verticesCoordinates[i][2]);
+  }
 }
 
 void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
@@ -651,6 +674,8 @@ void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
     readOFFFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
   else 
     readLiumFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
+
+  initializeCGALCoordinates(verticesCoordinatesCGAL[meshId],verticesCoordinates[meshId]);
 
   cerr << "Initializing bounding-boxes of triangles\n"; 
   timespec t0,t1;

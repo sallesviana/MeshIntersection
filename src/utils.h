@@ -97,6 +97,25 @@ double convertTimeMsecs(const timespec &t);
 //source: http://www.guyrutenberg.com/2007/09/22/profiling-code-using-clock_gettime/
 timespec diff(timespec start, timespec end);
 
+class Timer {
+  timespec t0,t1;
 
+  void restart() {
+	clock_gettime(CLOCK_REALTIME, &t0);
+  }
+
+  double getCurrentTime() {
+	clock_gettime(CLOCK_REALTIME, &t1);
+    return convertTimeMsecs(diff(t0,t1))/1000;
+  }
+
+  public:
+  Timer() {
+    restart();
+  }
+  ~Timer() {    
+    cerr << "Time: " << getCurrentTime() << endl;
+  }
+};
 
 #endif

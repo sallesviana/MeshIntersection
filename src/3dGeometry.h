@@ -74,6 +74,28 @@ const int PLANE_X0 =0;
 const int PLANE_Y0 =1;
 const int PLANE_Z0 =2;
 
+
+
+//CGAL 
+
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Filtered_kernel.h> 
+#include <CGAL/Lazy_kernel.h> 
+#include <CGAL/MP_Float.h>
+
+
+typedef CGAL::Filtered_kernel<CGAL::Simple_cartesian<CGAL::Lazy_exact_nt<mpq_class> > > Kernel; 
+//typedef CGAL::Exact_predicates_exact_constructions_kernel   Kernel;
+//typedef CGAL::Filtered_kernel<CGAL::Simple_cartesian<CGAL::Gmpq>> Kernel;
+//typedef CGAL::Filtered_kernel<CGAL::Simple_cartesian<mpq_class>> Kernel;
+typedef Kernel::Point_3                                       Point_3;
+typedef Kernel::Segment_3																				Edge_3;
+typedef Kernel::Triangle_3                                    Triangle_3;
+
+
+
+
+
 //
 class SosPredicatesImpl;
 class MeshIntersectionGeometry;
@@ -389,9 +411,19 @@ class MeshIntersectionGeometry {
 		MeshIntersectionGeometry(const string &pathMesh0, const string &pathMesh1);
 
 		//the meshId can be either 0 or 1
-		struct TempVarsGetGridCellContainingVertex { VertCoord tempVertCoords; big_int tempVarsInt[3];};
+		struct TempVarsGetGridCellContainingVertex { 
+			VertCoord tempVertCoords; 
+			big_int tempVarsInt[3];
+
+			
+			CGAL::Interval_nt<false> myTemp; //For CGAL ...
+      CGAL::Lazy_exact_nt<mpq_class> myTempLazyExact;
+      CGAL::Interval_nt<false>::Protector protect; //for ensuring CGAL correctness...
+      
+		};
 		array<int,3> getGridCellContainingVertex(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) ;
-		
+		array<int,3> getGridCellContainingVertex(const int meshId, const int vertexId, const CGAL::Lazy_exact_nt<mpq_class> &cellScale, const VertCoord &cellScaleRational,int gridSize, TempVarsGetGridCellContainingVertex &tempVars ) ;
+
 
 		vector<InputTriangle> inputTriangles[2];
 		int getVertexIdInputTriangleWithMinCoord(int meshId, int triangleId, int coord) const { return inputTrianglesBoundingBox[meshId][triangleId][0][coord];}
@@ -568,7 +600,7 @@ class MeshIntersectionGeometry {
 		void initPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars);
 
 		vector<Point> verticesCoordinates[3]; //verticesCoordinates[0] are from mesh 0, verticesCoordinates[1] are from mesh 1, verticesCoordinates[2] are from intersections
-
+		vector<Point_3> verticesCoordinatesCGAL[3];
 
 		//for efficiency purposes, we will store the bounding-box of the Triangles
 		//the bounding-boxes are defined as the extreme vertices of the triangles
@@ -580,8 +612,16 @@ class MeshIntersectionGeometry {
 			return verticesCoordinates[v.getMeshId()][v.getId()];
 		}
 
+		Point_3 &getCoordinatesCGAL(const Vertex &v) {
+			return verticesCoordinatesCGAL[v.getMeshId()][v.getId()];
+		}
+
 		const Point &getCoordinates(const Vertex &v) const {
 			return verticesCoordinates[v.getMeshId()][v.getId()];
+		}
+
+		const Point_3 &getCoordinatesCGAL(const Vertex &v) const {
+			return verticesCoordinatesCGAL[v.getMeshId()][v.getId()];
 		}
 
 		const array<double,3> getCoordinatesForDebugging(const Vertex &v) const {
@@ -595,6 +635,8 @@ class MeshIntersectionGeometry {
 
 		Point meshBoundingBoxes[2][2]; //boundingbox of the two input meshes
 		Point boundingBoxTwoMeshesTogetter[2];
+		array<CGAL::Lazy_exact_nt<mpq_class>,3> boundingBoxTwoMeshesTogetterCGAL[2]; //Why seg fault here???
+
 		void loadInputMesh(int meshId, const string &path);
 
 
@@ -645,7 +687,7 @@ class MeshIntersectionGeometry {
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
              VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) ;
 
-		array<int,3> getGridCellContainingVertexOrig(const int meshId, const int vertexId, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars ) ;
+		array<int,3> getGridCellContainingVertexOrig(const int meshId, const int vertexId, const VertCoord &cellScale,  TempVarsGetGridCellContainingVertex &tempVars ) ;
 		bool isCloserOrig(const InputVertex &origV, const Vertex &v1V, const Vertex &v2V, TempVarsIsCloser &tempVars) const;
 		bool isAngleWith0GreaterOrig(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 		bool isVertexInTriangleProjectionOrig(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
@@ -800,10 +842,10 @@ private:
 
 
 //Reads a GTS file, fills the boundingBox with the boundingBox of the triangles read
-void readGTSFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId, const int);
+//void readGTSFile(string fileName,vector<Point_3> &verticesCoordinatesCGAL, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId, const int);
 
 
 //Reads a Lium file, fills the boundingBox with the boundingBox of the triangles read
-void readLiumFile(string fileName, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId, const int);
+//void readLiumFile(string fileName,vector<Point_3> &verticesCoordinatesCGAL, vector<Point> &vertices,vector<InputTriangle> &triangles, Point boundingBox[2],const int meshId, const int);
 
 #endif

@@ -11,11 +11,8 @@ inline int getSignal(int i){
 
 //#define SosPredicatesImpl OriginalAlgFromMathematicaSosPredicatesImpl
 
-int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
-  const Point &p0 =  getCoordinates(v1);
-  const Point &p1 =  getCoordinates(v2);
-  const Point &p = getCoordinates(queryPoint);
 
+int orientation2D(const Point &p0,const Point &p1,const Point &p,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) {
   int coordY = 1;
   int coordX = 0;
   if(whatPlaneProjectTrianglesTo==PLANE_X0) { //if the triangle is projected to X=0 --> we need to use coordinates y,z (instead of x,y)
@@ -38,6 +35,15 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
   tempVars.tmp3 -= p0[coordX];
   tempVars.tmp2 *= tempVars.tmp3;
   int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+  return ans;
+}
+
+int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
+  const Point &p0 =  getCoordinates(v1);
+  const Point &p1 =  getCoordinates(v2);
+  const Point &p = getCoordinates(queryPoint);
+
+  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
 
   if(ans!=0) return ans;
 
@@ -65,29 +71,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
 
-  int coordY = 1;
-  int coordX = 0;
-  if(whatPlaneProjectTrianglesTo==PLANE_X0) { //if the triangle is projected to X=0 --> we need to use coordinates y,z (instead of x,y)
-    coordX = 1;
-    coordY = 2;
-  } else if(whatPlaneProjectTrianglesTo ==PLANE_Y0) { //if the triangle is projected to Y=0 --> we need to use coordinates z,x (instead of x,y)
-    coordX = 2;
-    coordY = 0;
-  }
-
-  //a.x * b.y - a.y * b.x;
-  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
-  tempVars.tmp = p1[coordX];
-  tempVars.tmp -= p0[coordX];
-  tempVars.tmp2 = p[coordY];
-  tempVars.tmp2 -= p0[coordY];
-  tempVars.tmp *= tempVars.tmp2;
-  tempVars.tmp2 = p1[coordY];
-  tempVars.tmp2 -= p0[coordY];
-  tempVars.tmp3 = p[coordX];
-  tempVars.tmp3 -= p0[coordX];
-  tempVars.tmp2 *= tempVars.tmp3;
-  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
 
   if(ans!=0) return ans;
 
@@ -116,28 +100,7 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
 
-  int coordY = 1;
-  int coordX = 0;
-  if(whatPlaneProjectTrianglesTo==PLANE_X0) { //if the triangle is projected to X=0 --> we need to use coordinates y,z (instead of x,y)
-    coordX = 1;
-    coordY = 2;
-  } else if(whatPlaneProjectTrianglesTo ==PLANE_Y0) { //if the triangle is projected to Y=0 --> we need to use coordinates z,x (instead of x,y)
-    coordX = 2;
-    coordY = 0;
-  }
-
-  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
-  tempVars.tmp = p1[coordX];
-  tempVars.tmp -= p0[coordX];
-  tempVars.tmp2 = p[coordY];
-  tempVars.tmp2 -= p0[coordY];
-  tempVars.tmp *= tempVars.tmp2;
-  tempVars.tmp2 = p1[coordY];
-  tempVars.tmp2 -= p0[coordY];
-  tempVars.tmp3 = p[coordX];
-  tempVars.tmp3 -= p0[coordX];
-  tempVars.tmp2 *= tempVars.tmp3;
-  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
 
   if(ans!=0) return ans;
 
@@ -165,29 +128,7 @@ int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, cons
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
 
-  int coordY = 1;
-  int coordX = 0;
-  if(whatPlaneProjectTrianglesTo==PLANE_X0) { //if the triangle is projected to X=0 --> we need to use coordinates y,z (instead of x,y)
-    coordX = 1;
-    coordY = 2;
-  } else if(whatPlaneProjectTrianglesTo ==PLANE_Y0) { //if the triangle is projected to Y=0 --> we need to use coordinates z,x (instead of x,y)
-    coordX = 2;
-    coordY = 0;
-  }
-
-  //a.x * b.y - a.y * b.x;
-  //int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
-  tempVars.tmp = p1[coordX];
-  tempVars.tmp -= p0[coordX];
-  tempVars.tmp2 = p[coordY];
-  tempVars.tmp2 -= p0[coordY];
-  tempVars.tmp *= tempVars.tmp2;
-  tempVars.tmp2 = p1[coordY];
-  tempVars.tmp2 -= p0[coordY];
-  tempVars.tmp3 = p[coordX];
-  tempVars.tmp3 -= p0[coordX];
-  tempVars.tmp2 *= tempVars.tmp3;
-  int ans = getSignal(cmp(tempVars.tmp,tempVars.tmp2));
+  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
 
   if(ans!=0) return ans;
   
@@ -278,7 +219,7 @@ bool MeshIntersectionGeometry::isVertexInTriangleProjectionSoS(const Vertex &v1,
 //SOS ORIENTATION of vertex with respect to a triangle and other basic geometric operations...
 
 
-/*
+
 int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point &p4) {
   const VertCoord &p1x = p1[0];
   const VertCoord &p1y = p1[1];
@@ -302,12 +243,19 @@ int signDeterminant4(const Point &p1,const Point &p2,const Point &p3,const Point
                          p2z*p3x*p4y - p1x*p3z*p4y + p2x*p3z*p4y + p1y*p2x*p4z - p1x*p2y*p4z - 
                          p1y*p3x*p4z + p2y*p3x*p4z + p1x*p3y*p4z - p2x*p3y*p4z;
   return sgn(det);
-}*/
+}
 
 
 //3d orientation...
 int MeshIntersectionGeometry::orientation(const InputVertex&p1, const InputVertex&p2,const InputVertex&p3, const InputVertex &v,TempVarsSoSPredicatesImpl &tempVars) {
+  CGAL::Orientation cgalAns = CGAL::orientation(getCoordinatesCGAL(p1),getCoordinatesCGAL(p2),getCoordinatesCGAL(p3),getCoordinatesCGAL(v));
+
   int ans = 0;//signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  if(cgalAns==CGAL::NEGATIVE) ans = 1;
+  else if (cgalAns==CGAL::POSITIVE) ans = -1;
+
+  //assert(ans==signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v)));
+
   if(ans!=0) return ans;
 
 
