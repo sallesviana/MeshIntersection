@@ -44,7 +44,47 @@ int labelConnectedComponentsEachVertex(const vector<vector<int> > &adjList,vecto
 
   return numComponentsSeenSoFar;
 }
+
+#include "unionFind.h"
 int labelConnectedComponentsEachVertex(const vector<pair<int,int> > &adjList,const vector<pair<int,int> > &raggedArray,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
+  int numVertices = adjList.size();
+  DisjointSets djSet(numVertices);
+
+  #pragma omp parallel for
+  for(int i=0;i<numVertices;i++) 
+    for(int j=adjList[i].first;j<adjList[i].second;j++) {
+          int neighbor = raggedArray[j].second;
+          djSet.unite(i,neighbor);
+    }
+
+  int ct =0;
+  unordered_map<int,int> connectedComponentToNumberFrom0;
+
+  #pragma omp parallel for
+  for(int i=0;i<numVertices;i++) {
+    int idI = djSet.find(i); //id of the connected component of the vertex...
+    if(connectedComponentToNumberFrom0.count(idI)==0) { //is this connected component already "registered"?
+      #pragma omp critical
+      if(connectedComponentToNumberFrom0.count(idI)==0) {
+        connectedComponentToNumberFrom0[idI] = ct;
+        sampleVertexIdFromEachConnectedComponent.push_back(i);
+        ct++;
+      }
+    }   
+  }  
+
+  #pragma omp parallel for
+  for(int i=0;i<numVertices;i++) {
+    int idI = djSet.find(i);
+    int cc = connectedComponentToNumberFrom0[idI];
+    connectedComponentEachVertex[i] = cc;
+  }
+
+  assert(ct == sampleVertexIdFromEachConnectedComponent.size());
+  return ct;
+}
+
+int labelConnectedComponentsEachVertex2(const vector<pair<int,int> > &adjList,const vector<pair<int,int> > &raggedArray,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
   int numComponentsSeenSoFar = 0;
   queue< int >   vertexToLabel;
   int numVertices = adjList.size();
@@ -78,6 +118,7 @@ int labelConnectedComponentsEachVertex(const vector<pair<int,int> > &adjList,con
 
   return numComponentsSeenSoFar;
 }
+
 
 
 
@@ -183,24 +224,24 @@ void locateTrianglesAndPolygonsInOtherMeshOriginal(const Nested3DGridWrapper *un
     int numComponents;
 
 {
-    vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
-
     
+
+    vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
     {
       cerr << "Num of vertices in adj list: " << numInputVerticesCoordinatesThisMesh << endl;
       Timer t; cerr << "Add data to adj. list " ; 
-    for(const InputTriangle&t:inputTriangles[meshId]) {
-      if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
-        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
+      for(const InputTriangle&t:inputTriangles[meshId]) {
+        if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+          adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
+          adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
 
-        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
-        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
+          adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
+          adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
 
-        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
-        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
-      } 
-    }
+          adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
+          adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
+        } 
+      }
     }
 
     clock_gettime(CLOCK_REALTIME, &t1);
@@ -452,42 +493,14 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     
 
 
-    /*vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
-
     
-    {
-      cerr << "Num of vertices in adj list: " << numInputVerticesCoordinatesThisMesh << endl;
-      Timer t; cerr << "Add data to adj. list " ; 
-    for(const InputTriangle&t:inputTriangles[meshId]) {
-      if(trianglesThatIntersect.count(&t)==0) { //this triangle does not intersect the other mesh...
-        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
-        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
-
-        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
-        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
-
-        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
-        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
-      } 
-    }
-    }
 
     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "Total time to create adj. list: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
     
 
 
-    for(int i=0;i<adjList.size();i++) {
-      set<int> elementsInAdj1(adjList[i].begin(),adjList[i].end());
-      set<int> elementsInAdj2;
-      //for(int j:elementsInAdj1) cerr << j << " " ; cerr << endl;
-      for(int j=adjList2[i].first;j<adjList2[i].second;j++) {
-        //cerr << raggedArray[j].second << " ";
-        elementsInAdj2.insert(raggedArray[j].second);
-      } //cerr << endl;
-
-      assert(elementsInAdj2==elementsInAdj1);
-    }*/
+    
 
     
     
@@ -495,14 +508,56 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     cerr << "Labeling connected components\n";
     
     numComponents = labelConnectedComponentsEachVertex(adjList2,raggedArray,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
-   // int nc2 =   labelConnectedComponentsEachVertex(adjList,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
-    //cerr << numComponents << " " << nc2 << endl;
-
-    assert(numComponents==sampleVertexIdFromEachConnectedComponent.size());
-
+    
     clock_gettime(CLOCK_REALTIME, &t1);
     cerr << "Total time to compute CCs: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
     clock_gettime(CLOCK_REALTIME, &t0);
+
+    
+    //#define DEBUGGING_MODE
+    #ifdef DEBUGGING_MODE
+    {
+      vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
+      cerr << "Num of vertices in adj list: " << numInputVerticesCoordinatesThisMesh << endl;
+      Timer t; cerr << "Add data to adj. list " ; 
+      for(const InputTriangle&t:inputTriangles[meshId]) {
+        if(trianglesThatIntersect.count(&t)==0) { //this triangle does not intersect the other mesh...
+          adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
+          adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
+
+          adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
+          adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
+
+          adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
+          adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
+        } 
+      }
+
+      for(int i=0;i<adjList.size();i++) {
+        set<int> elementsInAdj1(adjList[i].begin(),adjList[i].end());
+        set<int> elementsInAdj2;
+        //for(int j:elementsInAdj1) cerr << j << " " ; cerr << endl;
+        for(int j=adjList2[i].first;j<adjList2[i].second;j++) {
+          //cerr << raggedArray[j].second << " ";
+          elementsInAdj2.insert(raggedArray[j].second);
+        } //cerr << endl;
+
+        assert(elementsInAdj2==elementsInAdj1);
+      }
+
+
+      vector<int> connectedComponentEachVertex2(numInputVerticesCoordinatesThisMesh,DONT_KNOW_FLAG);
+      vector<int> sampleVertexIdFromEachConnectedComponent2;
+      int nc2 =   labelConnectedComponentsEachVertex(adjList,connectedComponentEachVertex2,sampleVertexIdFromEachConnectedComponent2);
+      cerr << numComponents << " " << nc2 << endl;
+      assert(nc2==numComponents);
+      //assert(connectedComponentEachVertex==connectedComponentEachVertex2);
+    }
+    #endif
+
+    assert(numComponents==sampleVertexIdFromEachConnectedComponent.size());
+
+    
 }
     //exit(0);
 
@@ -577,9 +632,10 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(numInputTrianglesThisMesh,DONT_KNOW_FLAG);
 
     int ct =0;
+    #pragma omp parallel for
     for(int tid = 0; tid < numInputTrianglesThisMesh;tid++) {
       const InputTriangle &t = inputTriangles[meshId][tid];
-      if(trianglesThatIntersect.count(&t)==0) {
+      if(t.doesIntersectOtherTriangles) {
         int connectedComponentOfThisVertex = connectedComponentEachVertex[t.getInputVertex(0)->getId()];
         locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
       }
@@ -715,7 +771,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
     clock_gettime(CLOCK_REALTIME, &t0);
 	}
 	clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to locate vertices and classify triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  cerr << "Time to locate vertices and classify triangles: " << convertTimeMsecs(diff(t0ThisFunction,t1))/1000 << endl;
   
   clock_gettime(CLOCK_REALTIME, &t0); 
 
@@ -861,6 +917,11 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
   
   double timeWithoutIO =  convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
   cerr << "Total time before writing output: " << timeWithoutIO << endl;
+ 
+
+
+
+
  
 
   //now, let's write everything in the output!
