@@ -1,4 +1,4 @@
-flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp -ltcmalloc  -fpermissive  -lmpfr -lCGAL -DCGAL_USE_GMPXX -DCGAL_DONT_USE_LAZY_KERNEL
+flags = -lgmp -lgmpxx -std=c++11 -O3  -fopenmp  -ltcmalloc  -fpermissive  -lmpfr -lCGAL -DCGAL_USE_GMPXX -DCGAL_DONT_USE_LAZY_KERNEL
 
 all: meshIntersection
 
@@ -9,7 +9,7 @@ meshIntersection: originalAlgFromMathematicaSosPredicatesImpl.o originalAlgFromM
 meshIntersection.o: src/meshIntersection.cpp
 	g++ src/meshIntersection.cpp  $(flags) -c  -o meshIntersection.o
 
-3dGeometry.o: src/3dGeometry.cpp src/3dGeometry.h src/3dGeometryGeometricalPart.cpp src/geometry/tritri_isectline.c  src/boundaryPolygon.cpp src/geometry/3dGeometryGeometricalPredicatesMainImpl.cpp src/geometry/3dGeometryGeometricalPredicates.cpp src/geometry/3dGeometryGeometricalPredicatesSoSImpl.cpp
+3dGeometry.o: src/3dGeometry.cpp src/3dGeometry.h src/3dGeometryGeometricalPart.cpp   src/boundaryPolygon.cpp src/geometry/3dGeometryGeometricalPredicatesMainImpl.cpp src/geometry/3dGeometryGeometricalPredicates.cpp src/geometry/3dGeometryGeometricalPredicatesSoSImpl.cpp
 	g++ src/3dGeometry.cpp  $(flags) -c  -o 3dGeometry.o
 
 

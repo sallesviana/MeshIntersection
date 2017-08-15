@@ -73,20 +73,7 @@ class PinMesh {
 
   //temp_big_ints should have size at least 2
   //tempVertCoords should have size at least 8
-  struct TempVarsComputeObjectWherePointIs {
-    MeshIntersectionGeometry::TempVarsIsVertexTriangleProjectionZ0 tempVarsIsVertexTriangleProjectionZ0;
-    MeshIntersectionGeometry::TempVarComputeHeightAbovePointNoSoS tempVarComputeHeightAbovePointNoSoS;
-    MeshIntersectionGeometry::TempVarZCellFromProjectionOfPoint tempVarZCellFromProjectionOfPoint;
-    MeshIntersectionGeometry::TempVarZCellGlobalFromProjectionOfPoint tempVarZCellGlobalFromProjectionOfPoint;
-    MeshIntersectionGeometry::TempVarGetBestTrianglePointInObjectSoS tempVarGetBestTrianglePointInObjectSoS;
-    MeshIntersectionGeometry::TempVarIsTriangleAbovePointSoS tempVarIsTriangleAbovePointSoS;
-    MeshIntersectionGeometry::TempVarIsTriangleNormalPointingPositiveZ tempVarIsTriangleNormalPointingPositiveZ;
-    MeshIntersectionGeometry::HeightPointInTriangleProjection heightAbovePoint,heightAbovePointBestTriangle;
-    TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;
-  };
-  ObjectId computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, bool &foundUsingGrid);
-
-
+  
 
 
 
@@ -109,6 +96,20 @@ public:
   //if meshIdToLocate=0, this means that vertices will be located in mesh 0
   //#define PINMESH_VERBOSE
   void  locateVerticesInObject(const vector<InputVertex> &verticesToLocate,std::vector<ObjectId> &verticesIds,int meshIdToLocate);
+
+  struct TempVarsComputeObjectWherePointIs {
+    MeshIntersectionGeometry::TempVarsIsVertexTriangleProjectionZ0 tempVarsIsVertexTriangleProjectionZ0;
+    MeshIntersectionGeometry::TempVarComputeHeightAbovePointNoSoS tempVarComputeHeightAbovePointNoSoS;
+    MeshIntersectionGeometry::TempVarZCellFromProjectionOfPoint tempVarZCellFromProjectionOfPoint;
+    MeshIntersectionGeometry::TempVarZCellGlobalFromProjectionOfPoint tempVarZCellGlobalFromProjectionOfPoint;
+    MeshIntersectionGeometry::TempVarGetBestTrianglePointInObjectSoS tempVarGetBestTrianglePointInObjectSoS;
+    MeshIntersectionGeometry::TempVarIsTriangleAbovePointSoS tempVarIsTriangleAbovePointSoS;
+    MeshIntersectionGeometry::TempVarIsTriangleNormalPointingPositiveZ tempVarIsTriangleNormalPointingPositiveZ;
+    MeshIntersectionGeometry::HeightPointInTriangleProjection heightAbovePoint,heightAbovePointBestTriangle;
+    TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;
+  };
+  ObjectId computeObjectWherePointIsTwoLevel(const InputVertex &p,int globalGridCoordX,int globalGridCoordY, int globalGridCoordZ, int meshId, TempVarsComputeObjectWherePointIs &tempVars, bool &foundUsingGrid);
+
 
 };
 

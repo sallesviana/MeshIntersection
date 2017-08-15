@@ -197,10 +197,11 @@ class InputTriangle: public Triangle {
 		p[1] = p1;
 		p[2] = p2;		
 		id = -1; //not initialized yet...
+		doesIntersectOtherTriangles = false;
 	}
 	
 public:
-	InputTriangle(): id(-1) {}
+	InputTriangle(): id(-1),doesIntersectOtherTriangles(false) {}
 	/*
 	//we assume the input triangles are unique
 	bool operator==(const InputTriangle &t) const {
@@ -258,11 +259,18 @@ public:
   virtual void print() const {
   	cerr << "Tri from: " << p[0].getMeshId() << " " << p[0].getId() << " "<< p[1].getId() << " "<< p[2].getId() << "";
   }
+
+  bool doesIntersectOtherTriangles;
 private:
 	int id;
 	InputVertex p[3];
+	
 };
-
+struct InputTriComparator {
+    bool operator()(const InputTriangle &a,const InputTriangle &b)  const {
+        return a.compare(b)<0;
+    }
+};
 
 class RetesselationTriangle: public Triangle {
 public:
@@ -564,9 +572,10 @@ class MeshIntersectionGeometry {
 		friend class SosPredicatesImpl;
 		friend class OriginalAlgFromMathematicaSosPredicatesImpl;
 
+		//We do not need this anymore (supposing we will not call the tri_tri_isectionline anymore...)
 		struct PlaneEquation {Point normal; VertCoord d;};
-		vector<PlaneEquation> planeEquationsInputTriangles[2];
-		vector<int> isPlaneEquationInputTrianglesInitialized[2];
+		//vector<PlaneEquation> planeEquationsInputTriangles[2];
+		//vector<int> isPlaneEquationInputTrianglesInitialized[2];
 
 
 		//the coordinates of a vertex from intersection are r0 + t*(r1-r0)
@@ -594,10 +603,10 @@ class MeshIntersectionGeometry {
 
 		void storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges,  const vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges);
 		
-		struct TempVarsComputePlaneEquation {Point E1,E2; VertCoord temp;};
-		void computePlaneEquation(PlaneEquation &equation, const Point &V0, const Point &V1, const Point &V2, TempVarsComputePlaneEquation &tempVars);
-		const PlaneEquation &getPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars);
-		void initPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars);
+		//struct TempVarsComputePlaneEquation {Point E1,E2; VertCoord temp;};
+		//void computePlaneEquation(PlaneEquation &equation, const Point &V0, const Point &V1, const Point &V2, TempVarsComputePlaneEquation &tempVars);
+		//const PlaneEquation &getPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars);
+		//void initPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars);
 
 		vector<Point> verticesCoordinates[3]; //verticesCoordinates[0] are from mesh 0, verticesCoordinates[1] are from mesh 1, verticesCoordinates[2] are from intersections
 		vector<Point_3> verticesCoordinatesCGAL[3];
@@ -641,23 +650,30 @@ class MeshIntersectionGeometry {
 
 
 		Point computePointFromIntersectionVertex(VertexFromIntersection &v);
+		struct TempVarsComputePointFromIntersectionVertex { Point dir,w0; VertCoord a,tmp,b,r;};
+		void computePointFromIntersectionVertex(Point &dest, 
+                                                        const Point &V0,
+                                                        const Point &V1,
+                                                        const Point &V2,
+                                                        const Point &P0,
+                                                        const Point &P1,
+                                                        const Point &triangleNormal, TempVarsComputePointFromIntersectionVertex &tempVars);
 
 
 		struct TempVarsComputeIntersections {
 			Point D,isectpointA1,isectpointA2,isectpointB1,isectpointB2; 
-			TempVarsComputePlaneEquation tempVarsComputeEquation;
+			//TempVarsComputePlaneEquation tempVarsComputeEquation;
 			array<VertCoord,2> isect1,isect2;
 			VertCoord du0,du1,du2, dv0,dv1,dv2, vp0,vp1,vp2, up0,up1,up2,b,c,max,tmp,diff;
 			VertCoord tempRationals[6];	
 			TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;
 		};
-		int intersectTwoTriangles(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
-				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
-             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars);
+		int doIntersect(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
+				     VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars);
 
 
 		
-
+		void computeCoordinatesOfVerticesOfEdges(vector<pair<Point,Point> > &coordsVerticesOfEdges,vector< pair<VertexFromIntersection, VertexFromIntersection> > &edgesFromIntersection);
 		//We are actually not using these functions...
 		/*
 		int getGridCellXContainingVertex(int meshId,const VertCoord &x, const VertCoord &cellScale, TempVarsGetGridCellContainingVertex &tempVars  ) ;

@@ -8,93 +8,11 @@ Predicates and functions needing SoS
 */
 
 
-int MeshIntersectionGeometry::intersectTwoTriangles(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
-             Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
-             VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) {
+int MeshIntersectionGeometry::doIntersect(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
+             VertexFromIntersection &vertexThatCreatedPt1, VertexFromIntersection &vertexThatCreatedPt2, TempVarsComputeIntersections &tempVars) {
 
-  //TODO: detect coincidencies properly here...
-  //TODO
-  //TODO: intersection at edge/vertex --> SoS...
+  return intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,vertexThatCreatedPt1, vertexThatCreatedPt2, tempVars);
 
-  //Disabled to force the CGAL SoS version...
-  int ans = 0;//intersectTwoTrianglesMainImpl(triMesh0,triMesh1,coordsPt1,vertexThatCreatedPt1, coordsPt2, vertexThatCreatedPt2, tempVars);
-
-
-  
-  /*VertexFromIntersection p1SoS,p2SoS;
-  bool ansSoS = intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,coordsPt1,p1SoS, coordsPt2, p2SoS, tempVars);
-
-  #pragma omp critical
-  {
-    //cerr << ans << " " << ansSoS << endl;
-    if(ans!=ansSoS) {
-      cerr << "@@@@@@@@@@@@@@@@@ DIFF ans in intersect two triangles" << endl;
-    }
-    if(ans && ansSoS) {
-      Point pOrig1 = computePointFromIntersectionVertex(vertexThatCreatedPt1);
-      Point pOrig2 = computePointFromIntersectionVertex(vertexThatCreatedPt2);
-      if(pOrig1>pOrig2) swap(pOrig1,pOrig2);
-
-      Point pSoS1 = computePointFromIntersectionVertex(p1SoS);
-      Point pSoS2 = computePointFromIntersectionVertex(p2SoS);
-      if(pSoS1>pSoS2) swap(pSoS1,pSoS2);
-
-      assert(pOrig1==pSoS1);
-      assert(pOrig2==pSoS2);
-    }
-  }*/
-
-  #ifdef COLLECT_GEOMETRY_STATISTICS
-    if(ans==0) {
-      #pragma omp atomic
-      geometryStatisticsDegenerateCases.ctDegeneraciesIntersectTwoTriangles++;
-    } else if(ans==-2){
-      #pragma omp atomic
-      geometryStatisticsNonDegenerateCases.ctDegeneraciesIntersectTwoTrianglesCoplanar++;
-    } else {
-      #pragma omp atomic
-      geometryStatisticsNonDegenerateCases.ctDegeneraciesIntersectTwoTriangles++;
-    }
-  #endif
-
-  /*if(ans==1) { //TODO: remove this if ... this is just for debugging purposes.
-      VertexFromIntersection v1Temp, v2Temp;
-      bool ansSoS = intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,v1Temp, v2Temp, tempVars);
-
-      Point pOrig1 = computePointFromIntersectionVertex(vertexThatCreatedPt1);
-      Point pOrig2 = computePointFromIntersectionVertex(vertexThatCreatedPt2);
-      if(pOrig1>pOrig2) swap(pOrig1,pOrig2);
-
-      Point pSoS1 = computePointFromIntersectionVertex(v1Temp);
-      Point pSoS2 = computePointFromIntersectionVertex(v2Temp);
-      if(pSoS1>pSoS2) swap(pSoS1,pSoS2);
-
-      assert(pOrig1==pSoS1);
-      assert(pOrig2==pSoS2);
-  } */ 
-
-  #ifdef DOUBLE_CHECK_RESULTS_SOS
-      VertexFromIntersection a,b;
-      if(ans!=0) {
-        assert( (ans==1)==intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,a, b, tempVars));
-        if(ans==1) {
-          assert( (a.compare(vertexThatCreatedPt1)==0&&b.compare(vertexThatCreatedPt2)==0) || (a.compare(vertexThatCreatedPt2)==0&&b.compare(vertexThatCreatedPt1)==0) );
-          assert( (coordsPt1==computePointFromIntersectionVertex(a)&&coordsPt2==computePointFromIntersectionVertex(b)) || (coordsPt1==computePointFromIntersectionVertex(b)&&coordsPt2==computePointFromIntersectionVertex(a)));
-        }
-      }
-  #endif
-
-  if(ans==0) {
-    bool ansSoS = intersectTwoTrianglesSoSImpl(triMesh0,triMesh1,vertexThatCreatedPt1, vertexThatCreatedPt2, tempVars);
-    if(ansSoS) {
-      coordsPt1 = computePointFromIntersectionVertex(vertexThatCreatedPt1);
-      coordsPt2 = computePointFromIntersectionVertex(vertexThatCreatedPt2);
-    }    
-    return ansSoS;
-  } else {
-
-    return ans==1;
-  }
 }
 
 
@@ -851,18 +769,6 @@ Possible no need for SoS...
 array<VertCoord,3> MeshIntersectionGeometry::coordRangeMeshes() const {
   return {boundingBoxTwoMeshesTogetter[1][0]-boundingBoxTwoMeshesTogetter[0][0],boundingBoxTwoMeshesTogetter[1][1]-boundingBoxTwoMeshesTogetter[0][1],boundingBoxTwoMeshesTogetter[1][2]-boundingBoxTwoMeshesTogetter[0][2]};
 } 
-
-//Given the vertices of a triangle, compute the plane equation ( N1.x + d = 0)
-void MeshIntersectionGeometry::computePlaneEquation(PlaneEquation &equation, const Point &V0, const Point &V1, const Point &V2, TempVarsComputePlaneEquation &tempVars) {
-  /* compute plane equation of triangle(V0,V1,V2) */
-  SUB(tempVars.E1,V1,V0);
-  SUB(tempVars.E2,V2,V0);
-  CROSS(equation.normal,tempVars.E1,tempVars.E2,tempVars.temp);
-  //d1=-DOT(N1,V0);
-  MinusDOT(equation.d,equation.normal,V0,tempVars.temp);  
-
-  /* plane equation 1: N1.X+d1=0 */
-}
 
 
 int MeshIntersectionGeometry::getPlaneTriangleIsNotPerpendicular(const InputTriangle &t, TempVarsGetPlaneTriangleIsNotPerpendicular &tempVariables) {

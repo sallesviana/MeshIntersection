@@ -72,7 +72,8 @@ timespec t0BeginProgram, t0AfterDatasetRead;
 //=======================================================================================================================
 
 
-void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize,vector<pair<InputTriangle *,InputTriangle *> > &pairsTrianglesToProcess) {
+void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize,
+  vector<pair<InputTriangle *,InputTriangle *> > &pairsTrianglesToProcess) {
   int numTrianglesMesh0 = grid->numTrianglesInGridCell(0, gridSize,i,j,k);//cell.triangles[0].size();
   int numTrianglesMesh1 = grid->numTrianglesInGridCell(1, gridSize,i,j,k);
 
@@ -139,29 +140,51 @@ void getPairsTrianglesInSameUnifGridCells(const Nested3DGridWrapper *uniformGrid
   int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
   int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
 
+  int gridSizeLevel1_3 = gridSizeLevel1*gridSizeLevel1*gridSizeLevel1;
 
-  for(int i=0;i<gridSizeLevel1;i++) 
-    for(int j=0;j<gridSizeLevel1;j++) 
-      for(int k=0;k<gridSizeLevel1;k++) {
-        if (uniformGrid->grid.hasSecondLevel(i,j,k) ) {
-          Nested3DGrid *secondLevelGrid = uniformGrid->grid.getChildGrid(i,j,k); 
-          for(int iLevel2=0;iLevel2<gridSizeLevel2;iLevel2++) 
-            for(int jLevel2=0;jLevel2<gridSizeLevel2;jLevel2++) 
-              for(int kLevel2=0;kLevel2<gridSizeLevel2;kLevel2++) {
-                  extractPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2,pairsTrianglesToProcess);   
-              }    
-        } else {
-          extractPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1,pairsTrianglesToProcess);         
-        }
-      }
+  #pragma omp parallel 
+  {
+    vector<pair<InputTriangle *,InputTriangle *> > myPairsTrianglesToProcess;
+    myPairsTrianglesToProcess.reserve(pairsTrianglesToProcess.size()/32);
 
+    #pragma omp for
+    for(int w=0;w<gridSizeLevel1_3;w++) {
+      int i = (w/gridSizeLevel1)/gridSizeLevel1;
+      int j = (w/gridSizeLevel1)%gridSizeLevel1;
+      int k = w%gridSizeLevel1;
+
+          if (uniformGrid->grid.hasSecondLevel(i,j,k) ) {
+            Nested3DGrid *secondLevelGrid = uniformGrid->grid.getChildGrid(i,j,k); 
+            for(int iLevel2=0;iLevel2<gridSizeLevel2;iLevel2++) 
+              for(int jLevel2=0;jLevel2<gridSizeLevel2;jLevel2++) 
+                for(int kLevel2=0;kLevel2<gridSizeLevel2;kLevel2++) {
+                    extractPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2,myPairsTrianglesToProcess);   
+                }    
+          } else {
+            extractPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1,myPairsTrianglesToProcess);         
+          }
+    }
+    sort(myPairsTrianglesToProcess.begin(),myPairsTrianglesToProcess.end());
+    vector<pair<InputTriangle *,InputTriangle *> >::iterator it = std::unique (myPairsTrianglesToProcess.begin(), myPairsTrianglesToProcess.end());
+    myPairsTrianglesToProcess.resize( std::distance(myPairsTrianglesToProcess.begin(),it) );
+
+    #pragma omp critical
+    {
+      pairsTrianglesToProcess.insert(pairsTrianglesToProcess.end(),myPairsTrianglesToProcess.begin(),myPairsTrianglesToProcess.end());
+    }
+  }
+
+        
+      
 //  clock_gettime(CLOCK_REALTIME, &t1);
   //cerr << "T before sort: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
   cerr << "Pairs before unique: " << pairsTrianglesToProcess.size() << "\n";
-  __gnu_parallel::sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
-  vector<pair<InputTriangle *,InputTriangle *> >::iterator it = std::unique (pairsTrianglesToProcess.begin(), pairsTrianglesToProcess.end());
-  pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10 
+  {Timer t; cerr << "Sort and unique" ;
+    __gnu_parallel::sort(pairsTrianglesToProcess.begin(),pairsTrianglesToProcess.end());
+    vector<pair<InputTriangle *,InputTriangle *> >::iterator it = std::unique (pairsTrianglesToProcess.begin(), pairsTrianglesToProcess.end());
+    pairsTrianglesToProcess.resize( std::distance(pairsTrianglesToProcess.begin(),it) ); // 10 20 30 20 10 
+  }
 
   cerr << "Pairs after unique: " << pairsTrianglesToProcess.size() << "\n";
 

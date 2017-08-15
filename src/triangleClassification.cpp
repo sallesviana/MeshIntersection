@@ -44,6 +44,40 @@ int labelConnectedComponentsEachVertex(const vector<vector<int> > &adjList,vecto
 
   return numComponentsSeenSoFar;
 }
+int labelConnectedComponentsEachVertex(const vector<pair<int,int> > &adjList,const vector<pair<int,int> > &raggedArray,vector<int> &connectedComponentEachVertex,vector<int> &sampleVertexIdFromEachConnectedComponent) {
+  int numComponentsSeenSoFar = 0;
+  queue< int >   vertexToLabel;
+  int numVertices = adjList.size();
+
+  vector<bool> shouldLabel(numVertices,true);
+  for(int i=0;i<numVertices;i++) 
+    if(shouldLabel[i]) {
+      vertexToLabel.push(i);
+      connectedComponentEachVertex[i] = numComponentsSeenSoFar;
+      shouldLabel[i] = false;
+      sampleVertexIdFromEachConnectedComponent.push_back(i);
+
+      while(!vertexToLabel.empty()) {
+        int v = vertexToLabel.front();
+        vertexToLabel.pop(); 
+        
+
+        for(int j=adjList[v].first;j<adjList[v].second;j++) {
+          int neighbor = raggedArray[j].second;
+          if(shouldLabel[neighbor]) {
+            shouldLabel[neighbor] = false;
+            connectedComponentEachVertex[neighbor] = numComponentsSeenSoFar;
+            vertexToLabel.push(neighbor);
+          }
+        }
+      }
+
+      numComponentsSeenSoFar++;
+    }
+   
+
+  return numComponentsSeenSoFar;
+}
 
 
 
@@ -122,7 +156,7 @@ void locatePolygonsOtherMeshUsingDFS(const MeshIntersectionGeometry &geometry,
 
 }
 
-void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
+void locateTrianglesAndPolygonsInOtherMeshOriginal(const Nested3DGridWrapper *uniformGrid, 
                                             MeshIntersectionGeometry &geometry, 
                                             const unordered_set<const InputTriangle *> trianglesThatIntersect[2],
                                             vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],
@@ -152,6 +186,9 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
 
     
+    {
+      cerr << "Num of vertices in adj list: " << numInputVerticesCoordinatesThisMesh << endl;
+      Timer t; cerr << "Add data to adj. list " ; 
     for(const InputTriangle&t:inputTriangles[meshId]) {
       if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
         adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
@@ -163,6 +200,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
         adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
         adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
       } 
+    }
     }
 
     clock_gettime(CLOCK_REALTIME, &t1);
@@ -304,16 +342,294 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
 
     
     clock_gettime(CLOCK_REALTIME, &t1);
-    cerr << "Total entire location functions: " << convertTimeMsecs(diff(t0Function,t1))/1000 << endl;
-
-
-    
+    cerr << "Total entire location functions: " << convertTimeMsecs(diff(t0Function,t1))/1000 << endl;    
 }
 
 
 
+//locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(numInputTrianglesThisMesh,DONT_KNOW_FLAG);
+//locationOfEachNonIntersectingTrianglesInOtherMesh will have one entry for each input triangle
+//locationOfEachNonIntersectingTrianglesInOtherMesh[id] will be the location of triangle with this id, if this triangle does not intersect other mesh.
+vector<pair<int,int> > raggedArray;
+void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGrid, 
+                                            MeshIntersectionGeometry &geometry, 
+                                            const unordered_set<const InputTriangle *> trianglesThatIntersectEachMesh[2],
+                                            vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2],
+                                            int meshId,
+                                            vector<ObjectId> &locationOfEachNonIntersectingTrianglesInOtherMesh) {  
+    
+    vector<InputTriangle> *inputTriangles = geometry.inputTriangles;
+    const unordered_set<const InputTriangle *> &trianglesThatIntersect = trianglesThatIntersectEachMesh[meshId];
+
+    timespec t0,t1,t0Function;
+
+    
+    clock_gettime(CLOCK_REALTIME, &t0);
+    t0Function  = t0;
+
+        
+    int numInputVerticesCoordinatesThisMesh = geometry.getNumVertices(meshId);
+
+    vector<int> connectedComponentEachVertex(numInputVerticesCoordinatesThisMesh,DONT_KNOW_FLAG);
+    vector<int> sampleVertexIdFromEachConnectedComponent;
+    int numComponents;
+
+{
+    raggedArray.resize((inputTriangles[meshId].size()*6));
+    {
+      Timer t(" create ragged array adj. list ");
+      
+      int elementsRaggedArray = 0;
+      int numTriangles = inputTriangles[meshId].size();
+
+      #pragma omp parallel for
+      for(int i=0;i<numTriangles;i++) {
+        const InputTriangle &t = inputTriangles[meshId][i];
+        int a=-1,b=-1,c=-1;
+
+        if(!t.doesIntersectOtherTriangles) {
+          a = t.getInputVertex(0)->getId();
+          b = t.getInputVertex(1)->getId();
+          c = t.getInputVertex(2)->getId();
+        }
+        { //this triangle does not intersect the other mesh...
+          int startPosRagged;
+
+         // #pragma omp atomic capture
+          startPosRagged = i*6;//elementsRaggedArray+=6;
+         
+          //startPosRagged -= 6;
+          raggedArray[startPosRagged+0].first = a;
+          raggedArray[startPosRagged+0].second = b;
+
+          raggedArray[startPosRagged+1].first = b;
+          raggedArray[startPosRagged+1].second = a;
+
+          raggedArray[startPosRagged+2].first = a;
+          raggedArray[startPosRagged+2].second = c;
+
+          raggedArray[startPosRagged+3].first = c;
+          raggedArray[startPosRagged+3].second = a;
+
+          raggedArray[startPosRagged+4].first = b;
+          raggedArray[startPosRagged+4].second = c;
+
+          raggedArray[startPosRagged+5].first = c;
+          raggedArray[startPosRagged+5].second = b;
+        }
+      }
+
+      
+    }
+    __gnu_parallel::sort(raggedArray.begin(),raggedArray.end());
+    vector<pair<int,int> >::iterator it = std::unique (raggedArray.begin(), raggedArray.end());
+    raggedArray.resize( std::distance(raggedArray.begin(),it) ); // 10 20 30 20 10 
+
+    vector<pair<int,int> > adjList2(numInputVerticesCoordinatesThisMesh);//
+
+    cerr << "Elements ragged array: " << raggedArray.size() << endl;
+
+    #pragma omp parallel for
+    for(int i=0;i<numInputVerticesCoordinatesThisMesh;i++) adjList2[i].first = adjList2[i].second = -1;
+
+    int numElemRaggedArray = raggedArray.size();
+    int lastSeen = -1;
+    for(int i=0;i<numElemRaggedArray;i++) {
+      if(raggedArray[i].first != lastSeen) {
+        lastSeen = raggedArray[i].first;
+        adjList2[lastSeen].first = i;
+        adjList2[lastSeen].second = i+1;
+      } else if(lastSeen!=-1) {
+        //-1 represents a non initialized position... this vertex doesn't exist
+        adjList2[lastSeen].second++;
+      }
+
+    }
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time so far after array...: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+    
 
 
+    /*vector<vector<int> > adjList(numInputVerticesCoordinatesThisMesh);
+
+    
+    {
+      cerr << "Num of vertices in adj list: " << numInputVerticesCoordinatesThisMesh << endl;
+      Timer t; cerr << "Add data to adj. list " ; 
+    for(const InputTriangle&t:inputTriangles[meshId]) {
+      if(trianglesThatIntersect.count(&t)==0) { //this triangle does not intersect the other mesh...
+        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(1)->getId());
+        adjList[t.getInputVertex(0)->getId()].push_back(t.getInputVertex(2)->getId()); 
+
+        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(0)->getId());
+        adjList[t.getInputVertex(1)->getId()].push_back(t.getInputVertex(2)->getId());
+
+        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(0)->getId());
+        adjList[t.getInputVertex(2)->getId()].push_back(t.getInputVertex(1)->getId());        
+      } 
+    }
+    }
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to create adj. list: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    
+
+
+    for(int i=0;i<adjList.size();i++) {
+      set<int> elementsInAdj1(adjList[i].begin(),adjList[i].end());
+      set<int> elementsInAdj2;
+      //for(int j:elementsInAdj1) cerr << j << " " ; cerr << endl;
+      for(int j=adjList2[i].first;j<adjList2[i].second;j++) {
+        //cerr << raggedArray[j].second << " ";
+        elementsInAdj2.insert(raggedArray[j].second);
+      } //cerr << endl;
+
+      assert(elementsInAdj2==elementsInAdj1);
+    }*/
+
+    
+    
+    clock_gettime(CLOCK_REALTIME, &t0);
+    cerr << "Labeling connected components\n";
+    
+    numComponents = labelConnectedComponentsEachVertex(adjList2,raggedArray,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
+   // int nc2 =   labelConnectedComponentsEachVertex(adjList,connectedComponentEachVertex,sampleVertexIdFromEachConnectedComponent);
+    //cerr << numComponents << " " << nc2 << endl;
+
+    assert(numComponents==sampleVertexIdFromEachConnectedComponent.size());
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to compute CCs: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+}
+    //exit(0);
+
+
+
+    cerr << "Num connected components to locate: " << numComponents << "\n";
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to free adj. list memory: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+
+    vector<InputVertex> verticesToLocateInOtherMesh;
+    verticesToLocateInOtherMesh.reserve(numComponents);
+
+    for(int i=0;i<numComponents;i++) {      
+      int vertexToLocateId = sampleVertexIdFromEachConnectedComponent[i];
+
+      verticesToLocateInOtherMesh.push_back(InputVertex(meshId,vertexToLocateId));           
+    }
+      
+    int posStartVerticesOfIntersectingTrianglesInThisMesh = verticesToLocateInOtherMesh.size();
+
+    int numPolygonsFromRetesselation = 0;
+    int numTriFromRetesselation = 0;
+    for(const auto &tri:polygonsFromRetesselationOfEachTriangle[meshId]) {
+      const auto &boundaryPolygons = tri.second;
+      numPolygonsFromRetesselation += boundaryPolygons.size();
+      for(const BoundaryPolygon &b:boundaryPolygons)
+        numTriFromRetesselation += b.triangulatedPolygon.size();
+    }
+
+    cerr << "Mesh " << meshId << " Num boundary polygons : " << numPolygonsFromRetesselation << endl;         
+    cerr << "Mesh " << meshId << " Num tri from retesselation: " << numTriFromRetesselation << endl;
+    
+
+ 
+    
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to select vertices to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+
+    //First let's locate the triangles/polygons that contain at least one non-shared vertex.
+    
+    
+    vector<ObjectId> locationOfEachVertexInOtherMesh(verticesToLocateInOtherMesh.size());
+    //vertices of mesh "meshId" will be located in mesh "1-meshId"
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to compute center and get grid cell of center of intersecting triangles: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+
+    //Locate the vertices...    
+
+    PinMesh pointLocationAlgorithm(uniformGrid,&geometry);
+    clock_gettime(CLOCK_REALTIME, &t0);
+    pointLocationAlgorithm.locateVerticesInObject(verticesToLocateInOtherMesh,locationOfEachVertexInOtherMesh,1-meshId);
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total time to locate: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
+
+    //----------------------------------------------------------------------------------------------------------
+    //now, we know in what object of the other mesh each triangle that does not intersect other triangles is...
+
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+
+    const int numInputTrianglesThisMesh = inputTriangles[meshId].size();
+
+    locationOfEachNonIntersectingTrianglesInOtherMesh = vector<ObjectId>(numInputTrianglesThisMesh,DONT_KNOW_FLAG);
+
+    int ct =0;
+    for(int tid = 0; tid < numInputTrianglesThisMesh;tid++) {
+      const InputTriangle &t = inputTriangles[meshId][tid];
+      if(trianglesThatIntersect.count(&t)==0) {
+        int connectedComponentOfThisVertex = connectedComponentEachVertex[t.getInputVertex(0)->getId()];
+        locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
+      }
+    }
+
+    //next step: locate triangles intersecting other triangles...
+
+    int ctOnlySharedVertices = 0;
+    //locationOfPolygonsFromRetesselationInOtherMesh = vector<ObjectId>(numPolygonsFromRetesselation,DONT_KNOW_FLAG);
+
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total copy triangle labels: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    clock_gettime(CLOCK_REALTIME, &t0);
+
+    const int numPolygonsFromRetesselationToProcess = polygonsFromRetesselationOfEachTriangle[meshId].size();
+    #pragma omp parallel for
+    for(int i =0;i<numPolygonsFromRetesselationToProcess;i++) {
+      auto &tri= polygonsFromRetesselationOfEachTriangle[meshId][i];
+      auto &boundaryPolygons = tri.second;
+
+      bool locatedAllPolygons = true;
+      for(BoundaryPolygon &polygon:boundaryPolygons) {
+        const Vertex *nonSharedVertex = getNonSharedVertextFromPolygon(&(*polygon.vertexSequence.begin()),&(*polygon.vertexSequence.end()));
+        if(nonSharedVertex!=NULL) {
+          int connectedComponentOfThisVertex = connectedComponentEachVertex[nonSharedVertex->getId()];
+          polygon.setPolyhedronWherePolygonIs(locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex]);          
+        } else {
+          locatedAllPolygons = false;
+          ctOnlySharedVertices++;
+        }
+      }
+      if(!locatedAllPolygons) {
+        locatePolygonsOtherMeshUsingDFS(geometry,tri);
+      }
+    }
+
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total locate polygons using DFS: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+    
+    cerr << "Num polygons with only shared vertices: " << ctOnlySharedVertices << endl;
+    cerr << "Num polygons with input vertices: " << numPolygonsFromRetesselation-ctOnlySharedVertices << endl;
+     
+    
+
+
+    
+    clock_gettime(CLOCK_REALTIME, &t1);
+    cerr << "Total entire location functions: " << convertTimeMsecs(diff(t0Function,t1))/1000 << endl;    
+}
 
 
 //----------------------------------------------------------------------------

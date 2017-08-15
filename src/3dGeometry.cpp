@@ -235,6 +235,7 @@ MeshIntersectionGeometry::~MeshIntersectionGeometry() {
   #endif
 }
 
+/*
 const MeshIntersectionGeometry::PlaneEquation &MeshIntersectionGeometry::getPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars) {
 	assert(meshId>=0 && meshId<=1);
   assert(triId>=0 && triId<planeEquationsInputTriangles[meshId].size());
@@ -250,7 +251,7 @@ void MeshIntersectionGeometry::initPlaneEquationInputTriangle(int meshId, int tr
     isPlaneEquationInputTrianglesInitialized[meshId][triId] = true;
   }
 }
-
+*/
 
 
 void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection,const vector< pair<Point, Point> > &coordsVerticesOfEdges, const vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges) {
@@ -317,7 +318,7 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
   }*/
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Vertices copied" << endl;
+  cerr << "Time for copying coordinates " << " time: "  << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
   clock_gettime(CLOCK_REALTIME, &t0);
 
   //use binary search to find ids? or hash? or map?
@@ -344,7 +345,7 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
   }
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "After assigning vertices ids (for rational coords): " <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  cerr << "Time for assigning vertices ids (for rational coords): " <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
   clock_gettime(CLOCK_REALTIME, &t0);
 
 
@@ -377,21 +378,15 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
     v2.idForEps = idV2;
   }
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "After assigning vertices ids (for eps coords): " <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  cerr << "Time for assigning vertices ids (for eps coords): " <<  convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
   cerr << "Num unique vertices from intersection: " << idsOfVerticesFromIntersection.size() << "\n";
-
-
   clock_gettime(CLOCK_REALTIME, &t0);
 
 
   int numPairsInterTri = intersectingTrianglesThatGeneratedEdges.size();
   int numUniqueInterTriSeenSoFar = 0;
 
-  struct InputTriComparator {
-    bool operator()(const InputTriangle &a,const InputTriangle &b)  const {
-        return a.compare(b)<0;
-    }
-  };
+  
   map<InputTriangle,int,InputTriComparator> idForEpsEachTriangle;
   for(int i=0;i<numPairsInterTri;i++) { //only triangles intersecting other triangles need to have their locks initialized...
     int triId = intersectingTrianglesThatGeneratedEdges[i].first->id;
@@ -450,6 +445,83 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
   cerr << "Time to init vectors for numerator/denominator for t: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 }
 
+
+#include <set>
+//given a vector of vertices from intersection, computes the real coordinates of these vertices...
+void MeshIntersectionGeometry::computeCoordinatesOfVerticesOfEdges(vector<pair<Point,Point> > &coordsVerticesOfEdges,vector< pair<VertexFromIntersection, VertexFromIntersection> > &edgesFromIntersection) {
+  int numEdges = edgesFromIntersection.size();
+  //cerr << "Edges from intersection: " << numEdges << endl;
+  coordsVerticesOfEdges.resize(numEdges);
+
+
+  map<InputTriangle,Point,InputTriComparator> triangleNormals;
+
+  set<InputTriangle,InputTriComparator> trianglesToComputeNormals;  
+  {
+    //Timer t; cerr << "Time for geting set of triangles compute normals... ";
+    for(int i=0;i<numEdges;i++) {
+      trianglesToComputeNormals.insert(edgesFromIntersection[i].first.triangle);
+      trianglesToComputeNormals.insert(edgesFromIntersection[i].second.triangle);
+    }
+  }
+  vector<InputTriangle> vtTrianglesToComputeNormals(trianglesToComputeNormals.begin(),trianglesToComputeNormals.end());
+  for(InputTriangle &tri:vtTrianglesToComputeNormals) triangleNormals[tri];
+
+  {
+    //Timer t; cerr << "Time for computing triangle normals.... ";
+    int n = vtTrianglesToComputeNormals.size();
+    #pragma omp parallel
+    {
+      Point E1,E2;
+      VertCoord temp;
+
+      #pragma omp for
+      for(int i=0;i<n;i++) {
+        InputTriangle &tri = vtTrianglesToComputeNormals[i];
+        const Point &V0 = getCoordinates(*(tri.getInputVertex(0)));
+        const Point &V1 = getCoordinates(*(tri.getInputVertex(1)));
+        const Point &V2 = getCoordinates(*(tri.getInputVertex(2)));
+        Point &normal = triangleNormals[tri];
+
+        SUB(E1,V1,V0);
+        SUB(E2,V2,V0);
+        CROSS(normal,E1,E2,temp);
+      }
+    }
+  }
+
+    
+ 
+
+  #pragma omp parallel
+  {
+    TempVarsComputePointFromIntersectionVertex tempVars;
+
+    #pragma omp for
+    for(int i=0;i<numEdges;i++) {
+      computePointFromIntersectionVertex(coordsVerticesOfEdges[i].first, 
+                                          getCoordinates(*(edgesFromIntersection[i].first.triangle.getInputVertex(0))), 
+                                          getCoordinates(*(edgesFromIntersection[i].first.triangle.getInputVertex(1))), 
+                                          getCoordinates(*(edgesFromIntersection[i].first.triangle.getInputVertex(2))), 
+                                          getCoordinates((edgesFromIntersection[i].first.edge[0])),
+                                          getCoordinates((edgesFromIntersection[i].first.edge[1])),
+                                          triangleNormals[edgesFromIntersection[i].first.triangle], tempVars);
+      //assert(coordsVerticesOfEdges[i].first == computePointFromIntersectionVertex(edgesFromIntersection[i].first));
+
+      computePointFromIntersectionVertex(coordsVerticesOfEdges[i].second, 
+                                          getCoordinates(*(edgesFromIntersection[i].second.triangle.getInputVertex(0))), 
+                                          getCoordinates(*(edgesFromIntersection[i].second.triangle.getInputVertex(1))), 
+                                          getCoordinates(*(edgesFromIntersection[i].second.triangle.getInputVertex(2))), 
+                                          getCoordinates((edgesFromIntersection[i].second.edge[0])),
+                                          getCoordinates((edgesFromIntersection[i].second.edge[1])),
+                                          triangleNormals[edgesFromIntersection[i].second.triangle], tempVars);
+
+      //assert(coordsVerticesOfEdges[i].second == computePointFromIntersectionVertex(edgesFromIntersection[i].second));
+    }
+  }
+
+}
+
 void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTriangle *,InputTriangle *> > &inputTrianglesToConsider, 
                           vector< pair<InputTriangle *,InputTriangle *> >  &intersectingTrianglesThatGeneratedEdges, 
                           vector< pair<VertexFromIntersection, VertexFromIntersection> >  &edgesFromIntersection, 
@@ -461,23 +533,12 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
 
-  cerr << "Initializing plane equations...\n";
+  /*cerr << "Initializing plane equations...\n";
   
   for(int meshId=0;meshId<2;meshId++) {
     //cerr << "Determining triangles to compute equations\n";
-    /*vector<int> trianglesToProcess;
-    if(meshId==0)
-      for(int i=0;i<numPairsTrianglesToProcess;i++) 
-        trianglesToProcess.push_back(inputTrianglesToConsider[i].first-&inputTriangles[0][0]);
-    else
-      for(int i=0;i<numPairsTrianglesToProcess;i++) 
-        trianglesToProcess.push_back(inputTrianglesToConsider[i].second-&inputTriangles[1][0]);
-
-    sort(trianglesToProcess.begin(),trianglesToProcess.end());
-
-    vector<int>::iterator it = std::unique (trianglesToProcess.begin(), trianglesToProcess.end());
-    trianglesToProcess.resize( std::distance(trianglesToProcess.begin(),it) );*/
-
+    
+    
     vector<int> trianglesToConsider(inputTriangles[meshId].size(),0);
     if(meshId==0) {
       #pragma omp parallel for
@@ -509,14 +570,10 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
       }
     }
 
-  }
+  }*/
   //for(int i:isPlaneEquationInputTrianglesInitialized[1]) cerr << i << " "; cerr << endl;
-  cerr << "Computing the intersections...\n"; 
+  
 
-  clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to only compute plane equations: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
-
-  clock_gettime(CLOCK_REALTIME, &t0);
 
   vector<pair<Point,Point> > coordsVerticesOfEdges;
 
@@ -525,53 +582,52 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
     TempVarsComputeIntersections tempVars;
 
     //vector<Point> coordsVerticesOfEdgesTemp[2];
-    vector<pair<Point,Point> > coordsVerticesOfEdgesTemp;
     vector< pair<VertexFromIntersection, VertexFromIntersection> > edgesFromIntersectionTemp;
     vector< pair<InputTriangle *,InputTriangle *> > intersectingTrianglesThatGeneratedEdgesTemp;
 
     VertexFromIntersection tempVertexFromIntersection[2]; //TODO: avoid copying...
-    Point tempCoordsVerticesFromIntersection[2];
 
     #pragma omp for
     for(int i=0;i<numPairsTrianglesToProcess;i++) {
       InputTriangle *t1 = inputTrianglesToConsider[i].first;
       InputTriangle *t2 = inputTrianglesToConsider[i].second;
 
-      
-      int coplanar;
-      int intersect = intersectTwoTriangles(*t1,*t2,
-             tempCoordsVerticesFromIntersection[0], tempVertexFromIntersection[0], tempCoordsVerticesFromIntersection[1],
-             tempVertexFromIntersection[1],tempVars);
+      int intersect = doIntersect(*t1,*t2, tempVertexFromIntersection[0], tempVertexFromIntersection[1],tempVars);
 
-      if(intersect) {
-	      //coordsVerticesOfEdgesTemp[0].push_back(tempCoordsVerticesFromIntersection[0]);
-	      //coordsVerticesOfEdgesTemp[1].push_back(tempCoordsVerticesFromIntersection[1]);
-        coordsVerticesOfEdgesTemp.push_back(make_pair(tempCoordsVerticesFromIntersection[0],tempCoordsVerticesFromIntersection[1]));
-        edgesFromIntersectionTemp.push_back(make_pair(tempVertexFromIntersection[0],tempVertexFromIntersection[1]));
+      if(intersect) { //TODO: no need to copy twice... we could use "back" as temp for vertex from intersection
+	      edgesFromIntersectionTemp.push_back(make_pair(tempVertexFromIntersection[0],tempVertexFromIntersection[1]));
 	      //verticesOfEdgesTemp[0].push_back(tempVertexFromIntersection[0]);
 	      //verticesOfEdgesTemp[1].push_back(tempVertexFromIntersection[1]);
         intersectingTrianglesThatGeneratedEdgesTemp.push_back(inputTrianglesToConsider[i]);
+        t1->doesIntersectOtherTriangles = true;
+        t2->doesIntersectOtherTriangles = true;
 	    }
 
     }
 
     #pragma omp critical
-    {
-        coordsVerticesOfEdges.insert(coordsVerticesOfEdges.end(),coordsVerticesOfEdgesTemp.begin(),coordsVerticesOfEdgesTemp.end());
+    {        
       	//coordsVerticesOfEdges[i].insert(coordsVerticesOfEdges[i].end(),coordsVerticesOfEdgesTemp[i].begin(),coordsVerticesOfEdgesTemp[i].end());
       	edgesFromIntersection.insert(edgesFromIntersection.end(),edgesFromIntersectionTemp.begin(),edgesFromIntersectionTemp.end());
         //verticesOfEdges[i].insert(verticesOfEdges[i].end(),verticesOfEdgesTemp[i].begin(),verticesOfEdgesTemp[i].end());
         intersectingTrianglesThatGeneratedEdges.insert(intersectingTrianglesThatGeneratedEdges.end(),intersectingTrianglesThatGeneratedEdgesTemp.begin(),intersectingTrianglesThatGeneratedEdgesTemp.end());
     }
   }
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to only detect intersections: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+  computeCoordinatesOfVerticesOfEdges(coordsVerticesOfEdges,edgesFromIntersection);
 
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to only compute intersections: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  cerr << "Time to compute coordinates of intersections: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
+  clock_gettime(CLOCK_REALTIME, &t0);
 
   cerr << "Registering new vertices" << endl;
   //After the intersections are computed, we need to "register" the coordinates of the new vertices and store their ids...
   storeIntersectionVerticesCoordinatesAndUpdateVerticesIds(edgesFromIntersection,coordsVerticesOfEdges,intersectingTrianglesThatGeneratedEdges);
-
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to only register new vertices: " << convertTimeMsecs(diff(t0,t1))/1000 << "\n"; 
 
   //#define DEBUGGING_MODE
 
@@ -690,8 +746,8 @@ void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
   		initTriangleBoundingBox(meshId,tid);
   	}
 
-  	planeEquationsInputTriangles[meshId].resize(numInputTrianglesThisMesh);
-  	isPlaneEquationInputTrianglesInitialized[meshId] = vector<int>(numInputTrianglesThisMesh,0);
+  	//planeEquationsInputTriangles[meshId].resize(numInputTrianglesThisMesh);
+  	//isPlaneEquationInputTrianglesInitialized[meshId] = vector<int>(numInputTrianglesThisMesh,0);
   }
   clock_gettime(CLOCK_REALTIME, &t1);
   cerr << "Time to init bounding boxes: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
@@ -983,7 +1039,7 @@ void MeshIntersectionGeometry::storeAllVertices(ostream &out) {
 
 //For debugging purposes
 Point MeshIntersectionGeometry::computePointFromIntersectionVertex(VertexFromIntersection &vertexFromIntersection) {
-	Point   u, v, n;              // triangle vectors
+  Point   u, v, n;              // triangle vectors
   Point    dir, w0, w;           // ray vectors
   VertCoord   r, a, b;              // params to calc ray-plane intersect
 
@@ -1024,6 +1080,41 @@ Point MeshIntersectionGeometry::computePointFromIntersectionVertex(VertexFromInt
   //*I = R.P0 + r * dir;
 
   return ans;
+}
+
+
+void MeshIntersectionGeometry::computePointFromIntersectionVertex(Point &dest, 
+                                                                  const Point &V0,
+                                                                  const Point &V1,
+                                                                  const Point &V2,
+                                                                  const Point &P0,
+                                                                  const Point &P1,
+                                                                  const Point &triangleNormal, TempVarsComputePointFromIntersectionVertex &tempVars) {
+
+
+  // get triangle edge vectors and plane normal
+
+
+ 
+  SUB(tempVars.dir,P1,P0);//dir = R.P1 - R.P0;              // ray direction vector
+  SUB(tempVars.w0,P0,V0);//w0 = R.P0 - T.V0;
+  DOT(tempVars.a,triangleNormal,tempVars.w0,tempVars.tmp);//a = -dot(n,w0);
+  tempVars.a = -tempVars.a;
+
+
+  DOT(tempVars.b,triangleNormal,tempVars.dir,tempVars.tmp);//b = dot(n,dir);
+
+
+  // get intersect point of ray with triangle plane
+  tempVars.r = tempVars.a / tempVars.b;
+
+  for(int i=0;i<3;i++) {
+    dest[i] = tempVars.r;
+    dest[i] *= tempVars.dir[i];
+    dest[i] += P0[i];    
+  }
+
+  //*I = R.P0 + r * dir;
 
 }
 

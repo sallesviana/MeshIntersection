@@ -101,21 +101,26 @@ class Timer {
   timespec t0,t1;
 
   void restart() {
-	clock_gettime(CLOCK_REALTIME, &t0);
+	 clock_gettime(CLOCK_REALTIME, &t0);
   }
 
   double getCurrentTime() {
 	clock_gettime(CLOCK_REALTIME, &t1);
     return convertTimeMsecs(diff(t0,t1))/1000;
   }
+  string msg;
 
   public:
   Timer() {
     restart();
   }
+  Timer(string st) { msg=st; restart(); };
   ~Timer() {    
-    cerr << "Time: " << getCurrentTime() << endl;
+    cerr << "Time " << msg << " : " << getCurrentTime() << endl;
   }
 };
+
+
+
 
 #endif
