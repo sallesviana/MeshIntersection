@@ -635,7 +635,7 @@ void locateTrianglesAndPolygonsInOtherMesh(const Nested3DGridWrapper *uniformGri
     #pragma omp parallel for
     for(int tid = 0; tid < numInputTrianglesThisMesh;tid++) {
       const InputTriangle &t = inputTriangles[meshId][tid];
-      if(t.doesIntersectOtherTriangles) {
+      if(!t.doesIntersectOtherTriangles) {
         int connectedComponentOfThisVertex = connectedComponentEachVertex[t.getInputVertex(0)->getId()];
         locationOfEachNonIntersectingTrianglesInOtherMesh[tid] = locationOfEachVertexInOtherMesh[connectedComponentOfThisVertex];
       }
@@ -728,19 +728,69 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 		const int numTrianglesThisMesh = inputTriangles[meshId].size();
 		int ctTrianglesProcessed = 0;
 
-		for(int i=0;i<numTrianglesThisMesh;i++) {
-			const InputTriangle &t=inputTriangles[meshId][i];
-			if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
-				//this will (probably) be an output triangle...
-				ObjectId objWhereTriangleIs = locationOfEachNonIntersectingTrianglesInOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];		
-				//cerr << "obj: " << objWhereTriangleIs << endl;		
-				if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
-					//if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
-					outputTriangles[meshId].push_back(t);
-				}		
-        
-			}			
-		}
+
+    vector<InputTriangle> &outputTrianglesThisMesh = outputTriangles[meshId];
+
+    for(int i=0;i<numTrianglesThisMesh;i++) {
+        const InputTriangle &t=inputTriangles[meshId][i];
+        if(!t.doesIntersectOtherTriangles) {//if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+          //this will (probably) be an output triangle...
+          ObjectId objWhereTriangleIs = locationOfEachNonIntersectingTrianglesInOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];   
+          //cerr << "obj: " << objWhereTriangleIs << endl;    
+          if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
+            //if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
+            outputTrianglesThisMesh.push_back(t);
+            
+          }        
+        }     
+    }
+
+    /*vector<InputTriangle> &outputTrianglesThisMesh = outputTriangles[meshId];
+    int ctOutputTriangles = 0;
+    #pragma omp parallel
+    {
+      int myCtOutputTriangles = 0;
+
+      #pragma omp for
+      for(int i=0;i<numTrianglesThisMesh;i++) {
+        const InputTriangle &t=inputTriangles[meshId][i];
+        if(!t.doesIntersectOtherTriangles) {//if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+          //this will (probably) be an output triangle...
+          ObjectId objWhereTriangleIs = locationOfEachNonIntersectingTrianglesInOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];   
+          //cerr << "obj: " << objWhereTriangleIs << endl;    
+          if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
+            //if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
+            //outputTriangles[meshId].push_back(t);
+            myCtOutputTriangles++;
+          }        
+        }     
+      }
+      
+      #pragma omp critical
+      {
+        ctOutputTriangles += myCtOutputTriangles;
+      }
+    }
+		outputTrianglesThisMesh.resize(ctOutputTriangles);
+
+    int ctOutputTrianglesInserted = 0;
+    #pragma omp parallel for
+      for(int i=0;i<numTrianglesThisMesh;i++) {
+        const InputTriangle &t=inputTriangles[meshId][i];
+        if(!t.doesIntersectOtherTriangles) {//if(trianglesThatIntersect[meshId].count(&t)==0) { //this triangle does not intersect the other mesh...
+          //this will (probably) be an output triangle...
+          ObjectId objWhereTriangleIs = locationOfEachNonIntersectingTrianglesInOtherMesh[i];//locationOfEachVertexInOtherMesh[ctTrianglesProcessed++];   
+          //cerr << "obj: " << objWhereTriangleIs << endl;    
+          if (objWhereTriangleIs!=OUTSIDE_OBJECT) {
+            //if the triangle is not outside the other mesh, it will be in the output (we still need to update the left/right objects correctly...)
+            //outputTriangles[meshId].push_back(t);
+
+            int posInsert = __sync_fetch_and_add(&ctOutputTrianglesInserted,1) ;
+            outputTrianglesThisMesh[posInsert] = t;
+          }        
+        }     
+      }*/
+
 
    
     //for each polygon   
@@ -893,7 +943,8 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 	cerr << "T so far: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
 
 	
-	int totalNumberOutputEdges = outputEdges.size();
+  //This is not necessary for OFF files...
+	/*int totalNumberOutputEdges = outputEdges.size();
 	vector<map<int,int> > mapEdgesIds2(totalNumberOutputVertices); //maps each edge (pair of vertices) to ids id
 	for (int i=0;i<totalNumberOutputEdges;i++) {
 		const pair<int,int> &e = outputEdges[i];
@@ -905,12 +956,12 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 		//cerr << e.first << " " << e.second << " " << totalNumberOutputEdges << endl;
 		assert(e.second<totalNumberOutputVertices);		
 		mapEdgesIds2[e.first][e.second] = i;
-	}
+	}*/
 
-	clock_gettime(CLOCK_REALTIME, &t1);
+	//clock_gettime(CLOCK_REALTIME, &t1);
 	//timeClassifyTriangles = convertTimeMsecs(diff(t0ThisFunction,t1))/1000;
 
-  cerr << "Time to create edges: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  //cerr << "Time to create edges: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
  // cerr << "Total time (excluding I/O) so far: " << convertTimeMsecs(diff(t0AfterDatasetRead,t1))/1000 << endl;
   clock_gettime(CLOCK_REALTIME, &t0); 
 
@@ -922,7 +973,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
 
 
 
- 
+
 
   //now, let's write everything in the output!
   outputStream << "OFF\n";
@@ -1005,7 +1056,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
     
 	
 		cerr << "Output vertices         : " << totalNumberOutputVertices << endl;
-		cerr << "Output edges            : " << totalNumberOutputEdges << endl;
+		//cerr << "Output edges            : " << totalNumberOutputEdges << endl;
 		cerr << "Output triangles non int: " << totalNumberOutputTriangles << endl;
 		//cerr << "Intersecting triangles  : " << ctIntersectingTrianglesTotal << endl;
 
