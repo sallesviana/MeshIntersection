@@ -192,6 +192,8 @@ int MeshIntersectionGeometry::isAngleWith0GreaterNonZeroAngleMainImpl(const Vert
 }
 
 
+
+
 int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
   const Point &p = getCoordinates(queryPoint);
   const Point &p0 =  getCoordinates(v1);
@@ -281,7 +283,84 @@ int MeshIntersectionGeometry::isVertexConvexMainImpl(const Vertex &v1,const Vert
 
 
 /*************** PinMesh Part... ****************/
-int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
+
+
+
+#include <CGAL/Projection_traits_xy_3.h>
+#include <CGAL/Projection_traits_xz_3.h>
+#include <CGAL/Projection_traits_yz_3.h>
+typedef CGAL::Projection_traits_xy_3<Kernel>  Projection_xy;
+typedef CGAL::Projection_traits_xz_3<Kernel>  Projection_xz;
+typedef CGAL::Projection_traits_yz_3<Kernel>  Projection_yz;
+typedef Projection_xy::Point_2 Point2_xy;
+typedef Projection_xz::Point_2 Point2_xz;
+typedef Projection_yz::Point_2 Point2_yz;
+
+//projection onto z=0
+int orientationCGAL(const Point_3 &p0,const Point_3 &p1,const Point_3 &p2,MeshIntersectionGeometry::TempVarsIsVertexTriangleProjectionZ0 &tempVars) {
+  //CGAL::Orientation cgalAns = CGAL::orientation(p0,p1,p2,Point2_xy);
+  const CGAL::Interval_nt<false> p0x = p0.x().approx();
+  const CGAL::Interval_nt<false> p0y = p0.y().approx();
+
+  const CGAL::Interval_nt<false> p1x = p1.x().approx();
+  const CGAL::Interval_nt<false> p1y = p1.y().approx();
+
+  const CGAL::Interval_nt<false> px = p2.x().approx();
+  const CGAL::Interval_nt<false> py = p2.y().approx();
+
+  const CGAL::Interval_nt<false>  ans = (p1x-p0x)*(py-p0y) -  (p1y-p0y)*(px-p0x);
+  
+  if(ans<0) return -1;
+  if(ans>0) return 1;
+  return 0;
+
+ // int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
+
+  //int ans = 0;//signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
+  //if(cgalAns==CGAL::NEGATIVE) ans = 1;
+  //else if (cgalAns==CGAL::POSITIVE) ans = -1;
+}
+
+int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImplCGAL(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
+  const Point_3 &p = getCoordinatesCGAL(queryPoint);
+  const Point_3 &p0 =  getCoordinatesCGAL(*t.getInputVertex(0));
+  const Point_3 &p1 =  getCoordinatesCGAL(*t.getInputVertex(1));
+  const Point_3 &p2 =  getCoordinatesCGAL(*t.getInputVertex(2));
+
+  int o1,o2,o3;
+  {
+   
+   try {
+     CGAL::Interval_nt<false>::Protector protector;
+     o1 = orientationCGAL(p0,p1,p,tempVars);
+     o2 = orientationCGAL(p1,p2,p,tempVars);
+     o3 = orientationCGAL(p2,p0,p,tempVars);
+    } catch(...) {
+      cerr << "Interval arithmetic failure... using regular exact computation" << endl;
+      return isVertexInTriangleProjectionMainImplOrig( t, queryPoint,tempVars);
+    }
+  }
+  //this will not work w/o SoS if point exactly on boundary...
+
+  //TODO: change code after implementing SoS properly...
+  /*
+  if(o1!=o2) return false;
+  
+  return o2==o3;*/
+
+  if(o1==0 || o2==0 || o3 ==0) return 0;
+
+  if(o2!=o3)
+    return -1;
+  if(o1!=o2)
+    return -1;
+  if(o1!=o3)
+    return -1;
+  return 1;
+}
+
+
+int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImplOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
   const Point &p0 = getCoordinates(*t.getInputVertex(0));
   const Point &p1 = getCoordinates(*t.getInputVertex(1));
   const Point &p2 = getCoordinates(*t.getInputVertex(2));
@@ -379,7 +458,16 @@ int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const InputTr
   return 1;
 }
 
+int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
+  //
+  int ansCGAL = isVertexInTriangleProjectionMainImplCGAL(t,queryPoint,tempVars);
 
+  #ifdef DEBUGGING_MODE
+    int ansOrig = isVertexInTriangleProjectionMainImplOrig(t,queryPoint,tempVars);
+    assert(ansCGAL==ansOrig);
+  #endif
+  return ansCGAL;
+}
 
 //TODO: use pre-computed normals here...
 //If all points from the same mesh are translated equally, we will not need SoS here

@@ -35,8 +35,8 @@ along with PinMesh.  If not, see <http://www.gnu.org/licenses/>.
 using namespace std;
 
 
-#define VERBOSE
-#define COLLECT_GEOMETRY_STATISTICS
+//#define VERBOSE
+//#define COLLECT_GEOMETRY_STATISTICS
 
 
 //if defined, we will double check the results with the one obtained by the original functions 
@@ -45,6 +45,7 @@ using namespace std;
 //#define DOUBLE_CHECK_SOS_PREDICATES_WITH_MATHEMATICA
 //#define DOUBLE_CHECK_RESULTS_SOS
 //#define DOUBLE_CHECK_SOS_RESULTS
+//#define DEBUGGING_MODE
 //#define PINMESH_VERBOSE
 
 //===============================================================
@@ -472,6 +473,7 @@ class MeshIntersectionGeometry {
 		struct TempVarsIsVertexTriangleProjection { TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl; };
 		bool isVertexInTriangleProjection(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTo,TempVarsIsVertexTriangleProjection &tempVars);
 
+
 		struct TempVarsIsVertexConvex { VertCoord tempCoords[2]; TempVarsSoSPredicatesImpl tempVarsSoSPredicatesImpl;};
 		bool isVertexConvex(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTo,TempVarsIsVertexConvex &tempVars);
 	
@@ -695,7 +697,11 @@ class MeshIntersectionGeometry {
 		//Implementation of geometrical predicates (these implementations do not handle degeneracies --> they return 0 for degenerate cases)
 		int isCloserMainImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
 		int isAngleWith0GreaterMainImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
+		
 		int isVertexInTriangleProjectionMainImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
+		int isVertexInTriangleProjectionMainImplCGAL(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
+		int isVertexInTriangleProjectionMainImplOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
+
 		int isVertexInTriangleProjectionMainImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
 		int isTriangleNormalPointingPositiveZMainImpl(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const;
 		int isVertexConvexMainImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
