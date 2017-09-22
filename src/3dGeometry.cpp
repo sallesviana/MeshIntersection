@@ -63,7 +63,7 @@ GeometryStatistics geometryStatisticsDegenerateCases, geometryStatisticsNonDegen
 #endif
 
 
-
+#include "geometry/cgalBasicOperations.cpp"
 #include "geometry/3dGeometryGeometricalPredicatesSoSImpl.cpp"
 #include "geometry/3dGeometryGeometricalPredicatesMainImpl.cpp"
 #include "geometry/3dGeometryGeometricalPredicatesMainImplOrig.cpp"
@@ -306,6 +306,12 @@ void MeshIntersectionGeometry::storeIntersectionVerticesCoordinatesAndUpdateVert
   #pragma omp parallel for
   for(int i=0;i<numUniqueVerts;i++)
     verticesCoordinates[2][i] = *vertPtrs[i];
+
+  //registering CGAL vertices...
+  verticesCoordinatesCGAL[2].resize(numUniqueVerts);
+  #pragma omp parallel for
+  for(int i=0;i<numUniqueVerts;i++)
+    verticesCoordinatesCGAL[2][i] = Point_3(verticesCoordinates[2][i][0],verticesCoordinates[2][i][1],verticesCoordinates[2][i][2]);
 
   /*{
     Timer t;
@@ -668,9 +674,119 @@ void MeshIntersectionGeometry::computeIntersections(const vector<pair<InputTrian
 
 }
 
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+// Rotation...
+
+
+void MeshIntersectionGeometry::rotateVertices(vector<Point> &vertices, const VertCoord &sinRotation, const VertCoord &cosRotation, const Point &origin,int axisToRotateAround) {
+  assert(axisToRotateAround<=2 && axisToRotateAround>=0);
+  Point newV;
+  for(Point &v:vertices) {
+    //translate s.t. origin will become 0
+    for(int i=0;i<3;i++) v[i] -= origin[i];
+
+    //rotate https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions   
+
+    if(axisToRotateAround==0) { //rotate around x...
+      newV[0]=v[0];
+      newV[1]=v[1]*cosRotation - v[2]*sinRotation;
+      newV[2]=v[1]*sinRotation + v[2]*cosRotation;
+    }
+    else if(axisToRotateAround==1) { //rotate around x...
+      newV[0]=v[0]*cosRotation + v[2]*sinRotation;
+      newV[1]=v[1];
+      newV[2]=-v[0]*sinRotation + v[2]*cosRotation;
+    } else {
+      newV[0]=v[0]*cosRotation - v[1]*sinRotation;
+      newV[1]=v[0]*sinRotation + v[1]*cosRotation;
+      newV[2]=v[2];
+    }
+
+    v = newV;
+
+    //translate back...
+    for(int i=0;i<3;i++) v[i] += origin[i];
+  }
+}
+
+void MeshIntersectionGeometry::rotateMeshes(bool isReversion) {
+  //rotates all the meshes around the origin, that is set as the center of their joint bounding boxes...
+
+  VertCoord cosRotation,sinRotation;
+
+  sinRotation = VertCoord(rotationInformation.a)/VertCoord(rotationInformation.c);
+  cosRotation = VertCoord(rotationInformation.b)/VertCoord(rotationInformation.c);
+  if(!isReversion) {
+
+    //since this is the first time we run, let's compute the center of the bounding box (the origin...)
+    boundingBoxTwoMeshesTogetter[0] = meshBoundingBoxes[0][0];
+    boundingBoxTwoMeshesTogetter[1] = meshBoundingBoxes[0][1];
+
+    for(int i=0;i<3;i++) {
+      if(meshBoundingBoxes[1][0][i] < boundingBoxTwoMeshesTogetter[0][i])
+        boundingBoxTwoMeshesTogetter[0][i] = meshBoundingBoxes[1][0][i];
+      if(meshBoundingBoxes[1][1][i] > boundingBoxTwoMeshesTogetter[1][i])
+        boundingBoxTwoMeshesTogetter[1][i] = meshBoundingBoxes[1][1][i];
+    }
+
+    for(int coord=0;coord<3;coord++)
+      rotationInformation.origin[coord] = (boundingBoxTwoMeshesTogetter[0][coord]+boundingBoxTwoMeshesTogetter[1][coord])/2;
+
+    for(int meshId=0;meshId<3;meshId++) {
+      rotateVertices(verticesCoordinates[meshId],sinRotation,cosRotation,rotationInformation.origin,0);
+      rotateVertices(verticesCoordinates[meshId],sinRotation,cosRotation,rotationInformation.origin,1);
+    }
+  } else { //when we are reverting the meshes back, we have to use a negative angle...
+    sinRotation = -sinRotation;
+    cosRotation = cosRotation;
+
+    if(rotationInformation.rotateBack) {
+      for(int meshId=0;meshId<3;meshId++) {
+        rotateVertices(verticesCoordinates[meshId],sinRotation,cosRotation,rotationInformation.origin,1); //when we revert, the order should be reversed...
+        rotateVertices(verticesCoordinates[meshId],sinRotation,cosRotation,rotationInformation.origin,0);
+      }
+    }
+  }
 
 
 
+
+  //updates the bounding boxes of the meshes...
+
+  for(int meshId=0;meshId<3;meshId++) {
+    const vector<Point> &vertices = this->verticesCoordinates[meshId];
+    auto &boundingBox = meshBoundingBoxes[meshId];
+
+    cerr << "Updating bounding boxes... number of vertices: " << vertices.size()<< "\n";
+    for(int i=0;i<vertices.size();i++) {
+      if (i==0) { //initialize the bounding box in the first iteration...
+        boundingBox[0] = vertices[0];
+        boundingBox[1] = vertices[0];
+      }
+
+      accum_min(boundingBox[0][0],vertices[i][0]);
+      accum_min(boundingBox[0][1],vertices[i][1]);
+      accum_min(boundingBox[0][2],vertices[i][2]);
+
+      accum_max(boundingBox[1][0],vertices[i][0]);
+      accum_max(boundingBox[1][1],vertices[i][1]);
+      accum_max(boundingBox[1][2],vertices[i][2]);
+    }
+  }
+}
+
+void MeshIntersectionGeometry::reverseRotationIfNecessary() {
+  if(rotationInformation.rotateBack)
+    rotateMeshes(true);
+}
+
+
+
+////---------------------------------------------------------------------------------------------------------------
+////---------------------------------------------------------------------------------------------------------------
+////---------------------------------------------------------------------------------------------------------------
+////---------------------------------------------------------------------------------------------------------------
 
 #include <iomanip>
 
@@ -685,9 +801,47 @@ void MeshIntersectionGeometry::printBoundingBoxes() {
 }
 
 
-MeshIntersectionGeometry::MeshIntersectionGeometry(const string &pathMesh0, const string &pathMesh1) {
+
+
+MeshIntersectionGeometry::MeshIntersectionGeometry(const string &pathMesh0, const string &pathMesh1, const RotationInformation &rotationInfo) {
+  rotationInformation = rotationInfo;
+
 	loadInputMesh(0,pathMesh0);
 	loadInputMesh(1,pathMesh1);
+
+
+  //we should have the bounding-boxes of the two meshes now...
+  //let's rotate the meshes (if rotate is defined) and update the bounding-boxes properly before we compute the bboxes of the triangles
+  if(rotationInformation.rotate) {
+    Timer t("Rotate meshes");
+    cerr << "Rotating meshes..." << endl;
+    rotateMeshes(false);
+  }
+
+
+  for(int meshId=0;meshId<2;meshId++)
+    initializeCGALCoordinates(verticesCoordinatesCGAL[meshId],verticesCoordinates[meshId]);
+
+  cerr << "Initializing bounding-boxes of triangles\n"; 
+  timespec t0,t1;
+  clock_gettime(CLOCK_REALTIME, &t0);
+
+  for(int meshId=0;meshId<2;meshId++) {
+    const int numInputTrianglesThisMesh = inputTriangles[meshId].size();
+    //cerr << "Triangles to init bbox: " << numInputTrianglesThisMesh << endl;
+
+    inputTrianglesBoundingBox[meshId].resize(numInputTrianglesThisMesh);
+    #pragma omp parallel for
+    for(int tid=0;tid<numInputTrianglesThisMesh;tid++) {
+      initTriangleBoundingBox(meshId,tid);
+    }
+
+    //planeEquationsInputTriangles[meshId].resize(numInputTrianglesThisMesh);
+    //isPlaneEquationInputTrianglesInitialized[meshId] = vector<int>(numInputTrianglesThisMesh,0);
+  }
+  clock_gettime(CLOCK_REALTIME, &t1);
+  cerr << "Time to init bounding boxes: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+
  
 	//initializes the bounding boxes...
 	boundingBoxTwoMeshesTogetter[0] = meshBoundingBoxes[0][0];
@@ -731,26 +885,31 @@ void MeshIntersectionGeometry::loadInputMesh(int meshId,const string &path) {
   else 
     readLiumFile(path,verticesCoordinates[meshId],inputTriangles[meshId],meshBoundingBoxes[meshId],meshId,numTrianglesPreviouslyRead);
 
-  initializeCGALCoordinates(verticesCoordinatesCGAL[meshId],verticesCoordinates[meshId]);
+
+
+
+
+
+ /* initializeCGALCoordinates(verticesCoordinatesCGAL[meshId],verticesCoordinates[meshId]);
 
   cerr << "Initializing bounding-boxes of triangles\n"; 
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
 
   for(int meshId=0;meshId<2;meshId++) {
-  	const int numInputTrianglesThisMesh = inputTriangles[meshId].size();
+    const int numInputTrianglesThisMesh = inputTriangles[meshId].size();
 
-  	inputTrianglesBoundingBox[meshId].resize(numInputTrianglesThisMesh);
-  	#pragma omp parallel for
-  	for(int tid=0;tid<numInputTrianglesThisMesh;tid++) {
-  		initTriangleBoundingBox(meshId,tid);
-  	}
+    inputTrianglesBoundingBox[meshId].resize(numInputTrianglesThisMesh);
+    #pragma omp parallel for
+    for(int tid=0;tid<numInputTrianglesThisMesh;tid++) {
+      initTriangleBoundingBox(meshId,tid);
+    }
 
-  	//planeEquationsInputTriangles[meshId].resize(numInputTrianglesThisMesh);
-  	//isPlaneEquationInputTrianglesInitialized[meshId] = vector<int>(numInputTrianglesThisMesh,0);
+    //planeEquationsInputTriangles[meshId].resize(numInputTrianglesThisMesh);
+    //isPlaneEquationInputTrianglesInitialized[meshId] = vector<int>(numInputTrianglesThisMesh,0);
   }
   clock_gettime(CLOCK_REALTIME, &t1);
-  cerr << "Time to init bounding boxes: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;
+  cerr << "Time to init bounding boxes: " << convertTimeMsecs(diff(t0,t1))/1000 << endl;*/
 }
 
 void MeshIntersectionGeometry::initTriangleBoundingBox(int meshId, int triangleId) {

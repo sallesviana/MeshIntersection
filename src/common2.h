@@ -162,11 +162,20 @@ struct timeval *watchdog_tv;
 struct timezone *watchdog_tz;
 
 void Print_Current_Process_Memory_Used() {
-  std::ostringstream sout;
-  pid_t p = getpid();
-  sout << "cat /proc/" << p << "/status | grep Vm" << std::ends;
-  cerr  << sout.str()  << endl;
-  system2(sout.str().c_str());
+	{
+		std::ostringstream sout;
+		pid_t p = getpid();
+		sout << "cat /proc/" << p << "/status | grep VmPeak  " << std::ends;
+		cerr  << sout.str()  << endl;
+		system2(sout.str().c_str());
+	}
+	{
+		std::ostringstream sout;
+		pid_t p = getpid();
+		sout << "cat /proc/" << p << "/status | grep VmHWM  " << std::ends;
+		cerr  << sout.str()  << endl;
+		system2(sout.str().c_str());		
+	}  
 }
 
 double Process_CPU_Time()  {  // Return CPU(user+system) time since start of process.

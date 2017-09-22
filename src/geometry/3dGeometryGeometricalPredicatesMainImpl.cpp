@@ -7,6 +7,8 @@ Returns 0 if we have a coincidency...
 #include "tritri_isectline.c"
 
 
+
+
 //Is v1 closer to origV than v2 is?
 int MeshIntersectionGeometry::isCloserMainImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const {
   const Point &orig = getCoordinates(origV);
@@ -191,10 +193,7 @@ int MeshIntersectionGeometry::isAngleWith0GreaterNonZeroAngleMainImpl(const Vert
   else return 0;
 }
 
-
-
-
-int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
+int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImplOrig(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
   const Point &p = getCoordinates(queryPoint);
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
@@ -237,7 +236,55 @@ int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex 
 }
 
 
-int MeshIntersectionGeometry::isVertexConvexMainImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const {
+
+int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImplCGAL(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
+  const Point_3 &p = getCoordinatesCGAL(queryPoint);
+  const Point_3 &p0 =  getCoordinatesCGAL(v1);
+  const Point_3 &p1 =  getCoordinatesCGAL(v2);
+  const Point_3 &p2 =  getCoordinatesCGAL(v3);
+  int o1,o2,o3;
+  {
+   
+   try {
+     CGAL::Interval_nt<false>::Protector protector;
+     o1 = orientationCGAL(p0,p1,p,whatPlaneProjectTrianglesTo);
+     o2 = orientationCGAL(p1,p2,p,whatPlaneProjectTrianglesTo);
+     o3 = orientationCGAL(p2,p0,p,whatPlaneProjectTrianglesTo);
+    } catch(...) {
+      #ifdef VERBOSE      
+        cerr << "Interval arithmetic failure... using regular exact computation" << endl;
+      #endif
+      return isVertexInTriangleProjectionMainImplOrig(v1,v2,v3,queryPoint,whatPlaneProjectTrianglesTo,tempVars);
+    }
+  }
+  //this will not work w/o SoS if point exactly on boundary...
+
+  
+  if(o1==0 || o2==0 || o3 ==0) return 0;
+
+  if(o2!=o3)
+    return -1;
+  if(o1!=o2)
+    return -1;
+  if(o1!=o3)
+    return -1;
+  return 1;
+}
+
+int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const {
+  int ansCGAL = isVertexInTriangleProjectionMainImplCGAL(v1,v2,v3,queryPoint,whatPlaneProjectTrianglesTo,tempVars);
+  
+  #ifdef DEBUGGING_MODE
+    int ansOrig = isVertexInTriangleProjectionMainImplOrig(v1,v2,v3,queryPoint,whatPlaneProjectTrianglesTo,tempVars);
+    //cerr << "Vertex in triangle projection any plane: " << ansCGAL << " " << ansOrig << endl;
+    assert(ansCGAL==ansOrig);
+  #endif
+
+  return ansCGAL;
+}
+
+
+int MeshIntersectionGeometry::isVertexConvexMainImplOrig(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const {
   const Point &vertex1 =  getCoordinates(v1);
   const Point &vertex2 =  getCoordinates(queryVertex);
   const Point &vertex3 =  getCoordinates(v3);
@@ -281,45 +328,35 @@ int MeshIntersectionGeometry::isVertexConvexMainImpl(const Vertex &v1,const Vert
   return -sgn(tempCoords[0]); //if the sign is negative --> the vertex is convex...
 }
 
+int MeshIntersectionGeometry::isVertexConvexMainImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const {
+  int ansCGAL;
+
+  try {
+    CGAL::Interval_nt<false>::Protector protector;
+    ansCGAL = isVertexConvexMainImplCGAL(getCoordinatesCGAL(v1),getCoordinatesCGAL(queryVertex),getCoordinatesCGAL(v3), whatPlaneProjectTrianglesTo);
+  } catch(...) {
+    //cerr << "Interval not enough in vertex convex checking..." << endl;
+    return isVertexConvexMainImplOrig(v1,queryVertex, v3,whatPlaneProjectTrianglesTo,tempVars);
+  }
+
+  #ifdef DEBUGGING_MODE
+    int ansOrig = isVertexConvexMainImplOrig(v1,queryVertex, v3,whatPlaneProjectTrianglesTo,tempVars);
+    cerr << ansCGAL << " " << ansOrig << endl;
+    assert(ansCGAL==ansOrig);
+  #endif
+
+  return ansCGAL;
+}
+
+
 
 /*************** PinMesh Part... ****************/
 
 
 
-#include <CGAL/Projection_traits_xy_3.h>
-#include <CGAL/Projection_traits_xz_3.h>
-#include <CGAL/Projection_traits_yz_3.h>
-typedef CGAL::Projection_traits_xy_3<Kernel>  Projection_xy;
-typedef CGAL::Projection_traits_xz_3<Kernel>  Projection_xz;
-typedef CGAL::Projection_traits_yz_3<Kernel>  Projection_yz;
-typedef Projection_xy::Point_2 Point2_xy;
-typedef Projection_xz::Point_2 Point2_xz;
-typedef Projection_yz::Point_2 Point2_yz;
 
-//projection onto z=0
-int orientationCGAL(const Point_3 &p0,const Point_3 &p1,const Point_3 &p2,MeshIntersectionGeometry::TempVarsIsVertexTriangleProjectionZ0 &tempVars) {
-  //CGAL::Orientation cgalAns = CGAL::orientation(p0,p1,p2,Point2_xy);
-  const CGAL::Interval_nt<false> p0x = p0.x().approx();
-  const CGAL::Interval_nt<false> p0y = p0.y().approx();
 
-  const CGAL::Interval_nt<false> p1x = p1.x().approx();
-  const CGAL::Interval_nt<false> p1y = p1.y().approx();
 
-  const CGAL::Interval_nt<false> px = p2.x().approx();
-  const CGAL::Interval_nt<false> py = p2.y().approx();
-
-  const CGAL::Interval_nt<false>  ans = (p1x-p0x)*(py-p0y) -  (p1y-p0y)*(px-p0x);
-  
-  if(ans<0) return -1;
-  if(ans>0) return 1;
-  return 0;
-
- // int ans = sgn( (p1[coordX]-p0[coordX])*(p[coordY]-p0[coordY]) -  (p1[coordY]-p0[coordY])*(p[coordX]-p0[coordX]) );
-
-  //int ans = 0;//signDeterminant4(getCoordinates(p1),getCoordinates(p2),getCoordinates(p3),getCoordinates(v));
-  //if(cgalAns==CGAL::NEGATIVE) ans = 1;
-  //else if (cgalAns==CGAL::POSITIVE) ans = -1;
-}
 
 int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImplCGAL(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const {
   const Point_3 &p = getCoordinatesCGAL(queryPoint);
@@ -332,11 +369,13 @@ int MeshIntersectionGeometry::isVertexInTriangleProjectionMainImplCGAL(const Inp
    
    try {
      CGAL::Interval_nt<false>::Protector protector;
-     o1 = orientationCGAL(p0,p1,p,tempVars);
-     o2 = orientationCGAL(p1,p2,p,tempVars);
-     o3 = orientationCGAL(p2,p0,p,tempVars);
+     o1 = orientationCGAL(p0,p1,p);
+     o2 = orientationCGAL(p1,p2,p);
+     o3 = orientationCGAL(p2,p0,p);
     } catch(...) {
-      cerr << "Interval arithmetic failure... using regular exact computation" << endl;
+      #ifdef VERBOSE      
+        cerr << "Interval arithmetic failure... using regular exact computation" << endl;
+      #endif
       return isVertexInTriangleProjectionMainImplOrig( t, queryPoint,tempVars);
     }
   }

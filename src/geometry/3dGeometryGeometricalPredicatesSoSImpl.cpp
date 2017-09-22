@@ -12,7 +12,7 @@ inline int getSignal(int i){
 //#define SosPredicatesImpl OriginalAlgFromMathematicaSosPredicatesImpl
 
 
-int orientation2D(const Point &p0,const Point &p1,const Point &p,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) {
+int orientation2DOriginal(const Point &p0,const Point &p1,const Point &p,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) {
   int coordY = 1;
   int coordX = 0;
   if(whatPlaneProjectTrianglesTo==PLANE_X0) { //if the triangle is projected to X=0 --> we need to use coordinates y,z (instead of x,y)
@@ -38,14 +38,32 @@ int orientation2D(const Point &p0,const Point &p1,const Point &p,int whatPlanePr
   return ans;
 }
 
+int MeshIntersectionGeometry::orientation2D(const Vertex &v1, const Vertex &v2, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) {
+  CGAL::Interval_nt<false>::Protector protector;
+  int ansCGAL;
+
+  try {
+    ansCGAL = orientationCGAL(getCoordinatesCGAL(v1),getCoordinatesCGAL(v2),getCoordinatesCGAL(queryPoint), whatPlaneProjectTrianglesTo);
+  } catch(...) {
+    //cerr << "CGAL filter failure... trying traditional exact..." << endl;
+    return orientation2DOriginal(getCoordinates(v1),getCoordinates(v2),getCoordinates(queryPoint),whatPlaneProjectTrianglesTo,tempVars);
+  }
+  #ifdef DEBUGGING_MODE
+    int ans = orientation2DOriginal(getCoordinates(v1),getCoordinates(v2),getCoordinates(queryPoint),whatPlaneProjectTrianglesTo,tempVars);
+    assert(ans==ansCGAL);
+  #endif
+
+  return ansCGAL;
+}
+
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
+  int ans = orientation2D((v1),(v2),(queryPoint),whatPlaneProjectTrianglesTo,tempVars);
+
+  if(ans!=0) return ans;
+
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
-
-  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
-
-  if(ans!=0) return ans;
 
   #ifdef COLLECT_GEOMETRY_STATISTICS
     #pragma omp atomic
@@ -67,13 +85,13 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const InputVert
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVertex &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars)  { 
+  int ans = orientation2D((v1),(v2),(queryPoint),whatPlaneProjectTrianglesTo,tempVars);
+
+  if(ans!=0) return ans;
+
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
-
-  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
-
-  if(ans!=0) return ans;
 
 
   #ifdef COLLECT_GEOMETRY_STATISTICS
@@ -96,13 +114,13 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1,const InputVerte
 }
 
 int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) { 
+  int ans = orientation2D((v1),(v2),(queryPoint),whatPlaneProjectTrianglesTo,tempVars);
+
+  if(ans!=0) return ans;
+
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
-
-  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
-
-  if(ans!=0) return ans;
 
 
   #ifdef COLLECT_GEOMETRY_STATISTICS
@@ -124,13 +142,13 @@ int MeshIntersectionGeometry::orientation(const InputVertex &v1, const VertexFro
 }
 
 int MeshIntersectionGeometry::orientation(const VertexFromIntersection &v1, const VertexFromIntersection &v2, const VertexFromIntersection &queryPoint, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) { 
+  int ans = orientation2D((v1),(v2),(queryPoint),whatPlaneProjectTrianglesTo,tempVars);
+
+  if(ans!=0) return ans;
+
   const Point &p0 =  getCoordinates(v1);
   const Point &p1 =  getCoordinates(v2);
   const Point &p = getCoordinates(queryPoint);
-
-  int ans = orientation2D(p0,p1,p,whatPlaneProjectTrianglesTo,tempVars);
-
-  if(ans!=0) return ans;
   
   //I am not sure if this is true... double check..()
   /*if(v1.getMeshOfTriangleDefiningVertex() == v2.getMeshOfTriangleDefiningVertex() && v1.getMeshOfTriangleDefiningVertex()==queryPoint.getMeshOfTriangleDefiningVertex()) {
@@ -393,6 +411,30 @@ int MeshIntersectionGeometry::signalVectorCoordOnlyCallWhenCoincident(const Vert
 //I think this could be 0... suppose the two vertices are from same mesh, for example...
 //TODO: review...
 int MeshIntersectionGeometry::signalVectorCoord(const Vertex &orig, const Vertex &dest, int coord,TempVarsSoSPredicatesImpl &tempVars)  {
+  try {
+    CGAL::Interval_nt<false>::Protector p;
+    CGAL::Interval_nt<false> p0 = getCoord(getCoordinatesCGAL(orig),coord);
+    CGAL::Interval_nt<false> p1 = getCoord(getCoordinatesCGAL(dest),coord);
+
+    int ans = 0;
+    if (p1>p0) ans = 1;
+    else if(p1<p0) ans = -1;
+
+    #ifdef DEBUGGING_MODE
+      const Point &p00 =  getCoordinates(orig);
+      const Point &p10 =  getCoordinates(dest);
+      int ans2 = getSignal(cmp(p10[coord],p00[coord]));
+      //cerr << p1 << " " << p0 << " " << ans2 << " " << ans << (p1<p0) << " " << (p1>p0) <<  endl;
+      assert(ans==ans2);
+    #endif
+
+    if(ans!=0)
+      return ans;
+  } catch(...) {
+
+  }
+
+
   const Point &p0 =  getCoordinates(orig);
   const Point &p1 =  getCoordinates(dest);
   int ans = getSignal(cmp(p1[coord],p0[coord])); // sgn(p1[coord]-p0[coord]);

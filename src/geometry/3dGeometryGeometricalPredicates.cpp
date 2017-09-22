@@ -353,6 +353,7 @@ bool MeshIntersectionGeometry::onSegment(const Vertex & p, const Vertex & q, con
 //Given Two co-planar edges e1, e2, do they intersect (except at their endpoints) ?
 //during computation, we project them to whatPlaneProjectTriangleTo plane... 
 //do p1-q1 intersect p2-q2 ?
+
 bool MeshIntersectionGeometry::doIntersect(const pair<const Vertex *,const Vertex *> &e1, 
                                             const pair<const Vertex *,const Vertex *> &e2, 
                                             int whatPlaneProjectTriangleTo, 
@@ -361,6 +362,7 @@ bool MeshIntersectionGeometry::doIntersect(const pair<const Vertex *,const Verte
   const Vertex &q1 = *e1.second;
   const Vertex &p2 = *e2.first;
   const Vertex &q2 = *e2.second;
+
 
     // Find the four orientations needed for general and
     // special cases

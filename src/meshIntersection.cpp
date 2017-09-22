@@ -94,7 +94,7 @@ void extractPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k
 }
 
 
-unsigned long long sumPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize,vector<pair<InputTriangle *,InputTriangle *> > &pairsTrianglesToProcess) {
+unsigned long long sumPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,int j, int k, int gridSize) {
   int numTrianglesMesh0 = grid->numTrianglesInGridCell(0, gridSize,i,j,k);//cell.triangles[0].size();
   int numTrianglesMesh1 = grid->numTrianglesInGridCell(1, gridSize,i,j,k);
 
@@ -102,7 +102,7 @@ unsigned long long sumPairsTrianglesInGridCell(const Nested3DGrid *grid,int i,in
 
 }
 
-unsigned long long computeNumPairsTrianglesToProcessBeforeUnique(const Nested3DGridWrapper *uniformGrid,vector<pair<InputTriangle *,InputTriangle *> > &pairsTrianglesToProcess) {
+unsigned long long computeNumPairsTrianglesToProcessBeforeUnique(const Nested3DGridWrapper *uniformGrid) {
   int gridSizeLevel1 =  uniformGrid->gridSizeLevel1;
   int gridSizeLevel2 =  uniformGrid->gridSizeLevel2;
 
@@ -115,10 +115,10 @@ unsigned long long computeNumPairsTrianglesToProcessBeforeUnique(const Nested3DG
           for(int iLevel2=0;iLevel2<gridSizeLevel2;iLevel2++) 
             for(int jLevel2=0;jLevel2<gridSizeLevel2;jLevel2++) 
               for(int kLevel2=0;kLevel2<gridSizeLevel2;kLevel2++) {
-                  ans += sumPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2,pairsTrianglesToProcess);   
+                  ans += sumPairsTrianglesInGridCell(secondLevelGrid,iLevel2,jLevel2,kLevel2,gridSizeLevel2);   
               }    
         } else {
-          ans += sumPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1,pairsTrianglesToProcess);         
+          ans += sumPairsTrianglesInGridCell(&(uniformGrid->grid),i,j,k,gridSizeLevel1);         
         }
       }
   return ans;
@@ -199,6 +199,9 @@ unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshI
                                                   vector< pair<const InputTriangle *,vector<BoundaryPolygon>> > polygonsFromRetesselationOfEachTriangle[2], 
                                                   vector< pair<VertexFromIntersection, 
                                                   VertexFromIntersection> >  &edgesFromIntersection) {
+  
+  cerr << "Num pairs to process according to this configuration: " << computeNumPairsTrianglesToProcessBeforeUnique(uniformGrid) << "\n";
+
   timespec t0,t1;
   clock_gettime(CLOCK_REALTIME, &t0);
    
@@ -299,10 +302,19 @@ unsigned long long  processTriangleIntersections(MeshIntersectionGeometry &meshI
 // TODO: if(a*b > 0 ) --> do not multiply!!! use test a>>0 && b>0 || a<0 && b<0
 
 int main(int argc, char **argv) {
-  if (argc!=7) {
-      cerr << "Error... use ./3dIntersection inputMesh0 inputMesh1 gridSizeLevel1 gridSizeLevel2 triggerSecondLevel outputFile.off" << endl;
+  if (argc<7 || (argc>7 && argc!=11)) {
+      cerr << "Error... use ./3dIntersection inputMesh0 inputMesh1 gridSizeLevel1 gridSizeLevel2 triggerSecondLevel outputFile.off " << endl;
+      cerr << "With rotation enabled, add the following: a b c rotateBack|noRotateBack" << endl;
+      cerr << "a,b,c are the sides of a rectangle triangle whose angle b,c will be used in the rotation.." << endl;
       cerr << "The mesh file may be in the off, gts format or in the lium format (multimaterial)" << endl;
       exit(1);
+  }
+  
+  RotationInformation rotationInfo;
+  if(argc>7) {
+    rotationInfo.rotate=true;
+    rotationInfo.setABC(atoi(argv[7]),atoi(argv[8]),atoi(argv[9]));
+    rotationInfo.rotateBack= string(argv[10])=="rotateBack";
   }
   clock_gettime(CLOCK_REALTIME, &t0BeginProgram);
 
@@ -320,7 +332,7 @@ int main(int argc, char **argv) {
   clock_gettime(CLOCK_REALTIME, &t0); 
 
   {
-  MeshIntersectionGeometry meshIntersectionGeometry(mesh0Path,mesh1Path);
+  MeshIntersectionGeometry meshIntersectionGeometry(mesh0Path,mesh1Path,rotationInfo);
 
   clock_gettime(CLOCK_REALTIME, &t1);
   t0AfterDatasetRead = t1;

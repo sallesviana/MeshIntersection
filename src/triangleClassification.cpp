@@ -971,7 +971,7 @@ double classifyTrianglesAndGenerateOutput(const Nested3DGridWrapper *uniformGrid
  
 
 
-
+  geometry.reverseRotationIfNecessary(); //if the meshes have been rotated and we are supposed to reverse the rotation...
 
 
 

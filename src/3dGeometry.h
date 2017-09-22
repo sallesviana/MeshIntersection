@@ -95,6 +95,21 @@ typedef Kernel::Triangle_3                                    Triangle_3;
 
 
 
+struct RotationInformation {
+	RotationInformation():rotate(false),rotateBack(false){};
+	void setABC(int a_,int b_,int c_) {
+		a=a_;
+		b=b_;
+		c=c_;
+		assert(a<=b && b<=c);
+		assert(a*a+b*b==c*c);
+	}
+	int a,b,c;
+	bool rotateBack;
+	bool rotate;
+
+	Point origin;
+};
 
 
 //
@@ -417,7 +432,7 @@ struct TempVarsSoSPredicatesImpl {
 //The same pool (even in different functions) cannot be used simultaneously by different threads...
 class MeshIntersectionGeometry {
 	public:
-		MeshIntersectionGeometry(const string &pathMesh0, const string &pathMesh1);
+		MeshIntersectionGeometry(const string &pathMesh0, const string &pathMesh1, const RotationInformation &rotationInformation);
 
 		//the meshId can be either 0 or 1
 		struct TempVarsGetGridCellContainingVertex { 
@@ -442,7 +457,7 @@ class MeshIntersectionGeometry {
 
 		~MeshIntersectionGeometry();
 
-
+		void reverseRotationIfNecessary();
 
 		struct TempVarsGetPlaneTriangleIsNotPerpendicular {VertCoord tempRationals[10];};
 		int getPlaneTriangleIsNotPerpendicular(const InputTriangle &t, TempVarsGetPlaneTriangleIsNotPerpendicular &tempVars);
@@ -574,6 +589,11 @@ class MeshIntersectionGeometry {
 		friend class SosPredicatesImpl;
 		friend class OriginalAlgFromMathematicaSosPredicatesImpl;
 
+
+		RotationInformation rotationInformation;
+		void rotateVertices(vector<Point> &vertices, const VertCoord &sin, const VertCoord &cos, const Point &origin,int axisToRotateAround);
+		void rotateMeshes(bool isReversion);
+
 		//We do not need this anymore (supposing we will not call the tri_tri_isectionline anymore...)
 		struct PlaneEquation {Point normal; VertCoord d;};
 		//vector<PlaneEquation> planeEquationsInputTriangles[2];
@@ -611,7 +631,7 @@ class MeshIntersectionGeometry {
 		//void initPlaneEquationInputTriangle(int meshId, int triId,TempVarsComputePlaneEquation &tempVars);
 
 		vector<Point> verticesCoordinates[3]; //verticesCoordinates[0] are from mesh 0, verticesCoordinates[1] are from mesh 1, verticesCoordinates[2] are from intersections
-		vector<Point_3> verticesCoordinatesCGAL[3];
+		vector<Point_3> verticesCoordinatesCGAL[3]; //TODO: do we need to store both? we can get exact coords from CGAL... maybe this is better...
 
 		//for efficiency purposes, we will store the bounding-box of the Triangles
 		//the bounding-boxes are defined as the extreme vertices of the triangles
@@ -698,12 +718,17 @@ class MeshIntersectionGeometry {
 		int isCloserMainImpl(const InputVertex &origV, const VertexFromIntersection &v1V, const VertexFromIntersection &v2V, TempVarsIsCloser &tempVars) const;
 		int isAngleWith0GreaterMainImpl(const Vertex &origV, const Vertex &v1V, const Vertex &v2V, const int planeToProject, TempVarsIsAngleWith0Greater &tempVars) const;
 		
+		int isVertexInTriangleProjectionMainImplCGAL(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
+		int isVertexInTriangleProjectionMainImplOrig(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
 		int isVertexInTriangleProjectionMainImpl(const Vertex &v1,const Vertex &v2, const Vertex &v3, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsIsVertexTriangleProjection &tempVars) const;
+
+
 		int isVertexInTriangleProjectionMainImplCGAL(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
 		int isVertexInTriangleProjectionMainImplOrig(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
-
 		int isVertexInTriangleProjectionMainImpl(const InputTriangle &t, const InputVertex &queryPoint,TempVarsIsVertexTriangleProjectionZ0 &tempVars) const;
+		
 		int isTriangleNormalPointingPositiveZMainImpl(const InputTriangle &t, TempVarIsTriangleNormalPointingPositiveZ &tempVars) const;
+		int isVertexConvexMainImplOrig(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
 		int isVertexConvexMainImpl(const Vertex &v1,const Vertex &queryVertex, const Vertex &v3,int whatPlaneProjectTrianglesTo,TempVarsIsVertexConvex &tempVars) const;
 		int intersectTwoTrianglesMainImpl(const InputTriangle &triMesh0,const InputTriangle &triMesh1,
 				     Point &coordsPt1,VertexFromIntersection &vertexThatCreatedPt1, Point &coordsPt2,
@@ -727,6 +752,8 @@ class MeshIntersectionGeometry {
 
 
 		//SoS functions...
+		int orientation2D(const Vertex &v1, const Vertex &v2, const Vertex &queryPoint,int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars);
+
 		int orientation(const Vertex &v1, const Vertex &v2, const Vertex &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ; 
 		int orientation(const InputVertex &v1, const InputVertex &v2, const InputVertex &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ; 
 		int orientation(const InputVertex &v1, const InputVertex &v2, const VertexFromIntersection &p, int whatPlaneProjectTrianglesTo,TempVarsSoSPredicatesImpl &tempVars) ;
@@ -775,7 +802,7 @@ class MeshIntersectionGeometry {
 
 
 
-
+void initializeCGALCoordinates(vector<Point_3> &verticesCoordinatesCGAL,vector<Point> &verticesCoordinates);
 
 
 //used by the triangulation algorithm....
