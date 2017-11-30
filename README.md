@@ -3,7 +3,7 @@ This is an initial version of 3D-EPUG-OVERLAY, an algorithm for exactly (and eff
 Warnings: 
 * I intend to rewrite most of this code.
 * This code lacks a good documentation (a short term goal is to improve this).
-* The "main" reads/writes off files (with triangulated meshes) with floating-point coordinates. Converting too/from floating-point
+* The "main" reads/writes text off files (with triangulated meshes) with floating-point coordinates. Converting too/from floating-point
 coordinates may introduce errors in the mesh (thus, it could be a good idea to provide exact rational coordinates to the algorithm and
 get the resulting rationals before they are converted to floating-point numbers). There are some interesting papers mentioning the challenge
 of converting meshes with  rational coordinates into meshes with floating-point coordinates.
@@ -20,9 +20,14 @@ Restrictions:
 invalid meshes (but it is not guaranteed to work -- the output may be invalid, the program may crash, etc).
 
 Compiling/running:
-* We employ the excellent CGAL library to do the computations with interval arithmetic (this accelerates the computations with rationals
-in the predicates).
+* We employ the excellent CGAL library to do the computations with interval arithmetic (this accelerates the computations with rationals in the predicates). 
+* This program also requires GMP.
 * This repository includes a Makefile (however, I still have to improve it...).
 * If you try to run the program without arguments it will print a small help message showing the required arguments.
-* Example of way to run the program:
-** 
+* Example of command line arguments:
+** ./meshIntersection 282_bimba_cvd.stl.off 203_vase.stl.off 64 8 1 out.off
+** The first and second arguments are the input meshes.
+** The third and fourth arguments are the resolutions of the first and second level grids (the optimum is very broad -- we typically use a heuristic to choose this resolution: g1 * g2 = power(100000*m0*m1,1/6), where g1*g2 is the product of the resolution of the two grids, m0  and m1 are the number of triangles in the two input meshes).
+** The fifth argument is the trigger for creating the second-level grid (again, the optimum is very broad -- we typically choose a small number for this).
+** The last argument is the output mesh.
+* This program uses OpenMP for running in parallel
