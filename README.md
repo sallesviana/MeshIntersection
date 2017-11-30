@@ -27,7 +27,7 @@ Compiling/running:
 * Example of command line arguments:
 ** ./meshIntersection 282_bimba_cvd.stl.off 203_vase.stl.off 64 8 1 out.off
 ** The first and second arguments are the input meshes.
-** The third and fourth arguments are the resolutions of the first and second level grids (the optimum is very broad -- we typically use a heuristic to choose this resolution: g1 * g2 = power(100000*m0*m1,1/6), where g1*g2 is the product of the resolution of the two grids, m0  and m1 are the number of triangles in the two input meshes).
+** The third and fourth arguments are the resolutions of the first and second level grids (the optimum is very broad -- we typically use a heuristic to choose this resolution: g1 x g2 = power(100000 x m0 x m1,1/6), where g1*g2 is the product of the resolution of the two grids, m0  and m1 are the number of triangles in the two input meshes).
 ** The fifth argument is the trigger for creating the second-level grid (again, the optimum is very broad -- we typically choose a small number for this).
 ** The last argument is the output mesh.
 * This program uses OpenMP for running in parallel
