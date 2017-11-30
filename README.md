@@ -10,9 +10,9 @@ of converting meshes with  rational coordinates into meshes with floating-point 
 * This algorithm employs Simulation of Simplicity (a symbolic perturbation technique) to handle the special cases. This technique is 
 very solid (it is not a numerical perturbation -- the perturbation is only "simulated" ). However, when the output is written to a file SoS is
 ignored:
-** This may generate artifacts in the output. For example: faces with area 0 (this area would be infinitesimal considering SoS),
+  * This may generate artifacts in the output. For example: faces with area 0 (this area would be infinitesimal considering SoS),
 polyhedra with volume 0 (again, the volume would be infinitesimal considering the perturbation), etc.
-** A future work is to regularize the output meshes removing these artifacts (an alternative is to process them not ignoring the 
+  * A future work is to regularize the output meshes removing these artifacts (an alternative is to process them not ignoring the 
 symbolic perturbations).
 
 Restrictions:
@@ -25,9 +25,9 @@ Compiling/running:
 * This repository includes a Makefile (however, I still have to improve it...).
 * If you try to run the program without arguments it will print a small help message showing the required arguments.
 * Example of command line arguments:
-** ./meshIntersection 282_bimba_cvd.stl.off 203_vase.stl.off 64 8 1 out.off
-** The first and second arguments are the input meshes.
-** The third and fourth arguments are the resolutions of the first and second level grids (the optimum is very broad -- we typically use a heuristic to choose this resolution: g1 x g2 = power(100000 x m0 x m1,1/6), where g1*g2 is the product of the resolution of the two grids, m0  and m1 are the number of triangles in the two input meshes).
-** The fifth argument is the trigger for creating the second-level grid (again, the optimum is very broad -- we typically choose a small number for this).
-** The last argument is the output mesh.
+  * ./meshIntersection 282_bimba_cvd.stl.off 203_vase.stl.off 64 8 1 out.off
+  * The first and second arguments are the input meshes.
+  * The third and fourth arguments are the resolutions of the first and second level grids (the optimum is very broad -- we typically use a heuristic to choose this resolution: g1 x g2 = power(100000 x m0 x m1,1/6), where g1*g2 is the product of the resolution of the two grids, m0  and m1 are the number of triangles in the two input meshes).
+  * The fifth argument is the trigger for creating the second-level grid (again, the optimum is very broad -- we typically choose a small number for this).
+  * The last argument is the output mesh.
 * This program uses OpenMP for running in parallel
