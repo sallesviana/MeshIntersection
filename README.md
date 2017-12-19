@@ -31,3 +31,15 @@ Compiling/running:
   * The fifth argument is the trigger for creating the second-level grid (again, the optimum is very broad -- we typically choose a small number for this).
   * The last argument is the output mesh.
 * This program uses OpenMP for running in parallel
+
+Example of mesh intersection computation:
+* Download two meshes at the Thingi10k repository
+https://ten-thousand-models.appspot.com/detail.html?file_id=461112
+https://ten-thousand-models.appspot.com/detail.html?file_id=461115
+* Since we do not support STL files, convert them to the OFF format. This can be done by opening each file with MeshLab (if asked to unify vertices, select YES) and exporting them as OFF files. 
+* Run the intersection program as follows: 
+  * ./meshIntersection 461112.off 461115.off 64 8 1 out.off
+* You can open the output using a program like MeshLab  
+
+
+
